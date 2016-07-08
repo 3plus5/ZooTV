@@ -3,4 +3,41 @@
     <color name="colorPrimary">#ff5722</color>
     <color name="colorPrimaryDark">#e64a19</color>
     <color name="colorAccent">#ff4081</color>
+
+    <color name="accent_translucent">#80ffeb3b</color>
+    <color name="tab_color">#e0e0e0e0</color>
+    <color name="white">#ffffff</color>
+    <color name="gray">#BDBDBD</color>
+    <color name="black">#000000</color>
+    <color name="black_overlay">#66000000</color>
+
+    <!--random Color-->
+    <color name="red">#f44336</color>
+    <color name="pink">#e91e63</color>
+    <color name="purple">#9c27b0</color>
+    <color name="deep_purple">#ff8a80</color>
+    <color name="indigo">#3f51b5</color>
+    <color name="blue">#2196f3</color>
+    <color name="light_blue">#03a9f4</color>
+    <color name="cyan">#00bcd4</color>
+    <color name="teal">#009688</color>
+    <color name="gree">#4caf50</color>
+    <color name="light_gree">#8bc34a</color>
+    <color name="lime">#cddc39</color>
+    <color name="amber">#ffc107</color>
+    <color name="orange">#ff9800</color>
+    <color name="yellow">#ffeb3b</color>
+    <color name="deep_orange">#ff5722</color>
+    <color name="brown">#795548</color>
+    <color name="grey">#9e9e9e</color>
+    <color name="blue_grey">#607d8b</color>
+    <array name="colors">
+        <item>#3f51b5</item>
+        <item>#e91e63</item>
+        <item>#9c27b0</item>
+        <item>#4caf50</item>
+        <item>#ff9800</item>
+        <item>#9e9e9e</item>
+        <item>#795548</item>
+    </array>
 </resources>

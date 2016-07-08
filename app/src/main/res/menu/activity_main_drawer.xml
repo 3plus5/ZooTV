@@ -3,19 +3,19 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/zoo"
             android:icon="@drawable/ic_menu_camera"
             android:title="Zoo专区" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/douyu"
             android:icon="@drawable/ic_menu_gallery"
             android:title="斗鱼专区" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/huya"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="虎牙专区" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/xiongmao"
             android:icon="@drawable/ic_menu_manage"
             android:title="熊猫专区" />
     </group>
@@ -23,11 +23,11 @@
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/chushou"
                 android:icon="@drawable/ic_menu_share"
                 android:title="触手专区" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/huomao"
                 android:icon="@drawable/ic_menu_send"
                 android:title="火猫专区" />
         </menu>
