@@ -1,4 +1,4 @@
-package xmu.edu.a3plus5.zootv.ui.adapter;
+package xmu.edu.a3plus5.zootv.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

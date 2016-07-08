@@ -24,7 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
-import xmu.edu.a3plus5.zootv.ui.adapter.CategoryGridAdapter;
+import xmu.edu.a3plus5.zootv.adapter.CategoryGridAdapter;
 
 /**
  * Created by hd_chen on 2016/7/8.
