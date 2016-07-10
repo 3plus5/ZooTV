@@ -40,7 +40,6 @@ public class CategoryGridFragment extends Fragment{
     private int NUM = 4; // 每行显示个数
 
     private int LIEWIDTH;//每列宽度
-    private int LIE = 12;//列数
 
     @Nullable
     @Override

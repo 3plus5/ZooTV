@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/piece_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/piece_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_menu_send" />
+
+            <TextView
+                android:id="@+id/piece_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/piece_icon"
+                android:paddingLeft="5dp"
+                android:text="标题"
+                android:textSize="@dimen/piece_title"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/piece_more"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_menu_send" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/piece_more"
+                android:paddingRight="5dp"
+                android:text="更多" />
+        </RelativeLayout>
+
+        <xmu.edu.a3plus5.zootv.widget.MyGridView
+            android:id="@+id/item_gridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="2dp"
+            android:listSelector="@drawable/item_selector"
+            android:numColumns="2"
+            android:padding="2dp"
+            android:verticalSpacing="2dp" />
+        <!--<FrameLayout-->
+            <!--android:id="@+id/item_frame"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+    </LinearLayout>
+</android.support.v7.widget.CardView>
