@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.adapter.CategoryGridAdapter;
+import xmu.edu.a3plus5.zootv.widget.MyGridView;
 
 /**
  * Created by hd_chen on 2016/7/8.
@@ -34,7 +35,7 @@ public class CategoryGridFragment extends Fragment{
     @Bind(R.id.horizontalScrollView)
     HorizontalScrollView horizontalScrollView;
     @Bind(R.id.gridView)
-    GridView gridView;
+    MyGridView gridView;
 
     DisplayMetrics dm;
     private int NUM = 4; // 每行显示个数

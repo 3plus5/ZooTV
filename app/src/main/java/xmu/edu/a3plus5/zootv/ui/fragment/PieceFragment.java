@@ -15,9 +15,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
-import xmu.edu.a3plus5.zootv.adapter.PieceAdapter;
+import xmu.edu.a3plus5.zootv.adapter.MainMultiAdapter;
 import xmu.edu.a3plus5.zootv.entity.PieceHeader;
-import xmu.edu.a3plus5.zootv.ui.MainActivity;
 
 /**
  * Created by hd_chen on 2016/7/10.
@@ -42,8 +41,8 @@ public class PieceFragment extends Fragment {
         pieceHeaders.add(new PieceHeader("热门", "12", "www.douyu.com"));
         pieceHeaders.add(new PieceHeader("推荐", "12", "www.douyu.com"));
         pieceHeaders.add(new PieceHeader("英雄联盟", "12", "www.douyu.com"));
-        PieceAdapter pieceAdapter = new PieceAdapter((MainActivity) getActivity(), pieceHeaders);
+        MainMultiAdapter mainMultiAdapter = new MainMultiAdapter(getActivity(), pieceHeaders);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(pieceAdapter);
+        recyclerView.setAdapter(mainMultiAdapter);
     }
 }

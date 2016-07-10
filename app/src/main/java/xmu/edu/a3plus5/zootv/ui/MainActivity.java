@@ -2,6 +2,7 @@ package xmu.edu.a3plus5.zootv.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ashokvarma.bottomnavigation.BottomNavigationBar;
+import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import butterknife.Bind;
@@ -24,9 +27,10 @@ import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.ui.fragment.AdPagerFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.CategoryGridFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.PieceFragment;
+import xmu.edu.a3plus5.zootv.ui.fragment.RoomListFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationBar.OnTabSelectedListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -34,10 +38,13 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     @Bind(R.id.nav_view)
     NavigationView navigationView;
+    @Bind(R.id.bottom_navigation_bar)
+    BottomNavigationBar bottomNavigationBar;
 //    @Bind(R.id.pull_to_refresh)
 //    PullToRefreshView pullToRefreshView;
 
     private long exitTime = 0;
+    int lastSelectedPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +57,23 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
+        bottomNavigationBar
+                .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC
+                );
+        bottomNavigationBar
+                .addItem(new BottomNavigationItem(R.drawable.ic_action_explore, "首页").setActiveColor(R.color.orange))
+                .addItem(new BottomNavigationItem(R.drawable.ic_action_explore, "分类").setActiveColor(R.color.orange))
+                .addItem(new BottomNavigationItem(R.drawable.ic_action_explore, "记录").setActiveColor(R.color.orange))
+                .addItem(new BottomNavigationItem(R.drawable.ic_action_explore, "个人").setActiveColor(R.color.orange))
+                .setFirstSelectedPosition(lastSelectedPosition)
+                .initialise();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.ad_fragment, new AdPagerFragment()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.category_fragment, new CategoryGridFragment()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.piece_frame, new PieceFragment()).commit();
+        bottomNavigationBar.setTabSelectedListener(this);
+
+//        getSupportFragmentManager().beginTransaction().replace(R.id.ad_fragment, new AdPagerFragment()).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.category_fragment, new CategoryGridFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
 //        pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
 //            @Override
 //            public void onRefresh() {
@@ -79,12 +99,12 @@ public class MainActivity extends AppCompatActivity
                 LinearLayout linearLayout = (LinearLayout) toast.getView();
                 linearLayout.setOrientation(LinearLayout.HORIZONTAL);
                 TextView messageTextView = (TextView) linearLayout.getChildAt(0);
-                messageTextView.setPadding(10,0,0,0);
+                messageTextView.setPadding(10, 0, 0, 0);
                 messageTextView.setTextSize(18);
                 ImageView imageView = new ImageView(this);
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(50,50));
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(50, 50));
                 imageView.setImageResource(R.drawable.push_chat_default);
-                linearLayout.addView(imageView,0);
+                linearLayout.addView(imageView, 0);
                 toast.show();
                 exitTime = System.currentTimeMillis();
                 return;
@@ -103,7 +123,7 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(MainActivity.this, "提交了"+query, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "提交了" + query, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
@@ -149,5 +169,33 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onTabSelected(int position) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        switch (position) {
+            case 0:
+                ft.replace(R.id.main_content,new PieceFragment());
+                break;
+            case 1:
+                ft.replace(R.id.main_content,new RoomListFragment());
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
+        ft.commit();
+    }
+
+    @Override
+    public void onTabUnselected(int position) {
+
+    }
+
+    @Override
+    public void onTabReselected(int position) {
+
     }
 }

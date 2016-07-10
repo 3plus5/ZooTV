@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.daimajia.swipe.util.Attributes;
+import com.yalantis.phoenix.PullToRefreshView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,6 +25,8 @@ public class RoomListFragment extends Fragment {
 
     @Bind(R.id.gridview)
     MyGridView gridView;
+    @Bind(R.id.pull_to_refresh)
+    PullToRefreshView pullToRefreshView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,12 +52,24 @@ public class RoomListFragment extends Fragment {
         gridView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(),"跳转至房间",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "跳转至房间", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullToRefreshView.setRefreshing(false);
+                    }
+                }, 500);
             }
         });
 
