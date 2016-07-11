@@ -19,13 +19,11 @@ import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.yalantis.phoenix.PullToRefreshView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
-import xmu.edu.a3plus5.zootv.ui.fragment.AdPagerFragment;
-import xmu.edu.a3plus5.zootv.ui.fragment.CategoryGridFragment;
+import xmu.edu.a3plus5.zootv.ui.fragment.CategoryFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.PieceFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.RoomListFragment;
 
@@ -40,8 +38,6 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     @Bind(R.id.bottom_navigation_bar)
     BottomNavigationBar bottomNavigationBar;
-//    @Bind(R.id.pull_to_refresh)
-//    PullToRefreshView pullToRefreshView;
 
     private long exitTime = 0;
     int lastSelectedPosition = 0;
@@ -72,19 +68,8 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationBar.setTabSelectedListener(this);
 
 //        getSupportFragmentManager().beginTransaction().replace(R.id.ad_fragment, new AdPagerFragment()).commit();
-//        getSupportFragmentManager().beginTransaction().replace(R.id.category_fragment, new CategoryGridFragment()).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.category_fragment, new CategoryViewPagerFragment()).commit();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
-//        pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                pullToRefreshView.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        pullToRefreshView.setRefreshing(false);
-//                    }
-//                }, 500);
-//            }
-//        });
     }
 
     @Override
@@ -179,9 +164,10 @@ public class MainActivity extends AppCompatActivity
                 ft.replace(R.id.main_content,new PieceFragment());
                 break;
             case 1:
-                ft.replace(R.id.main_content,new RoomListFragment());
+                ft.replace(R.id.main_content,new CategoryFragment());
                 break;
             case 2:
+                ft.replace(R.id.main_content,RoomListFragment.getRoomListFragment(null));
                 break;
             case 3:
                 break;

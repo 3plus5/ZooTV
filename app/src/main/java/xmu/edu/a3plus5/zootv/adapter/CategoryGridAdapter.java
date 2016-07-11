@@ -1,14 +1,23 @@
 package xmu.edu.a3plus5.zootv.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.entity.Category;
+import xmu.edu.a3plus5.zootv.ui.RoomListActivity;
 
 /**
  * Created by hd_chen on 2016/7/8.
@@ -17,10 +26,14 @@ public class CategoryGridAdapter extends BaseAdapter {
 
     int count;
     Context context;
+    String type;
+    List<Category> categories;
 
-    public CategoryGridAdapter (Context context,int count){
+    public CategoryGridAdapter(Context context, List<Category> categories, String type) {
         this.context = context;
-        this.count = count;
+        this.categories = categories;
+        this.type = type;
+        this.count = categories.size();
     }
 
     @Override
@@ -41,26 +54,40 @@ public class CategoryGridAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
-        if(null == view){
+        final Category category = categories.get(i);
+        if (null == view) {
             viewHolder = new ViewHolder();
-            view = LayoutInflater.from(context).inflate(R.layout.category_item,null);
-            viewHolder.circleImageView = (CircleImageView)view.findViewById(R.id.item_image);
-            viewHolder.textView = (TextView)view.findViewById(R.id.item_text);
+            view = LayoutInflater.from(context).inflate(R.layout.category_item, null);
+            viewHolder.circleImageView = (CircleImageView) view.findViewById(R.id.item_image);
+            viewHolder.textView = (TextView) view.findViewById(R.id.item_text);
+            viewHolder.item_layout = (LinearLayout)view.findViewById(R.id.category_item);
             view.setTag(viewHolder);
-        }else{
-            viewHolder = (ViewHolder)view.getTag();
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
         }
-        if(i == count-1){
-            viewHolder.circleImageView.setImageResource(R.drawable.push_chat_default);
+        if ("home".equals(type) && i == count - 1) {
+            Picasso.with(context).load(R.drawable.push_chat_default).into( viewHolder.circleImageView);
             viewHolder.textView.setText("更多");
-        }else {
-            viewHolder.circleImageView.setImageResource(R.drawable.push_chat_default);
-            viewHolder.textView.setText("游戏类别");
+        } else {
+            Picasso.with(context).load(categories.get(i).getPicUrl()).into( viewHolder.circleImageView);
+            viewHolder.textView.setText(categories.get(i).getName());
         }
+        viewHolder.item_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, RoomListActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("category",category);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
         return view;
     }
-    class ViewHolder{
+
+    class ViewHolder {
         CircleImageView circleImageView;
         TextView textView;
+        LinearLayout item_layout;
     }
 }

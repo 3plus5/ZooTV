@@ -2,6 +2,7 @@ package xmu.edu.a3plus5.zootv.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +32,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.entity.PieceHeader;
+import xmu.edu.a3plus5.zootv.entity.Room;
+import xmu.edu.a3plus5.zootv.network.BasePlatform;
+import xmu.edu.a3plus5.zootv.entity.Category;
+import xmu.edu.a3plus5.zootv.network.PlatformFactory;
 import xmu.edu.a3plus5.zootv.widget.MyGridView;
 
 /**
@@ -38,16 +44,20 @@ import xmu.edu.a3plus5.zootv.widget.MyGridView;
 public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<PieceHeader> pieceHeaders;
+    List<Room> rooms;
     Context context;
+    List<Category> categories;
 
     public static enum ITEM_TYPE {
         HEADER_TYPE,
         CONTENT_TYPE
     }
 
-    public MainMultiAdapter(Context context, List<PieceHeader> pieceHeaders) {
+    public MainMultiAdapter(Context context, List<PieceHeader> pieceHeaders, List<Room> rooms, List<Category> categories) {
         this.context = context;
         this.pieceHeaders = pieceHeaders;
+        this.rooms = rooms;
+        this.categories = categories;
     }
 
     @Override
@@ -60,19 +70,19 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onItem(int position) {
                     Toast.makeText(context, "点击了 " + pieceHeaders.get(position - 1).getTitle(), Toast.LENGTH_SHORT).show();
                 }
-            });
+            }, rooms);
         } else {
             itemView = LayoutInflater.from(context).inflate(R.layout.main_header, parent, false);
-            return new HeaderViewHolder(itemView, context);
+            return new HeaderViewHolder(itemView, context, categories);
         }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ContentViewHolder) {
             PieceHeader item = pieceHeaders.get(position - 1);
             ((ContentViewHolder) holder).title.setText(item.getTitle());
-            RoomListAdapter adapter = new RoomListAdapter(context);
+            RoomListAdapter adapter = new RoomListAdapter(context, rooms);
             adapter.setMode(Attributes.Mode.Multiple);
             ((ContentViewHolder) holder).myGridView.setAdapter(adapter);
             ((ContentViewHolder) holder).myGridView.setSelected(false);
@@ -103,9 +113,10 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((HeaderViewHolder) holder).gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Toast.makeText(context, "点击了第" + i + "个分类", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "点击了" + ((HeaderViewHolder) holder).categories.get(i).getName(), Toast.LENGTH_SHORT).show();
                 }
             });
+            ((HeaderViewHolder) holder).relativeLayout.setVisibility(View.GONE);
         }
     }
 
@@ -131,10 +142,13 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Bind(R.id.item_gridView)
         MyGridView myGridView;
 
-        public ContentViewHolder(View itemView, MyViewHolderClicks listener) {
+        List<Room> rooms;
+
+        public ContentViewHolder(View itemView, MyViewHolderClicks listener, List<Room> rooms) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mListener = listener;
+            this.rooms = rooms;
             header.setOnClickListener(this);
         }
 
@@ -158,6 +172,8 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         HorizontalScrollView horizontalScrollView;
         @Bind(R.id.gridView)
         MyGridView gridView;
+        @Bind(R.id.category_head)
+        RelativeLayout relativeLayout;
 
         DisplayMetrics dm;
         private int NUM = 4; // 每行显示个数
@@ -165,6 +181,7 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private int LIEWIDTH;//每列宽度
 
         Context context;
+        List<Category> categories;
 
         //装点点的ImageView数组
         private ImageView[] tips;
@@ -174,15 +191,24 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private int[] imgIdArray;
         public ImageHandler handler = new ImageHandler(new WeakReference<Context>(context));
 
-        public HeaderViewHolder(View itemView, Context context) {
+        public HeaderViewHolder(View itemView, Context context, List<Category> categories) {
             super(itemView);
             this.context = context;
             ButterKnife.bind(this, itemView);
             setUpViewPager();
-            horizontalScrollView.setHorizontalScrollBarEnabled(false);
             getScreenDen();
+            CategoryGridAdapter categoryGridAdapter = new CategoryGridAdapter(context, categories, "category");
+            this.categories = categories;
+            gridView.setNumColumns(categories.size() + 1);
+            gridView.setAdapter(categoryGridAdapter);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(categoryGridAdapter.getCount() * LIEWIDTH,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            gridView.setLayoutParams(params);
+            gridView.setColumnWidth(dm.widthPixels / NUM);
+            gridView.setStretchMode(GridView.NO_STRETCH);
+            horizontalScrollView.setHorizontalScrollBarEnabled(false);
             LIEWIDTH = dm.widthPixels / NUM;
-            setUpData();
+//            setUpData();
         }
 
         @Override
@@ -190,18 +216,18 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         }
 
-        public void setUpData() {
-            CategoryGridAdapter adapter = new CategoryGridAdapter(context, 7);
-            gridView.setNumColumns(7);
-            gridView.setAdapter(adapter);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(adapter.getCount() * LIEWIDTH,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            gridView.setLayoutParams(params);
-            gridView.setColumnWidth(dm.widthPixels / NUM);
-            gridView.setStretchMode(MyGridView.NO_STRETCH);
-            int count = adapter.getCount();
-            gridView.setNumColumns(count);
-        }
+//        public void setUpData() {
+//            CategoryGridAdapter adapter = new CategoryGridAdapter(context, categories, "home");
+//            gridView.setNumColumns(7);
+//            gridView.setAdapter(adapter);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(adapter.getCount() * LIEWIDTH,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT);
+//            gridView.setLayoutParams(params);
+//            gridView.setColumnWidth(dm.widthPixels / NUM);
+//            gridView.setStretchMode(MyGridView.NO_STRETCH);
+//            int count = adapter.getCount();
+//            gridView.setNumColumns(count);
+//        }
 
         private void getScreenDen() {
             dm = new DisplayMetrics();
@@ -236,7 +262,7 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             //将图片装载到数组中
             mImageViews = new ImageView[imgIdArray.length];
             for (int i = 0; i < mImageViews.length; i++) {
-                if(mImageViews[i] == null) {
+                if (mImageViews[i] == null) {
                     ImageView imageView = new ImageView(context);
                     Log.d("image", "image");
                     imageView.setBackgroundResource(imgIdArray[i]);

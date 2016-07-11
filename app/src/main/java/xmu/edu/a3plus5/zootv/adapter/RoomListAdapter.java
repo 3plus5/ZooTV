@@ -1,23 +1,31 @@
 package xmu.edu.a3plus5.zootv.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.entity.Room;
+import xmu.edu.a3plus5.zootv.ui.WebActivity;
 
 public class RoomListAdapter extends BaseSwipeAdapter {
 
     private Context mContext;
+    List<Room> rooms;
 
-    public RoomListAdapter(Context mContext) {
-
+    public RoomListAdapter(Context mContext, List<Room> rooms) {
+        this.rooms = rooms;
         this.mContext = mContext;
     }
 
@@ -40,12 +48,18 @@ public class RoomListAdapter extends BaseSwipeAdapter {
         ImageView attention = (ImageView) view.findViewById(R.id.attention);
         ImageView trash = (ImageView) view.findViewById(R.id.trash);
         ImageView room = (ImageView) view.findViewById(R.id.room_photo);
+        TextView title = (TextView) view.findViewById(R.id.room_title);
+        title.setText(rooms.get(position).getTitle());
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.room_up);
-        room.setImageResource(R.drawable.room);
+        Picasso.with(mContext).load(rooms.get(position).getPicUrl()).into(room);
+
+//        room.setImageResource(R.drawable.room);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "跳转至房间" + position, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, WebActivity.class);
+                intent.putExtra("url",rooms.get(position).getLink());
+                mContext.startActivity(intent);
             }
         });
         attention.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +92,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
 
     @Override
     public int getCount() {
-        return 6;
+        return rooms.size();
     }
 
     @Override

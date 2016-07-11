@@ -73,6 +73,7 @@
                 android:layout_height="wrap_content" />-->
 
             <TextView
+                android:id="@+id/room_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:tag="Hover"
