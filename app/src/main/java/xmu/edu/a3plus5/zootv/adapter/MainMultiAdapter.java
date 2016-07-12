@@ -2,7 +2,6 @@ package xmu.edu.a3plus5.zootv.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -31,11 +30,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.PieceHeader;
 import xmu.edu.a3plus5.zootv.entity.Room;
-import xmu.edu.a3plus5.zootv.network.BasePlatform;
-import xmu.edu.a3plus5.zootv.entity.Category;
-import xmu.edu.a3plus5.zootv.network.PlatformFactory;
 import xmu.edu.a3plus5.zootv.widget.MyGridView;
 
 /**

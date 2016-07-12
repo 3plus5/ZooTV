@@ -26,7 +26,7 @@ public class HuYaPlatform extends BasePlatform{
 			String picPath = element.select("img[class = pic]").attr("src");
 			String watchingNum = element.select("i[class = js-num").text();
 			String anchor = element.select("i[class = nick]").text();
-			long num = getPopularity(watchingNum);
+			long num = Room.getPopularity(watchingNum);
 			
 			Room room = new Room();
 			rooms.add(room);
@@ -36,10 +36,10 @@ public class HuYaPlatform extends BasePlatform{
 	}
 	
 	@Override
-	public List<Room> getByCateGory(Category category, int page) {
+	public List<Room> getByCategory(Category category, int page) {
 		Document doc = null;
 		try {
-			doc = Jsoup.connect(category.getHuyaUrl()).get();
+			doc = Jsoup.connect(category.getCateUrl(Huya)).get();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -80,7 +80,7 @@ public class HuYaPlatform extends BasePlatform{
 			Category c = new Category();
 			c.setName(e.select("img").attr("alt"));
 			c.setPicUrl(e.select("img").attr("src"));
-			c.setHuyaUrl(e.select("a").attr("href"));
+			c.setCateUrl(Huya, e.select("a").attr("href"));
 			categories.add(c);
 		}
 		System.out.println(categories);
@@ -95,13 +95,16 @@ public class HuYaPlatform extends BasePlatform{
 	public static void main(String[] args)
 	{
 		HuYaPlatform huYaPlatform = new HuYaPlatform();
-		Category category  = new Category();
-		category.setHuyaUrl("http://www.huya.com/g/hearthstone");
-		huYaPlatform.search("overwatch");
 	}
 
 	@Override
 	public List<Category> getPopularCategory() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Room getRoomById(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
