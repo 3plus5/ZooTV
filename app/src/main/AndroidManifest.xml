@@ -33,6 +33,9 @@
         <activity
             android:name=".ui.CategoryListActivity"
             android:theme="@style/AppThemeBack" />
+        <activity
+            android:name=".ui.LoginActivity"
+            android:theme="@style/AppThemeBack"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,123 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.LoginActivity">
+
+    <!--<view-->
+    <!--android:layout_below="@id/qq_login_btn"-->
+    <!--android:layout_marginTop="5dp"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="3dp"-->
+    <!--android:background="@color/mdtp_red"/>-->
+    <!--<android.support.design.widget.TextInputLayout-->
+    <!--android:id="@+id/username_text_input_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:paddingTop="10dp"-->
+    <!-- -->
+    <!--app:hintTextAppearance="@style/TextAppearance.AppCompat">-->
+
+    <!--<Button-->
+        <!--android:id="@+id/email_login_btn"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@drawable/login_button"-->
+        <!--android:backgroundTint="@color/colorPrimaryDark"-->
+        <!--android:text="邮箱登录"-->
+        <!--android:textColor="@color/white" />-->
+
+    <TextView
+        android:id="@+id/email_login_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="邮箱登录"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <EditText
+        android:id="@+id/email_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/email_login_btn"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_edit_text"
+        android:ems="10"
+        android:hint="邮箱"
+        android:inputType="textPersonName" />
+    <!--</android.support.design.widget.TextInputLayout>-->
+
+    <!--<android.support.design.widget.TextInputLayout-->
+    <!--android:id="@+id/password_text_input_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/email_text_input_layout"-->
+    <!--app:hintTextAppearance="@style/TextAppearance.AppCompat">-->
+
+    <EditText
+        android:id="@+id/password_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/email_edit_text"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/bg_edit_text"
+        android:ems="10"
+        android:hint="密码"
+        android:inputType="textPassword" />
+    <!--</android.support.design.widget.TextInputLayout>-->
+
+
+    <RelativeLayout
+        android:id="@+id/email_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/password_edit_text"
+        android:layout_marginTop="33dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:background="@drawable/selectable_item_background"
+            android:clickable="true"
+            android:text="忘记密码？" />
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/login_button"
+            android:text="登录"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/sina_login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/email_login"
+        android:layout_marginTop="33dp"
+        android:background="@drawable/login_button"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="微博登录"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/qq_login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sina_login_btn"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/login_qq_button"
+        android:backgroundTint="@color/md_material_blue_600"
+        android:text="QQ登录"
+        android:textColor="@color/white" />
+</RelativeLayout>

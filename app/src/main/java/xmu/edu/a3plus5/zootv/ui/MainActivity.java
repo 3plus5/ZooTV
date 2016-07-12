@@ -23,6 +23,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.ui.fragment.CategoryFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.PieceFragment;
@@ -71,6 +72,20 @@ public class MainActivity extends AppCompatActivity
 //        getSupportFragmentManager().beginTransaction().replace(R.id.ad_fragment, new AdPagerFragment()).commit();
 //        getSupportFragmentManager().beginTransaction().replace(R.id.category_fragment, new CategoryViewPagerFragment()).commit();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+    }
+
+//    @OnClick(R.id.user_photo)
+//    public void login(){
+//        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+//        startActivityForResult(intent,1);
+//    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            //登录后返回时间
+        }
     }
 
     @Override
