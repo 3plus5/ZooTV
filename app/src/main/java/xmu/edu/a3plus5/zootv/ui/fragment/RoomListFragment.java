@@ -6,26 +6,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.daimajia.swipe.util.Attributes;
 import com.yalantis.phoenix.PullToRefreshView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
-import xmu.edu.a3plus5.zootv.adapter.MainMultiAdapter;
 import xmu.edu.a3plus5.zootv.adapter.RoomListAdapter;
 import xmu.edu.a3plus5.zootv.entity.Category;
-import xmu.edu.a3plus5.zootv.entity.PieceHeader;
 import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.network.PlatformFactory;
@@ -42,6 +37,7 @@ public class RoomListFragment extends Fragment {
     PullToRefreshView pullToRefreshView;
 
     Category category;
+    String searchQuery;
 
     private boolean isRefreshing = false;
 
@@ -59,11 +55,24 @@ public class RoomListFragment extends Fragment {
         return roomListFragment;
     }
 
+    public static synchronized RoomListFragment getRoomListFragment(String searchQuery) {
+        if (roomListFragment == null) {
+            roomListFragment = new RoomListFragment();
+        }
+        if(searchQuery != null) {
+            Bundle args = new Bundle();
+            args.putSerializable("searchQuery", searchQuery);
+            roomListFragment.setArguments(args);
+        }
+        return roomListFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             category = (Category) getArguments().getSerializable("category");
+            searchQuery = (String) getArguments().getSerializable("searchQuery");
         }
     }
 
@@ -140,10 +149,12 @@ public class RoomListFragment extends Fragment {
             manager = new LinearLayoutManager(getActivity());
             BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
 //            List<Category> categories = douYuPlatform.getPopularCategory();
-            if(category == null){
-                rooms = douYuPlatform.getByCateGory(douYuPlatform.getPopularCategory().get(0), 1);
-            }else {
-                rooms = douYuPlatform.getByCateGory(category, 1);
+            if(category == null && searchQuery == null){
+                rooms = douYuPlatform.getByCategory(douYuPlatform.getPopularCategory().get(0), 1);
+            }else if(searchQuery != null){
+                rooms = douYuPlatform.search(searchQuery);
+            } else{
+                rooms = douYuPlatform.getByCategory(category, 1);
             }
             adapter = new RoomListAdapter(getActivity(),rooms);
             return null;

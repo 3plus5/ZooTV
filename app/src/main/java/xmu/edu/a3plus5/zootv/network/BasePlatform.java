@@ -9,26 +9,20 @@ public abstract class BasePlatform {
 	public static final String DouYu = "DouYu";
 	public static final String Huya = "Huya";
 	public static final String Panda = "Panda";
+	public static final String Zoo = "Zoo";
 
-	public abstract List<Room> getByCateGory(Category category, int page);
+	//按分类获取直播间列表
+	public abstract List<Room> getByCategory(Category category, int page);
+	//获取最热直播间列表
 	public abstract List<Category> getPopularCategory();
+	//获取搜索列表
 	public abstract List<Room> search(String keyword);
+	//获取所有分类
 	public abstract List<Category> getAllCategory();
+	//获取最热分类
 	public abstract List<Room> getMostPopular();
+	//根据id获取直播间
+	public abstract Room getRoomById(String id);
 
-	protected long getPopularity(String watchingNum)
-	{
-		String num;
-		if(watchingNum.contains("万"))
-		{
-			return (long) (Float.parseFloat(watchingNum.substring(0, watchingNum.length() - 1)) * 10000);
-		}
-		else
-			return Long.parseLong(watchingNum);
-	}
 
-	protected String getWatchingNum(long popularity)
-	{
-		return null;
-	}
 }

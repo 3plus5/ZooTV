@@ -134,9 +134,9 @@ public class HistoryContentFragment extends Fragment {
             BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
 //            List<Category> categories = douYuPlatform.getPopularCategory();
             if(category == null){
-                rooms = douYuPlatform.getByCateGory(douYuPlatform.getPopularCategory().get(0), 1);
+                rooms = douYuPlatform.getByCategory(douYuPlatform.getPopularCategory().get(0), 1);
             }else {
-                rooms = douYuPlatform.getByCateGory(category, 1);
+                rooms = douYuPlatform.getByCategory(category, 1);
             }
             adapter = new RoomListAdapter(getActivity(),rooms);
             return null;

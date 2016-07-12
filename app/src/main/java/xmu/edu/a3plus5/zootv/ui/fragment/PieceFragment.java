@@ -7,12 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.LinearLayout;
 
 import com.yalantis.phoenix.PullToRefreshView;
 
@@ -22,7 +19,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
-import xmu.edu.a3plus5.zootv.adapter.CategoryGridAdapter;
 import xmu.edu.a3plus5.zootv.adapter.MainMultiAdapter;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.PieceHeader;
@@ -108,12 +104,12 @@ public class PieceFragment extends Fragment {
             manager = new LinearLayoutManager(getActivity());
             BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
             List<Category> categories = douYuPlatform.getPopularCategory();
-            List<Room> rooms = douYuPlatform.getByCateGory(categories.get(0), 1);
+            List<Room> rooms = douYuPlatform.getByCategory(categories.get(0), 1);
             List<PieceHeader> pieceHeaders = new ArrayList<>();
             pieceHeaders.add(new PieceHeader("热门", "12", "www.douyu.com"));
-//            pieceHeaders.add(new PieceHeader("推荐", "12", "www.douyu.com"));
-//            pieceHeaders.add(new PieceHeader("英雄联盟", "12", "www.douyu.com"));
-            mainMultiAdapter = new MainMultiAdapter(getActivity(), pieceHeaders, rooms, categories);
+            pieceHeaders.add(new PieceHeader("推荐", "12", "www.douyu.com"));
+            pieceHeaders.add(new PieceHeader("英雄联盟", "12", "www.douyu.com"));
+            mainMultiAdapter = new MainMultiAdapter(getActivity(), pieceHeaders, rooms.subList(0,10), categories);
             return null;
         }
 

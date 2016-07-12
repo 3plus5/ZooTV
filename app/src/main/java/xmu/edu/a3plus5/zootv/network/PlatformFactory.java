@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class PlatformFactory {
     private static final Map<String, Object> objectMap = new HashMap<String, Object>();
 
@@ -28,7 +29,8 @@ public class PlatformFactory {
         return (T) objectMap.get(className);
     }
 
-    public synchronized static <T extends BasePlatform> T createPlatform(String platformName) {
+    public synchronized static <T extends BasePlatform> T createPlatform(String platformName)
+    {
         switch (platformName) {
             case BasePlatform.DouYu:
                 return (T) createPlatform(DouYuPlatform.class);
@@ -36,8 +38,15 @@ public class PlatformFactory {
                 return (T) createPlatform(HuYaPlatform.class);
             case BasePlatform.Panda:
                 return (T) createPlatform(PandaPlatform.class);
+            case BasePlatform.Zoo:
+                return (T) createPlatform(ZooPlatform.class);
             default:
                 return null;
         }
+    }
+
+    public static void main(String[] args) {
+        BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
+        System.out.println(douYuPlatform.getAllCategory());
     }
 }

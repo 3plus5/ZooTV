@@ -2,7 +2,6 @@ package xmu.edu.a3plus5.zootv.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -31,11 +30,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.PieceHeader;
 import xmu.edu.a3plus5.zootv.entity.Room;
-import xmu.edu.a3plus5.zootv.network.BasePlatform;
-import xmu.edu.a3plus5.zootv.entity.Category;
-import xmu.edu.a3plus5.zootv.network.PlatformFactory;
 import xmu.edu.a3plus5.zootv.widget.MyGridView;
 
 /**
@@ -47,6 +44,11 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     List<Room> rooms;
     Context context;
     List<Category> categories;
+
+    DisplayMetrics dm;
+    private int NUM = 4; // 每行显示个数
+
+    private int LIEWIDTH;//每列宽度
 
     public static enum ITEM_TYPE {
         HEADER_TYPE,
@@ -117,6 +119,20 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
             ((HeaderViewHolder) holder).relativeLayout.setVisibility(View.GONE);
+            ((HeaderViewHolder) holder).horizontalScrollView.setHorizontalScrollBarEnabled(false);
+
+            dm = new DisplayMetrics();
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+            LIEWIDTH = dm.widthPixels / NUM;
+
+            CategoryGridAdapter adapter = new CategoryGridAdapter(context, categories, "home");
+            ((HeaderViewHolder) holder).gridView.setNumColumns(categories.size() + 1);
+            ((HeaderViewHolder) holder).gridView.setAdapter(adapter);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(adapter.getCount() * LIEWIDTH,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            ((HeaderViewHolder) holder).gridView.setLayoutParams(params);
+            ((HeaderViewHolder) holder).gridView.setColumnWidth(dm.widthPixels / NUM);
+            ((HeaderViewHolder) holder).gridView.setStretchMode(MyGridView.NO_STRETCH);
         }
     }
 
@@ -175,10 +191,10 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Bind(R.id.category_head)
         RelativeLayout relativeLayout;
 
-        DisplayMetrics dm;
-        private int NUM = 4; // 每行显示个数
-
-        private int LIEWIDTH;//每列宽度
+//        DisplayMetrics dm;
+//        private int NUM = 4; // 每行显示个数
+//
+//        private int LIEWIDTH;//每列宽度
 
         Context context;
         List<Category> categories;
@@ -196,18 +212,28 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             this.context = context;
             ButterKnife.bind(this, itemView);
             setUpViewPager();
-            getScreenDen();
-            CategoryGridAdapter categoryGridAdapter = new CategoryGridAdapter(context, categories, "category");
             this.categories = categories;
-            gridView.setNumColumns(categories.size() + 1);
-            gridView.setAdapter(categoryGridAdapter);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(categoryGridAdapter.getCount() * LIEWIDTH,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            gridView.setLayoutParams(params);
-            gridView.setColumnWidth(dm.widthPixels / NUM);
-            gridView.setStretchMode(GridView.NO_STRETCH);
-            horizontalScrollView.setHorizontalScrollBarEnabled(false);
-            LIEWIDTH = dm.widthPixels / NUM;
+//            CategoryGridAdapter categoryGridAdapter = new CategoryGridAdapter(context, categories, "home");
+//            gridView.setNumColumns(categories.size() + 1);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(categoryGridAdapter.getCount() * LIEWIDTH,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT);
+//            gridView.setLayoutParams(params);
+//            gridView.setColumnWidth(dm.widthPixels / NUM);
+//            gridView.setStretchMode(GridView.NO_STRETCH);
+//            gridView.setAdapter(categoryGridAdapter);
+//            horizontalScrollView.setHorizontalScrollBarEnabled(false);
+//            LIEWIDTH = dm.widthPixels / NUM;
+//            CategoryGridAdapter adapter = new CategoryGridAdapter(context, categories, "home");
+//            gridView.setNumColumns(categories.size() + 1);
+//            gridView.setAdapter(adapter);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(adapter.getCount() * LIEWIDTH,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT);
+//            gridView.setLayoutParams(params);
+//            gridView.setColumnWidth(dm.widthPixels / NUM);
+//            gridView.setStretchMode(MyGridView.NO_STRETCH);
+//            int count = adapter.getCount();
+//            gridView.setNumColumns(count);
+
 //            setUpData();
         }
 
@@ -218,7 +244,7 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 //        public void setUpData() {
 //            CategoryGridAdapter adapter = new CategoryGridAdapter(context, categories, "home");
-//            gridView.setNumColumns(7);
+//            gridView.setNumColumns(categories.size() + 1);
 //            gridView.setAdapter(adapter);
 //            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(adapter.getCount() * LIEWIDTH,
 //                    LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -229,10 +255,6 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //            gridView.setNumColumns(count);
 //        }
 
-        private void getScreenDen() {
-            dm = new DisplayMetrics();
-            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        }
 
         public void setUpViewPager() {
             //载入图片资源ID

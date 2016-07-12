@@ -1,84 +1,75 @@
 package xmu.edu.a3plus5.zootv.entity;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Category implements Serializable{
-    private String name;        //分类名
-    private String picUrl;        //图片地址
-    private String douyuUrl;    //斗鱼请求地址
-    private String huyaUrl;        //虎牙请求地址
-    private String pandaUrl;    //熊猫请求地址
+public class Category implements Serializable
+{
+	private String name;			//分类名
+	private String picUrl;				//图片地址
+	private Map<String, String> cateMap; //分类地址
 
+	public Category()
+	{
+		cateMap = new HashMap<>();
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
 
-    public String getDouyuUrl() {
-        return douyuUrl;
-    }
+	public Map<String, String> getCateMap() {
+		return cateMap;
+	}
+
+	public void setCateMap(Map<String, String> cateMap) {
+		this.cateMap = cateMap;
+	}
+
+	public String getPicUrl() {
+		return picUrl;
+	}
 
 
-    public void setDouyuUrl(String douyuUrl) {
-        this.douyuUrl = douyuUrl;
-    }
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+
+	public void setCateUrl(String platform, String url)
+	{
+		cateMap.put(platform, url);
+	}
+
+	public String getCateUrl(String platform)
+	{
+		return cateMap.get(platform);
+	}
+
+	public Category(String name, String picUrl, Map<String, String> cateMap) {
+		this.name = name;
+		this.picUrl = picUrl;
+		this.cateMap = cateMap;
+	}
+
+	public String toString()
+	{
+		String str = name + " " + picUrl + "\n";
+		for(Map.Entry<String, String> entry : cateMap.entrySet())
+			str += entry.getKey() + " : " + entry.getValue() + "\n";
+		return str;
+	}
 
 
-    public String getHuyaUrl() {
-        return huyaUrl;
-    }
 
-
-    public void setHuyaUrl(String huyaUrl) {
-        this.huyaUrl = huyaUrl;
-    }
-
-
-    public String getPandaUrl() {
-        return pandaUrl;
-    }
-
-
-    public void setPandaUrl(String pandaUrl) {
-        this.pandaUrl = pandaUrl;
-    }
-
-
-    public Category() {
-    }
-
-    public Category(String name, String picUrl, String douyuUrl, String huyaUrl, String pandaUrl) {
-        this.name = name;
-        this.picUrl = picUrl;
-        this.douyuUrl = douyuUrl;
-        this.huyaUrl = huyaUrl;
-        this.pandaUrl = pandaUrl;
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "name='" + name + '\'' +
-                ", picUrl='" + picUrl + '\'' +
-                ", douyuUrl='" + douyuUrl + '\'' +
-                ", huyaUrl='" + huyaUrl + '\'' +
-                ", pandaUrl='" + pandaUrl + '\'' +
-                '}';
-    }
+//	public static void main(String[] args)
+//	{
+//		Category c = new Category();
+//		System.out.println(c.getCateUrl("123"));
+//	}
 }
