@@ -24,7 +24,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.ui.fragment.CategoryFragment;
+import xmu.edu.a3plus5.zootv.ui.fragment.HistoryTabFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.PieceFragment;
+import xmu.edu.a3plus5.zootv.ui.fragment.ProfileFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.RoomListFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -167,9 +169,10 @@ public class MainActivity extends AppCompatActivity
                 ft.replace(R.id.main_content,new CategoryFragment());
                 break;
             case 2:
-                ft.replace(R.id.main_content,RoomListFragment.getRoomListFragment(null));
+                ft.replace(R.id.main_content,new HistoryTabFragment());
                 break;
             case 3:
+                ft.replace(R.id.main_content,new ProfileFragment());
                 break;
         }
         ft.commit();
