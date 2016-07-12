@@ -3,7 +3,10 @@
     package="xmu.edu.a3plus5.zootv">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name=".ui.MyApplication"
@@ -26,7 +29,7 @@
         <activity
             android:name=".ui.WebActivity"
             android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppThemeBack" />
         <activity
             android:name=".ui.RoomListActivity"
             android:theme="@style/AppThemeBack" />
@@ -35,7 +38,8 @@
             android:theme="@style/AppThemeBack" />
         <activity
             android:name=".ui.LoginActivity"
-            android:theme="@style/AppThemeBack"></activity>
+            android:theme="@style/AppThemeBack" />
+        <activity android:name=".ui.NoNetworkActivity"></activity>
     </application>
 
 </manifest>

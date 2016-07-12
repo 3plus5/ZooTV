@@ -9,6 +9,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/profile_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -19,16 +20,16 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/push_chat_default" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:paddingLeft="10dp">
+                android:paddingLeft="15dp">
 
                 <TextView
                     android:id="@+id/profile_name"
@@ -153,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@color/white"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="0.8dp"
                 android:padding="10dp">
 
                 <ImageView
@@ -175,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@color/white"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="0.8dp"
                 android:padding="10dp">
 
                 <ImageView
@@ -197,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@color/white"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="0.8dp"
                 android:padding="10dp">
 
                 <ImageView
@@ -219,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@color/white"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="0.8dp"
                 android:padding="10dp">
 
                 <ImageView

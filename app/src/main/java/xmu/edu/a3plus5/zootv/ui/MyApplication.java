@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import xmu.edu.a3plus5.zootv.network.BasePlatform;
+
 /**
  * Created by Administrator on 2015/7/3.
  */
@@ -23,12 +25,18 @@ public class MyApplication extends Application {
 
     private static final String TAG = "MyApplication";
 
+    public static String platform = BasePlatform.Zoo;
+
     @Override
     public void onCreate() {
         super.onCreate();
         applicationContext = this;
         instance = this;
         initImageLoader();
+    }
+
+    public static void setPlatform(String mplatform){
+        platform = mplatform;
     }
 
     void initImageLoader(){

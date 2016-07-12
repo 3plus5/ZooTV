@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,13 +24,14 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.ui.fragment.CategoryFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.HistoryTabFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.PieceFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.ProfileFragment;
-import xmu.edu.a3plus5.zootv.ui.fragment.RoomListFragment;
+import xmu.edu.a3plus5.zootv.util.NetState;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationBar.OnTabSelectedListener {
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     @Bind(R.id.bottom_navigation_bar)
     BottomNavigationBar bottomNavigationBar;
+    CircleImageView user_photo;
 
     private long exitTime = 0;
     int lastSelectedPosition = 0;
@@ -52,11 +55,21 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        user_photo = (CircleImageView) header.findViewById(R.id.user_photo);
+        user_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivityForResult(intent, 1);
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
         bottomNavigationBar
                 .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC
@@ -76,16 +89,20 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
     }
 
-//    @OnClick(R.id.user_photo)
-//    public void login(){
-//        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-//        startActivityForResult(intent,1);
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!NetState.isNetworkConnected()) {
+            Intent intent = new Intent(MainActivity.this, NoNetworkActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
+        if (requestCode == 1) {
             //登录后返回时间
         }
     }
@@ -126,8 +143,8 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Intent intent = new Intent(MainActivity.this,RoomListActivity.class);
-                intent.putExtra("query",query);
+                Intent intent = new Intent(MainActivity.this, RoomListActivity.class);
+                intent.putExtra("query", query);
                 startActivity(intent);
 //                Toast.makeText(MainActivity.this, "提交了" + query, Toast.LENGTH_SHORT).show();
                 return true;
@@ -159,13 +176,22 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.zoo) {
-
+            MyApplication.setPlatform(BasePlatform.Zoo);
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            bottomNavigationBar.selectTab(0);
+            setTitle("ZooTV");
         } else if (id == R.id.douyu) {
-
+            MyApplication.setPlatform(BasePlatform.DouYu);
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            bottomNavigationBar.selectTab(0);
+            setTitle("斗鱼专区");
         } else if (id == R.id.huya) {
 
         } else if (id == R.id.xiongmao) {
-
+            MyApplication.setPlatform(BasePlatform.Panda);
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            bottomNavigationBar.selectTab(0);
+            setTitle("熊猫专区");
         } else if (id == R.id.chushou) {
 
         } else if (id == R.id.huomao) {
@@ -182,16 +208,16 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         switch (position) {
             case 0:
-                ft.replace(R.id.main_content,new PieceFragment());
+                ft.replace(R.id.main_content, new PieceFragment());
                 break;
             case 1:
-                ft.replace(R.id.main_content,new CategoryFragment());
+                ft.replace(R.id.main_content, new CategoryFragment());
                 break;
             case 2:
-                ft.replace(R.id.main_content,new HistoryTabFragment());
+                ft.replace(R.id.main_content, new HistoryTabFragment());
                 break;
             case 3:
-                ft.replace(R.id.main_content,new ProfileFragment());
+                ft.replace(R.id.main_content, new ProfileFragment());
                 break;
         }
         ft.commit();

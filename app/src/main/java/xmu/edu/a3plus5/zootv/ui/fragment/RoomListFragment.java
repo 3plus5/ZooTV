@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.daimajia.swipe.util.Attributes;
+import com.nostra13.universalimageloader.utils.L;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.List;
@@ -24,6 +26,7 @@ import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.network.PlatformFactory;
+import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.widget.MyGridView;
 
 /**
@@ -147,14 +150,14 @@ public class RoomListFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             manager = new LinearLayoutManager(getActivity());
-            BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
-//            List<Category> categories = douYuPlatform.getPopularCategory();
+            BasePlatform platform = PlatformFactory.createPlatform(MyApplication.platform);
+//            List<Category> categories = platform.getPopularCategory();
             if(category == null && searchQuery == null){
-                rooms = douYuPlatform.getByCategory(douYuPlatform.getPopularCategory().get(0), 1);
+                rooms = platform.getByCategory(platform.getPopularCategory().get(0), 1);
             }else if(searchQuery != null){
-                rooms = douYuPlatform.search(searchQuery);
+                rooms = platform.search(searchQuery);
             } else{
-                rooms = douYuPlatform.getByCategory(category, 1);
+                rooms = platform.getByCategory(category, 1);
             }
             adapter = new RoomListAdapter(getActivity(),rooms);
             return null;
@@ -165,6 +168,7 @@ public class RoomListFragment extends Fragment {
             super.onPreExecute();
             if(!isRefreshing) {
                 progressDialog = ProgressDialog.show(getActivity(), "", "数据载入中...", false);
+                progressDialog.setCancelable(true);
             }
         }
     }

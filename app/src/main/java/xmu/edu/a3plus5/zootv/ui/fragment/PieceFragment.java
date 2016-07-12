@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import xmu.edu.a3plus5.zootv.entity.PieceHeader;
 import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.network.PlatformFactory;
+import xmu.edu.a3plus5.zootv.ui.MyApplication;
 
 /**
  * Created by hd_chen on 2016/7/10.
@@ -102,9 +104,9 @@ public class PieceFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             manager = new LinearLayoutManager(getActivity());
-            BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
-            List<Category> categories = douYuPlatform.getPopularCategory();
-            List<Room> rooms = douYuPlatform.getByCategory(categories.get(0), 1);
+            BasePlatform platform = PlatformFactory.createPlatform(MyApplication.platform);
+            List<Category> categories = platform.getPopularCategory();
+            List<Room> rooms = platform.getByCategory(categories.get(0), 1);
             List<PieceHeader> pieceHeaders = new ArrayList<>();
             pieceHeaders.add(new PieceHeader("热门", "12", "www.douyu.com"));
             pieceHeaders.add(new PieceHeader("推荐", "12", "www.douyu.com"));
@@ -118,6 +120,7 @@ public class PieceFragment extends Fragment {
             super.onPreExecute();
             if(!isRefreshing) {
                 progressDialog = ProgressDialog.show(getActivity(), "", "数据载入中...", false);
+                progressDialog.setCancelable(true);
             }
         }
     }

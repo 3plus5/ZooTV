@@ -2,6 +2,7 @@ package xmu.edu.a3plus5.zootv.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, WebActivity.class);
-                intent.putExtra("url",rooms.get(position).getLink());
+                intent.putExtra("url", rooms.get(position).getLink());
                 mContext.startActivity(intent);
             }
         });

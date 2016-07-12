@@ -26,6 +26,7 @@ import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.network.PlatformFactory;
+import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.widget.MyGridView;
 
 /**
@@ -131,7 +132,7 @@ public class HistoryContentFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             manager = new LinearLayoutManager(getActivity());
-            BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
+            BasePlatform douYuPlatform = PlatformFactory.createPlatform(MyApplication.platform);
 //            List<Category> categories = douYuPlatform.getPopularCategory();
             if(category == null){
                 rooms = douYuPlatform.getByCategory(douYuPlatform.getPopularCategory().get(0), 1);
@@ -147,6 +148,7 @@ public class HistoryContentFragment extends Fragment {
             super.onPreExecute();
             if(!isRefreshing) {
                 progressDialog = ProgressDialog.show(getActivity(), "", "数据载入中...", false);
+                progressDialog.setCancelable(true);
             }
         }
     }
