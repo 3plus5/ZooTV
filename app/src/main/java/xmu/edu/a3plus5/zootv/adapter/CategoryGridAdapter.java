@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.entity.Category;
+import xmu.edu.a3plus5.zootv.ui.CategoryListActivity;
+import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.ui.RoomListActivity;
 
 /**
@@ -60,28 +63,38 @@ public class CategoryGridAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.category_item, null);
             viewHolder.circleImageView = (CircleImageView) view.findViewById(R.id.item_image);
             viewHolder.textView = (TextView) view.findViewById(R.id.item_text);
-            viewHolder.item_layout = (LinearLayout)view.findViewById(R.id.category_item);
+            viewHolder.item_layout = (LinearLayout) view.findViewById(R.id.category_item);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
         if ("home".equals(type) && i == count - 1) {
-            Picasso.with(context).load(R.drawable.push_chat_default).into( viewHolder.circleImageView);
+            Picasso.with(context).load(R.drawable.push_chat_default).into(viewHolder.circleImageView);
             viewHolder.textView.setText("更多");
+            viewHolder.item_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, CategoryListActivity.class);
+                    context.startActivity(intent);
+                }
+            });
         } else {
-            Picasso.with(context).load(categories.get(i).getPicUrl()).into( viewHolder.circleImageView);
+//            ImageLoader imageLoader = ImageLoader.getInstance();
+//            imageLoader.displayImage(categories.get(i).getPicUrl(), viewHolder.circleImageView);
+            Picasso.with(context).load(categories.get(i).getPicUrl()).into(viewHolder.circleImageView);
             viewHolder.textView.setText(categories.get(i).getName());
+
+            viewHolder.item_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, RoomListActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("category", category);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            });
         }
-        viewHolder.item_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, RoomListActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("category",category);
-                intent.putExtras(bundle);
-                context.startActivity(intent);
-            }
-        });
         return view;
     }
 

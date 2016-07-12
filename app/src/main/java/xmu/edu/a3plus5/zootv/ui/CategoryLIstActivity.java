@@ -11,9 +11,10 @@ import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.entity.Category;
+import xmu.edu.a3plus5.zootv.ui.fragment.CategoryGridFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.RoomListFragment;
 
-public class RoomListActivity extends SwipeBackActivity {
+public class CategoryListActivity extends SwipeBackActivity {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -21,18 +22,10 @@ public class RoomListActivity extends SwipeBackActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room_list);
+        setContentView(R.layout.activity_category_list);
         ButterKnife.bind(this);
-        Intent intent = getIntent();
-        Category category = (Category) intent.getSerializableExtra("category");
-        String query = (String) intent.getSerializableExtra("query");
-        if(category!=null) {
-            toolbar.setTitle(category.getName());
-            getSupportFragmentManager().beginTransaction().replace(R.id.room_list,RoomListFragment.getRoomListFragment(category)).commit();
-        }else if(query != null){
-            toolbar.setTitle(query);
-            getSupportFragmentManager().beginTransaction().replace(R.id.room_list,RoomListFragment.getRoomListFragment(query)).commit();
-        }
+        toolbar.setTitle("全部分类");
+        getSupportFragmentManager().beginTransaction().replace(R.id.category_list, CategoryGridFragment.getCategoryGridFragment()).commit();
 //        setSupportActionBar(toolbar);
         SwipeBackLayout mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);

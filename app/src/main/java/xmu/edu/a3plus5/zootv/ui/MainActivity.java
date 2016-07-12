@@ -1,5 +1,6 @@
 package xmu.edu.a3plus5.zootv.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -108,8 +109,11 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(MainActivity.this, "提交了" + query, Toast.LENGTH_SHORT).show();
-                return false;
+                Intent intent = new Intent(MainActivity.this,RoomListActivity.class);
+                intent.putExtra("query",query);
+                startActivity(intent);
+//                Toast.makeText(MainActivity.this, "提交了" + query, Toast.LENGTH_SHORT).show();
+                return true;
             }
 
             @Override
@@ -167,7 +171,7 @@ public class MainActivity extends AppCompatActivity
                 ft.replace(R.id.main_content,new CategoryFragment());
                 break;
             case 2:
-                ft.replace(R.id.main_content,RoomListFragment.getRoomListFragment(null));
+                ft.replace(R.id.main_content,RoomListFragment.getRoomListFragment("炉石传说"));
                 break;
             case 3:
                 break;

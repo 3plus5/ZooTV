@@ -92,7 +92,7 @@ public class CategoryViewPagerFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.Zoo);
+            BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
             categories = douYuPlatform.getPopularCategory();
             categoryGridAdapter = new CategoryGridAdapter(getActivity(), categories, "category");
             return null;

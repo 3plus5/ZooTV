@@ -37,6 +37,7 @@ public class RoomListFragment extends Fragment {
     PullToRefreshView pullToRefreshView;
 
     Category category;
+    String searchQuery;
 
     private boolean isRefreshing = false;
 
@@ -54,11 +55,24 @@ public class RoomListFragment extends Fragment {
         return roomListFragment;
     }
 
+    public static synchronized RoomListFragment getRoomListFragment(String searchQuery) {
+        if (roomListFragment == null) {
+            roomListFragment = new RoomListFragment();
+        }
+        if(searchQuery != null) {
+            Bundle args = new Bundle();
+            args.putSerializable("searchQuery", searchQuery);
+            roomListFragment.setArguments(args);
+        }
+        return roomListFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             category = (Category) getArguments().getSerializable("category");
+            searchQuery = (String) getArguments().getSerializable("searchQuery");
         }
     }
 
@@ -133,11 +147,13 @@ public class RoomListFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             manager = new LinearLayoutManager(getActivity());
-            BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.Zoo);
+            BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
 //            List<Category> categories = douYuPlatform.getPopularCategory();
-            if(category == null){
+            if(category == null && searchQuery == null){
                 rooms = douYuPlatform.getByCategory(douYuPlatform.getPopularCategory().get(0), 1);
-            }else {
+            }else if(searchQuery != null){
+                rooms = douYuPlatform.search(searchQuery);
+            } else{
                 rooms = douYuPlatform.getByCategory(category, 1);
             }
             adapter = new RoomListAdapter(getActivity(),rooms);
