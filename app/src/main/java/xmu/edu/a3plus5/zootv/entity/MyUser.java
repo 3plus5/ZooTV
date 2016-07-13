@@ -6,6 +6,7 @@ package xmu.edu.a3plus5.zootv.entity;
 public class MyUser {
     public static final String SINA="sina";
     public static final String QQ="qq";
+    public static final String WECHAT="wechat";
     public static final String EMAIL="email";
 
     public static String userId = "001";

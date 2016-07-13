@@ -6,23 +6,37 @@ import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
 
 public abstract class BasePlatform {
-	public static final String DouYu = "DouYu";
-	public static final String Huya = "Huya";
-	public static final String Panda = "Panda";
-	public static final String Zoo = "Zoo";
+    public static final String DouYu = "DouYu";
+    public static final String Huya = "Huya";
+    public static final String Panda = "Panda";
+    public static final String Zoo = "Zoo";
 
-	//按分类获取直播间列表
-	public abstract List<Room> getByCategory(Category category, int page);
-	//获取最热直播间列表
-	public abstract List<Category> getPopularCategory();
-	//获取搜索列表
-	public abstract List<Room> search(String keyword);
-	//获取所有分类
-	public abstract List<Category> getAllCategory();
-	//获取最热分类
-	public abstract List<Room> getMostPopular();
-	//根据id获取直播间
-	public abstract Room getRoomById(String id);
+    //按分类获取直播间列表
+    public abstract List<Room> getByCategory(Category category, int page);
 
+    //获取最热直播间列表
+    public abstract List<Category> getPopularCategory();
+
+    //获取搜索列表
+    public abstract List<Room> search(String keyword);
+
+    //获取所有分类
+    public abstract List<Category> getAllCategory();
+
+    //获取最热分类
+    public abstract List<Room> getMostPopular();
+
+    //根据id获取直播间
+    public abstract Room getRoomById(String id);
+
+    //根据名字获取分类
+    public Category getCategoryByName(String name) {
+        List<Category> categories = getAllCategory();
+        for (Category cate : categories) {
+            if (cate.getName().equals(name))
+                return cate;
+        }
+        return null;
+    }
 
 }
