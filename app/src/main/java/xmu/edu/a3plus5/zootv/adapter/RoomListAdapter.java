@@ -14,9 +14,14 @@ import android.widget.Toast;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.dao.DaoFactory;
+import xmu.edu.a3plus5.zootv.dao.UserDao;
+import xmu.edu.a3plus5.zootv.entity.History;
+import xmu.edu.a3plus5.zootv.entity.Interest;
 import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.ui.WebActivity;
 
@@ -24,10 +29,14 @@ public class RoomListAdapter extends BaseSwipeAdapter {
 
     private Context mContext;
     List<Room> rooms;
+    private UserDao userdao;
+
 
     public RoomListAdapter(Context mContext, List<Room> rooms) {
         this.rooms = rooms;
         this.mContext = mContext;
+
+        userdao= DaoFactory.getUserDao(mContext);
     }
 
     @Override
@@ -61,12 +70,28 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                 Intent intent = new Intent(mContext, WebActivity.class);
                 intent.putExtra("url", rooms.get(position).getLink());
                 mContext.startActivity(intent);
+
+                userdao.addhistory(1,1);
+                Toast.makeText(mContext, "历史记录~~", Toast.LENGTH_SHORT).show();
+                List<History> histories=userdao.selehistory(1);
+                for(int i=0;i<histories.size();i++)
+                {
+                    Toast.makeText(mContext, histories.get(i)+" ** ", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         attention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "attention", Toast.LENGTH_SHORT).show();
+
+                userdao.addinterest(1,1);
+
+                Toast.makeText(mContext, "关注成功~~", Toast.LENGTH_SHORT).show();
+                List<Interest> interests=userdao.seleinterest(1);
+                for(int i=0;i<interests.size();i++)
+                {
+                    Toast.makeText(mContext, interests.get(i)+" ** ", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         trash.setOnClickListener(new View.OnClickListener() {

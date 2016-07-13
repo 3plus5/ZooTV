@@ -26,6 +26,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.dao.DaoFactory;
+import xmu.edu.a3plus5.zootv.dao.UserDao;
+import xmu.edu.a3plus5.zootv.entity.User;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.ui.fragment.CategoryFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.HistoryTabFragment;
@@ -49,12 +52,20 @@ public class MainActivity extends AppCompatActivity
     private long exitTime = 0;
     int lastSelectedPosition = 0;
 
+    private static User myuser;
+    private UserDao userdao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+
+        myuser=new User("@drawable/room","test","123",1,1);
+        userdao= DaoFactory.getUserDao(MainActivity.this);
+        userdao.addUserbyUser(myuser);
+
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
