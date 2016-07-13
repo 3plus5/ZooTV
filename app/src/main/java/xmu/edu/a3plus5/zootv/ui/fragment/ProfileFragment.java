@@ -4,19 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.ui.LoginActivity;
+import xmu.edu.a3plus5.zootv.ui.MainActivity;
 import xmu.edu.a3plus5.zootv.ui.MyApplication;
 
 /**
@@ -42,6 +49,6 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.profile_login)
     public void login(){
         Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivityForResult(intent, 1);
+        getActivity().startActivityForResult(intent, 1);
     }
 }

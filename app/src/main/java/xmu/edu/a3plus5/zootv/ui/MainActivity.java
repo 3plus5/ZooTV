@@ -19,13 +19,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.entity.User;
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         ShareSDK.initSDK(this);
+        MyApplication.initUser();
         setSupportActionBar(toolbar);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -69,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         user_photo = (CircleImageView) header.findViewById(R.id.userPhoto);
         userName = (TextView) header.findViewById(R.id.user_name);
-        userDescription = (TextView)header.findViewById(R.id.user_description);
+        userDescription = (TextView) header.findViewById(R.id.user_description);
         user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         userDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //登出操作
+                logout();
             }
         });
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
@@ -101,6 +106,36 @@ public class MainActivity extends AppCompatActivity
 //        getSupportFragmentManager().beginTransaction().replace(R.id.ad_fragment, new AdPagerFragment()).commit();
 //        getSupportFragmentManager().beginTransaction().replace(R.id.category_fragment, new CategoryViewPagerFragment()).commit();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+    }
+
+    public void logout() {
+        new MaterialDialog.Builder(this)
+                .title("真的要退出登录吗(｡˘•ε•˘｡)")
+                .positiveText("忍心退出")
+                .negativeText("我要再耍耍")
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        MyApplication.initUser();
+                        drawer.closeDrawer(GravityCompat.START);
+                        Picasso.with(MainActivity.this).load(MyApplication.user.getUserPhoto()).into(user_photo);
+                        userName.setText(MyApplication.user.getUserName());
+                        userDescription.setText("登录后课享受更多有趣的功能");
+                        Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
+                        if (sina.isValid()){
+                            sina.removeAccount();
+                        }
+                        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+                        bottomNavigationBar.selectTab(0);
+                    }
+
+                    @Override
+                    public void onNegative(MaterialDialog dialog) {
+
+                    }
+                })
+                .show();
+
     }
 
     @Override
@@ -127,6 +162,8 @@ public class MainActivity extends AppCompatActivity
             Picasso.with(MainActivity.this).load(user.getUserPhoto()).into(user_photo);
             userName.setText(user.getUserName());
             userDescription.setText("登出");
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            bottomNavigationBar.selectTab(0);
         }
     }
 

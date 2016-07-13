@@ -48,7 +48,8 @@
         <activity
             android:name=".ui.WebActivity"
             android:hardwareAccelerated="true"
-            android:theme="@style/AppThemeBack" />
+            android:theme="@style/AppThemeBack"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.RoomListActivity"
             android:theme="@style/AppThemeBack" />
@@ -57,7 +58,8 @@
             android:theme="@style/AppThemeBack" />
         <activity
             android:name=".ui.LoginActivity"
-            android:theme="@style/AppThemeBack" >
+            android:theme="@style/AppThemeBack"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <!-- 调用新浪原生SDK，需要注册的回调activity -->
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
