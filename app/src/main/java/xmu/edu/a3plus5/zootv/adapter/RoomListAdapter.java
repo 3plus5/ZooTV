@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.ui.WebActivity;
@@ -50,6 +51,8 @@ public class RoomListAdapter extends BaseSwipeAdapter {
         ImageView trash = (ImageView) view.findViewById(R.id.trash);
         ImageView room = (ImageView) view.findViewById(R.id.room_photo);
         TextView title = (TextView) view.findViewById(R.id.room_title);
+//        CircleImageView platformLogo =  (CircleImageView)view.findViewById(R.id.platform_logo);
+//        platformLogo.setImageResource(R.drawable.douyu_logo);
         title.setText(rooms.get(position).getTitle());
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.room_up);
         Picasso.with(mContext).load(rooms.get(position).getPicUrl()).into(room);

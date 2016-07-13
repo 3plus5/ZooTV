@@ -43,7 +43,7 @@ public class WebActivity extends SwipeBackActivity {
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
         Log.d("ppurl",url);
-//        webView.loadUrl("http://www.douyu.com");
+//        webView.loadUrl("http://www.quanmin.tv");
         webView.loadUrl(url);
         WebSettings webSettings = webView.getSettings();
         webSettings.setPluginState(WebSettings.PluginState.ON);
@@ -106,7 +106,7 @@ public class WebActivity extends SwipeBackActivity {
         @Override
         public void onShowCustomView(View view, CustomViewCallback callback) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            webView.setVisibility(View.INVISIBLE);
+            webView.setVisibility(View.GONE);
             // 如果一个视图已经存在，那么立刻终止并新建一个
             if (xCustomView != null) {
                 callback.onCustomViewHidden();

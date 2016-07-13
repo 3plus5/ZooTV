@@ -143,7 +143,7 @@ public class PandaPlatform extends BasePlatform {
                 room.setPopularity(obj.getLong("person_num"));
                 room.setWatchingNumByPopularity();
 
-                room.setLink("www.panda.tv/" + obj.getString("roomid"));
+                room.setLink("http://m.panda.tv/room.html?roomid=" + room.getRoomId());
 
                 ret.add(room);
             }
@@ -170,7 +170,7 @@ public class PandaPlatform extends BasePlatform {
                 JSONObject obj = array.getJSONObject(i);
 
                 r.setRoomId(obj.getString("id"));
-                r.setLink("www.panda.tv/" + r.getRoomId());
+                r.setLink("http://m.panda.tv/room.html?roomid=" + r.getRoomId());
 
                 r.setTitle(obj.getString("name"));
 

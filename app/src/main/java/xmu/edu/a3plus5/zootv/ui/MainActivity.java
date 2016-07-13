@@ -21,11 +21,14 @@ import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.sharesdk.framework.ShareSDK;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.entity.User;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.ui.fragment.CategoryFragment;
 import xmu.edu.a3plus5.zootv.ui.fragment.HistoryTabFragment;
@@ -45,6 +48,8 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.bottom_navigation_bar)
     BottomNavigationBar bottomNavigationBar;
     CircleImageView user_photo;
+    TextView userName;
+    TextView userDescription;
 
     private long exitTime = 0;
     int lastSelectedPosition = 0;
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        ShareSDK.initSDK(this);
         setSupportActionBar(toolbar);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -61,13 +67,21 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
-        user_photo = (CircleImageView) header.findViewById(R.id.user_photo);
+        user_photo = (CircleImageView) header.findViewById(R.id.userPhoto);
+        userName = (TextView) header.findViewById(R.id.user_name);
+        userDescription = (TextView)header.findViewById(R.id.user_description);
         user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivityForResult(intent, 1);
                 drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+        userDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //登出操作
             }
         });
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
@@ -100,10 +114,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ShareSDK.stopSDK();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            //登录后返回时间
+            User user = (User) data.getSerializableExtra("userInfo");
+            Picasso.with(MainActivity.this).load(user.getUserPhoto()).into(user_photo);
+            userName.setText(user.getUserName());
+            userDescription.setText("登出");
         }
     }
 
