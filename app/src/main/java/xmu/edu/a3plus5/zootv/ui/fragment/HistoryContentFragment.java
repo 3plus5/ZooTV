@@ -38,6 +38,8 @@ public class HistoryContentFragment extends Fragment {
     @Bind(R.id.pull_to_refresh)
     PullToRefreshView pullToRefreshView;
 
+    ProgressDialog progressDialog;
+
     private Category category;
     private boolean isRefreshing = false;
 
@@ -110,12 +112,17 @@ public class HistoryContentFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        progressDialog = null;
+    }
+
     class RoomsAsyncTask extends AsyncTask<Void, Void, Void> {
 
         RoomListAdapter adapter;
         List<Room> rooms;
         LinearLayoutManager manager;
-        ProgressDialog progressDialog;
 
         @Override
         protected void onPostExecute(Void aVoid) {

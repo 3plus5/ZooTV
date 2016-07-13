@@ -36,6 +36,7 @@ public class PieceFragment extends Fragment {
     RecyclerView recyclerView;
     @Bind(R.id.pull_to_refresh)
     PullToRefreshView pullToRefreshView;
+    ProgressDialog progressDialog;
 
     private static PieceFragment pieceFragment;
     private boolean isRefreshing = false;
@@ -81,13 +82,17 @@ public class PieceFragment extends Fragment {
         new RoomsAsyncTask().execute();
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        progressDialog = null;
+    }
 
     class RoomsAsyncTask extends AsyncTask<Void, Void, Void> {
 
         MainMultiAdapter mainMultiAdapter;
         LinearLayoutManager manager;
-        ProgressDialog progressDialog;
+
 
         @Override
         protected void onPostExecute(Void aVoid) {

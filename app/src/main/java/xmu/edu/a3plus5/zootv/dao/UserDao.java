@@ -10,7 +10,7 @@ public interface UserDao {
     /*
     第三方登录
      */
-    public boolean addUserbyItem(String userPic, String userName, String userPwd);
+    public boolean addUserbyItem(String userPic, String userName);
     /*
     第三方登录2
      */

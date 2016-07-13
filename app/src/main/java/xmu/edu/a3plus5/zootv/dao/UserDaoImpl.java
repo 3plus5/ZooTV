@@ -47,13 +47,12 @@ public class UserDaoImpl implements  UserDao{
     }
 
     @Override
-    public boolean addUserbyItem(String userPic,String userName,String userPwd) {
+    public boolean addUserbyItem(String userPic,String userName) {
         boolean flag=false;
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBUtil.userPic, userPic);
         values.put(DBUtil.userName, userName);
-        values.put(DBUtil.userPwd, userPwd);
         values.put(DBUtil.signCount, 0);
         values.put(DBUtil.logCount, 0);
         long i=0;
@@ -71,7 +70,6 @@ public class UserDaoImpl implements  UserDao{
         ContentValues values = new ContentValues();
         values.put(DBUtil.userPic, user.getUserPic());
         values.put(DBUtil.userName, user.getUserName());
-        values.put(DBUtil.userPwd, user.getUserPwd());
         values.put(DBUtil.signCount, user.getSignCount());
         values.put(DBUtil.logCount, user.getLogCount());
         long i=0;

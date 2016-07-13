@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.entity.User;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 
 /**
@@ -22,6 +24,8 @@ import xmu.edu.a3plus5.zootv.network.BasePlatform;
 public class MyApplication extends Application {
     public static Context applicationContext;
     private static MyApplication instance;
+
+    public static User user;
 
     private static final String TAG = "MyApplication";
 
@@ -32,7 +36,13 @@ public class MyApplication extends Application {
         super.onCreate();
         applicationContext = this;
         instance = this;
+        user = new User();
         initImageLoader();
+    }
+
+    public static void initUser(){
+        user.setUserName("点击头像登录");
+        user.setUserPic(R.drawable.push_chat_default+"");
     }
 
     public static void setPlatform(String mplatform){

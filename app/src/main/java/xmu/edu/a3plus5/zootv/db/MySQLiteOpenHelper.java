@@ -23,7 +23,6 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
                 + DBUtil.userId + " integer primary key autoincrement,"
                 + DBUtil.userPic + " text not null,"
                 + DBUtil.userName + " text not null,"
-                + DBUtil.userPwd + " text not null,"
                 + DBUtil.signCount + " text not null,"
                 + DBUtil.logCount + " text not null);";
         db.execSQL(User_table);

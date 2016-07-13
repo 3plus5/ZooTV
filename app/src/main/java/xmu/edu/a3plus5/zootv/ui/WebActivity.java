@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.webkit.WebSettings;
@@ -43,7 +44,7 @@ public class WebActivity extends SwipeBackActivity {
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
         Log.d("ppurl",url);
-//        webView.loadUrl("http://www.douyu.com");
+//        webView.loadUrl("http://www.quanmin.tv");
         webView.loadUrl(url);
         WebSettings webSettings = webView.getSettings();
         webSettings.setPluginState(WebSettings.PluginState.ON);
@@ -101,12 +102,11 @@ public class WebActivity extends SwipeBackActivity {
 
     public class myWebChromeClient extends WebChromeClient {
         private View xprogressvideo;
-
         // 播放网络视频时全屏会被调用的方法
         @Override
         public void onShowCustomView(View view, CustomViewCallback callback) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            webView.setVisibility(View.INVISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             // 如果一个视图已经存在，那么立刻终止并新建一个
             if (xCustomView != null) {
                 callback.onCustomViewHidden();
@@ -116,20 +116,22 @@ public class WebActivity extends SwipeBackActivity {
             xCustomView = view;
             xCustomViewCallback = callback;
             video_fullView.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.INVISIBLE);
         }
-
         // 视频播放退出全屏会被调用的
         @Override
         public void onHideCustomView() {
             if (xCustomView == null)// 不是全屏播放状态
                 return;
+
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            webView.setVisibility(View.VISIBLE);
             xCustomView.setVisibility(View.GONE);
             video_fullView.removeView(xCustomView);
             xCustomView = null;
             video_fullView.setVisibility(View.GONE);
             xCustomViewCallback.onCustomViewHidden();
-            webView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -141,7 +143,6 @@ public class WebActivity extends SwipeBackActivity {
     public boolean inCustomView() {
         return (xCustomView != null);
     }
-
     /**
      * 全屏时按返加键执行退出全屏方法
      */
@@ -153,15 +154,8 @@ public class WebActivity extends SwipeBackActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            webView.getClass().getMethod("onResume").invoke(webView, (Object[]) null);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        webView.onResume();
+        webView.resumeTimers();
 
         //添加部分
         /**
@@ -176,17 +170,12 @@ public class WebActivity extends SwipeBackActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        try {
-            webView.getClass().getMethod("onPause").invoke(webView, (Object[]) null);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        webView.onPause();
+        webView.pauseTimers();
     }
 
+
+    //添加部分
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -198,12 +187,26 @@ public class WebActivity extends SwipeBackActivity {
         webView = null;
     }
 
+
+    //修改部分
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
-            webView.goBack();// 返回前一个页面
+
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+    	/* if(webView.canGoBack()){
+    		 webView.goBack();// 返回前一个页面
+             return true;
+    	 }*/
+            if (inCustomView()) {
+                // webViewDetails.loadUrl("about:blank");
+                hideCustomView();
+
+            } else if(webView.canGoBack()){
+                webView.goBack();// 返回前一个页面
+            }
             return true;
         }
+
         return super.onKeyDown(keyCode, event);
     }
 }

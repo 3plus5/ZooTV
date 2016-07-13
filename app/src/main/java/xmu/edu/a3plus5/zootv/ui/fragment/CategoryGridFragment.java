@@ -31,6 +31,7 @@ public class CategoryGridFragment extends Fragment {
 
     @Bind(R.id.gridView)
     MyGridView gridView;
+    ProgressDialog progressDialog;
 
     private static CategoryGridFragment categoryGridFragment;
 
@@ -58,10 +59,15 @@ public class CategoryGridFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        progressDialog = null;
+    }
+
     class MyAsyncTask extends AsyncTask<Void, Void, Void> {
 
         CategoryGridAdapter adapter;
-        ProgressDialog progressDialog;
 
         @Override
         protected void onPostExecute(Void aVoid) {

@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +20,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.dao.DaoFactory;
@@ -48,11 +55,13 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.bottom_navigation_bar)
     BottomNavigationBar bottomNavigationBar;
     CircleImageView user_photo;
+    TextView userName;
+    TextView userDescription;
 
     private long exitTime = 0;
     int lastSelectedPosition = 0;
 
-    private static User myuser;
+//    private static User myuser;
     private UserDao userdao;
 
     @Override
@@ -60,11 +69,12 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        ShareSDK.initSDK(this);
+        MyApplication.initUser();
         setSupportActionBar(toolbar);
 
-        myuser=new User("@drawable/room","test","123",1,1);
+//        myuser=new User("@drawable/room","test",1,1);
         userdao= DaoFactory.getUserDao(MainActivity.this);
-        userdao.addUserbyUser(myuser);
 
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -72,13 +82,21 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
-        user_photo = (CircleImageView) header.findViewById(R.id.user_photo);
+        user_photo = (CircleImageView) header.findViewById(R.id.userPhoto);
+        userName = (TextView) header.findViewById(R.id.user_name);
+        userDescription = (TextView) header.findViewById(R.id.user_description);
         user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivityForResult(intent, 1);
                 drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+        userDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
             }
         });
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
@@ -100,6 +118,36 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
     }
 
+    public void logout() {
+        new MaterialDialog.Builder(this)
+                .title("真的要退出登录吗(｡˘•ε•˘｡)")
+                .positiveText("忍心退出")
+                .negativeText("我要再耍耍")
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        MyApplication.initUser();
+                        drawer.closeDrawer(GravityCompat.START);
+                        Picasso.with(MainActivity.this).load(MyApplication.user.getUserPic()).into(user_photo);
+                        userName.setText(MyApplication.user.getUserName());
+                        userDescription.setText("登录后课享受更多有趣的功能");
+                        Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
+                        if (sina.isValid()){
+                            sina.removeAccount();
+                        }
+                        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+                        bottomNavigationBar.selectTab(0);
+                    }
+
+                    @Override
+                    public void onNegative(MaterialDialog dialog) {
+
+                    }
+                })
+                .show();
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -111,10 +159,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ShareSDK.stopSDK();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            //登录后返回时间
+        if (requestCode == 1 && data != null) {
+            User user = (User) data.getSerializableExtra("userInfo");
+            Log.d("loglog2",user.toString());
+            Picasso.with(MainActivity.this).load(user.getUserPic()).into(user_photo);
+            userName.setText(user.getUserName());
+            userDescription.setText("登出");
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            bottomNavigationBar.selectTab(0);
+
+            //登录时判断是否存入数据库
+            if(!"点击头像登录".equals(MyApplication.user.getUserName())) {
+                //不管数据库是否有数据，都返回user并赋值给MyApplication.user
+                if(true){
+                    userdao.addUserbyUser(MyApplication.user);
+                }
+            }
+
         }
     }
 

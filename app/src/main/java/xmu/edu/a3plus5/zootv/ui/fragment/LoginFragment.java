@@ -30,12 +30,24 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.PlatformDb;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.entity.MyUser;
+import xmu.edu.a3plus5.zootv.entity.User;
+import xmu.edu.a3plus5.zootv.ui.LoginActivity;
+import xmu.edu.a3plus5.zootv.ui.MainActivity;
+import xmu.edu.a3plus5.zootv.ui.MyApplication;
 
 /**
  * Created by zero on 2015/6/29.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements PlatformActionListener, Handler.Callback {
 
     private static final String TAG = "LoginFragment";
     public static final int MAIN = 1;
@@ -44,15 +56,13 @@ public class LoginFragment extends Fragment {
     private static final int MSG_AUTH_ERROR = 0x3;
     private static final int MSG_AUTH_COMPLETE = 0x4;
 
-    //    LoginCallBack loginCallBack;
+    LoginCallBack loginCallBack;
     @Bind(R.id.email_edit_text)
     EditText user_email;
     @Bind(R.id.password_edit_text)
     EditText password;
 
-    AppCompatActivity activity;
-    String mPassword;
-    String mId;
+    SwipeBackActivity activity;
     Handler handler;
 
     @Override
@@ -63,7 +73,6 @@ public class LoginFragment extends Fragment {
     String mResult = "";
     int mType;
     String mLoginType;
-//    User user = new User();
 
     public static LoginFragment newInstance(int type) {
         LoginFragment loginFragment = new LoginFragment();
@@ -99,144 +108,135 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-//    @OnClick(R.id.login_btn)
-//    public void Login() {
-//        myClickHandler();
-//    }
+    @OnClick(R.id.sina_login_btn)
+    public void onSinaLogin() {
+        Log.v(TAG, "Sina");
+        final Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
+        mLoginType = MyUser.SINA;
+        if (sina.isValid()) {
+            Log.v(TAG, "已授权");
+            getInfo(sina);
+        } else {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    authorize(sina);
+                }
+            });
+        }
 
-//    @OnClick(R.id.sina_login_btn)
-//    public void onSinaLogin(){
-//        Log.v(TAG, "Sina");
-//        final Platform sina= ShareSDK.getPlatform(SinaWeibo.NAME);
-//        mLoginType=MyUser.SINA;
-//        if(sina.isValid()){
-//            Log.v(TAG, "已授权");
-//            getInfo(sina);
-//        }else
-//        {
-//            new Handler().post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    authorize(sina);
-//                }
-//            });
-//        }
-//
-//    }
-//
-//    @OnClick(R.id.qq_login_btn)
-//    public void onQQLogin(){
-//        Log.v(TAG, "QQ");
-//        final Platform qq= ShareSDK.getPlatform(QQ.NAME);
-//        mLoginType=MyUser.QQ;
-//        if(qq.isValid()){
-//            Log.v(TAG, "已授权");
-//            getInfo(qq);
-//        }else{
-//            new Handler().post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    authorize(qq);
-//                }
-//            });
-//        }
-//
-//    }
-//
-//    private void authorize(Platform platform){
-//        if (platform==null){
-//            Log.w(TAG,"platform is null");
-//            return;
-//        }
-//        Log.i(TAG,"authorize");
-//        platform.setPlatformActionListener(this);
-//        platform.authorize();
-//        platform.SSOSetting(true);
-//        platform.showUser(null);
-//    }
-//
-//    public void getInfo(Platform platform){
-//        PlatformDb db=platform.getDb();
-//        mId=db.getUserId();
+    }
+
+    //
+    @OnClick(R.id.qq_login_btn)
+    public void onQQLogin() {
+        Log.v(TAG, "QQ");
+        final Platform qq = ShareSDK.getPlatform(QQ.NAME);
+        mLoginType = MyUser.QQ;
+        if (qq.isValid()) {
+            Log.v(TAG, "已授权");
+            getInfo(qq);
+        } else {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    authorize(qq);
+                }
+            });
+        }
+
+    }
+
+    private void authorize(Platform platform) {
+        if (platform == null) {
+            Log.w(TAG, "platform is null");
+            return;
+        }
+        Log.i(TAG, "authorize");
+        platform.setPlatformActionListener(this);
+        platform.authorize();
+        platform.SSOSetting(true);
+        platform.showUser(null);
+    }
+
+    public void getInfo(Platform platform) {
+        PlatformDb db = platform.getDb();
+        String mId = db.getUserId();
+        String mphoto = db.getUserIcon();
+        String mname = db.getUserName();
+        Intent intent = new Intent();
+        User user = new User(mphoto, mname);
+        MyApplication.user = user;
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("userInfo", user);
+        intent.putExtras(bundle);
+        getActivity().setResult(1, intent);
+        Log.d("loglog", user.toString());
+        getActivity().finish();
 //        JSONObject jsonObject=new JSONObject();
-//        try {
+
 //            jsonObject.put("action", "login" +mLoginType);
 //            jsonObject.put("userId", mId);
 //            Log.d(TAG, jsonObject.toString());
 //            new LoginTask(getContext()).execute(jsonObject.toString());
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void myClickHandler() {
-//        ConnectivityManager check = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo networkInfo = check.getActiveNetworkInfo();
-//        if (networkInfo != null && networkInfo.isConnected()) {
-//            user.setAction("loginemail");
-//            user.setUserEmail(user_email.getText().toString());
-//            mPassword=password.getText().toString();
-//            user.setUserPassword(mPassword);
-//            mLoginType=MyUser.EMAIL;
-//            new LoginTask(getActivity()).execute(new Gson().toJson(user));
-//
-//        } else {
-//        }
-//    }
-//
-//    @Override
-//    public void onComplete(Platform platform, int action, HashMap<String, Object> res) {
-//        if (action==Platform.ACTION_USER_INFOR){
-//            Log.i(TAG,"onComplete");
-//            Message msg=new Message();
-//            msg.what=MSG_AUTH_COMPLETE;
-//            msg.obj=platform;
-//            handler.sendMessage(msg);
-//        }
-//    }
-//
-//    @Override
-//    public void onError(Platform platform, int action, Throwable throwable) {
-//        if(action==Platform.ACTION_USER_INFOR){
-//            Log.i(TAG, "onError:" + throwable.getMessage() + "|" + throwable.toString());
-//            handler.sendEmptyMessage(MSG_AUTH_ERROR);
-//        }
-//        throwable.printStackTrace();
-//    }
-//
-//    @Override
-//    public void onCancel(Platform platform, int action) {
-//        if (action==Platform.ACTION_USER_INFOR){
-//            Log.i(TAG, "onCancel");
-//            handler.sendEmptyMessage(MSG_AUTH_CANCEL);
-//        }
-//    }
-//
-//    @Override
-//    public boolean handleMessage(Message msg) {
-//        switch(msg.what) {
-//            case MSG_AUTH_CANCEL: {
-//                //取消授权
-//                //materialDialog.dismiss();
-//                Log.i(TAG, "MSG_AUTH_CANCEL");
-//            } break;
-//            case MSG_AUTH_ERROR: {
-//                //授权失败
-////                materialDialog.dismiss();
-//                Log.i(TAG, "MSG_AUTH_ERROR");
-//            } break;
-//            case MSG_AUTH_COMPLETE: {
-//                //授权成功
-//                Log.i(TAG, "MSG_AUTH_COMPLETE");
-//                Platform platform=(Platform)msg.obj;
-//                getInfo(platform);
-//            } break;
-//        }
-//        return false;
-//    }
-//
-//
-//
+
+    }
+
+    @Override
+    public void onComplete(Platform platform, int action, HashMap<String, Object> res) {
+        if (action == Platform.ACTION_USER_INFOR) {
+            Log.i(TAG, "onComplete");
+            Message msg = new Message();
+            msg.what = MSG_AUTH_COMPLETE;
+            msg.obj = platform;
+            handler.sendMessage(msg);
+        }
+    }
+
+    @Override
+    public void onError(Platform platform, int action, Throwable throwable) {
+        if (action == Platform.ACTION_USER_INFOR) {
+            Log.i(TAG, "onError:" + throwable.getMessage() + "|" + throwable.toString());
+            handler.sendEmptyMessage(MSG_AUTH_ERROR);
+        }
+        throwable.printStackTrace();
+    }
+
+    @Override
+    public void onCancel(Platform platform, int action) {
+        if (action == Platform.ACTION_USER_INFOR) {
+            Log.i(TAG, "onCancel");
+            handler.sendEmptyMessage(MSG_AUTH_CANCEL);
+        }
+    }
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case MSG_AUTH_CANCEL: {
+                //取消授权
+                //materialDialog.dismiss();
+                Log.i(TAG, "MSG_AUTH_CANCEL");
+            }
+            break;
+            case MSG_AUTH_ERROR: {
+                //授权失败
+//                materialDialog.dismiss();
+                Log.i(TAG, "MSG_AUTH_ERROR");
+            }
+            break;
+            case MSG_AUTH_COMPLETE: {
+                //授权成功
+                Log.i(TAG, "MSG_AUTH_COMPLETE");
+                Platform platform = (Platform) msg.obj;
+                getInfo(platform);
+            }
+            break;
+        }
+        return false;
+    }
+
+
 //    private class LoginTask extends AsyncTask<String, Void, Boolean> {
 //        Context context;
 //        User mUser;
@@ -309,21 +309,21 @@ public class LoginFragment extends Fragment {
 //            }
 //        }
 //    }
-//
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        this.activity=(AppCompatActivity)activity;
-//        if (activity instanceof MainActivity) {
-//            loginCallBack = (LoginCallBack) activity;
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//    }
-//
-//    public interface LoginCallBack {
-//        public void onLongin(User user);
-//    }
+
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = (SwipeBackActivity) activity;
+        if (activity instanceof MainActivity) {
+            loginCallBack = (LoginCallBack) activity;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    public interface LoginCallBack {
+        public void onLongin(User user);
+    }
 }
