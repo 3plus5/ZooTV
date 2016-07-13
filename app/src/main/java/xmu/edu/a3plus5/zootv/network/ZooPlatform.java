@@ -35,6 +35,9 @@ public class ZooPlatform extends BasePlatform{
 	@Override
 	public List<Category> getPopularCategory() {
 		List<Category> categories = getAllCategory();
+		if(categories == null){
+			return null;
+		}
 		categories = categories.subList(0, 8);
 		return categories;
 	}

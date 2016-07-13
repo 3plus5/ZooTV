@@ -286,7 +286,6 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             for (int i = 0; i < mImageViews.length; i++) {
                 if (mImageViews[i] == null) {
                     ImageView imageView = new ImageView(context);
-                    Log.d("image", "image");
                     imageView.setBackgroundResource(imgIdArray[i]);
                     mImageViews[i] = imageView;
                 }

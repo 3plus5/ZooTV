@@ -23,6 +23,7 @@ import xmu.edu.a3plus5.zootv.adapter.CategoryGridAdapter;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.network.PlatformFactory;
+import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.ui.RoomListActivity;
 import xmu.edu.a3plus5.zootv.widget.MyGridView;
 
@@ -92,7 +93,7 @@ public class CategoryViewPagerFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
+            BasePlatform douYuPlatform = PlatformFactory.createPlatform(MyApplication.platform);
             categories = douYuPlatform.getPopularCategory();
             categoryGridAdapter = new CategoryGridAdapter(getActivity(), categories, "category");
             return null;

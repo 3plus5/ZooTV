@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.ui.WebActivity;
@@ -53,6 +54,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
         TextView title = (TextView) view.findViewById(R.id.room_title);
         TextView author = (TextView) view.findViewById(R.id.room_author);
         TextView audience = (TextView) view.findViewById(R.id.room_audience);
+
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.room_up);
 
         ViewHolder viewHolder = new ViewHolder(attention, share, room, title, author, audience, linearLayout);
@@ -80,7 +82,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, WebActivity.class);
-                intent.putExtra("url",rooms.get(position).getLink());
+                intent.putExtra("url", rooms.get(position).getLink());
                 mContext.startActivity(intent);
             }
         });

@@ -21,6 +21,7 @@ import xmu.edu.a3plus5.zootv.adapter.CategoryGridAdapter;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.network.PlatformFactory;
+import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.widget.MyGridView;
 
 /**
@@ -77,7 +78,7 @@ public class CategoryGridFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            BasePlatform douYuPlatform = PlatformFactory.createPlatform(BasePlatform.DouYu);
+            BasePlatform douYuPlatform = PlatformFactory.createPlatform(MyApplication.platform);
             List<Category> categories = douYuPlatform.getAllCategory();
             adapter = new CategoryGridAdapter(getActivity(), categories, "category");
             return null;
@@ -87,6 +88,7 @@ public class CategoryGridFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = ProgressDialog.show(getActivity(),"","数据载入中...",false);
+            progressDialog.setCancelable(true);
         }
     }
 
