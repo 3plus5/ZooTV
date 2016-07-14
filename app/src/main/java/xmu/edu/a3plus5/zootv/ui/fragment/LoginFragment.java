@@ -89,7 +89,7 @@ public class LoginFragment extends Fragment implements PlatformActionListener, H
         if (getArguments() != null) {
             mType = getArguments().getInt("Type");
         }
-//        handler=new Handler(this);
+        handler=new Handler(this);
     }
 
     @Override

@@ -114,6 +114,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                 if(user.getUserName().equals("点击头像登录"))
                     Toast.makeText(mContext, "请先登录哦~~", Toast.LENGTH_SHORT).show();
                 else{
+                    Log.d("useruser",user.toString());
                     if(userdao.ifhavehistory(user.getUserId(), room.getRid()))
                         userdao.deletehistory(user.getUserId(), room.getRid());
                     userdao.addhistory(user.getUserId(), room.getRid());
