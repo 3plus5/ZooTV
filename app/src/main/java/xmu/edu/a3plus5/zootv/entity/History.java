@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class History implements Serializable{
     private int historyId;     //历史记录ID
     private int userId;         //用户编号ID
-    private int roomId;         //房间编号id
+    private int rId;         //房间编号id
 
     public int getHistoryId() {
         return historyId;
@@ -24,22 +24,22 @@ public class History implements Serializable{
     }
 
     public int getRoomId() {
-        return roomId;
+        return rId;
     }
 
     public void setRoomId(int roomId) {
-        this.roomId = roomId;
+        this.rId = roomId;
     }
 
     public History(int historyId, int userId, int roomId) {
         this.historyId = historyId;
         this.userId = userId;
-        this.roomId = roomId;
+        this.rId = roomId;
     }
 
     public History(int userId, int roomId) {
         this.userId = userId;
-        this.roomId = roomId;
+        this.rId = roomId;
     }
 
     public History() {
@@ -50,7 +50,7 @@ public class History implements Serializable{
         return "History{" +
                 "historyId=" + historyId +
                 ", userId=" + userId +
-                ", roomId=" + roomId +
+                ", roomId=" + rId +
                 '}';
     }
 }

@@ -135,6 +135,12 @@ public class Room implements Comparable<Room>{
 		return String.format(" platform:%s\n title:%s\n roomId:%s\n link:%s\n cate:%s\n anchor:%s\n watchingNum:%s\n popularity:%d\n picUrl:%s\n", platform, title, roomId, link, cate, anchor, watchingNum, popularity, picUrl);
 	}
 
+	public Room(int rid, String platform, String roomId) {
+		this.rid = rid;
+		this.platform = platform;
+		this.roomId = roomId;
+	}
+
 	public void setWatchingNumByPopularity()
 	{
 		DecimalFormat df =new DecimalFormat("#.00");

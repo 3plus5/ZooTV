@@ -16,12 +16,15 @@ import android.widget.GridView;
 import com.daimajia.swipe.util.Attributes;
 import com.yalantis.phoenix.PullToRefreshView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.adapter.RoomListAdapter;
+import xmu.edu.a3plus5.zootv.dao.DaoFactory;
+import xmu.edu.a3plus5.zootv.dao.UserDao;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
@@ -58,7 +61,7 @@ public class HistoryContentFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             category = (Category) getArguments().getSerializable("category");
         }
     }
@@ -129,7 +132,7 @@ public class HistoryContentFragment extends Fragment {
             super.onPostExecute(aVoid);
             adapter.setMode(Attributes.Mode.Multiple);
             gridView.setAdapter(adapter);
-            if(progressDialog != null) {
+            if (progressDialog != null) {
                 progressDialog.dismiss();
             }
             pullToRefreshView.setRefreshing(false);
@@ -139,21 +142,28 @@ public class HistoryContentFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             manager = new LinearLayoutManager(getActivity());
-            BasePlatform douYuPlatform = PlatformFactory.createPlatform(MyApplication.platform);
-//            List<Category> categories = douYuPlatform.getPopularCategory();
-            if(category == null){
-                rooms = douYuPlatform.getByCategory(douYuPlatform.getPopularCategory().get(0), 1);
-            }else {
-                rooms = douYuPlatform.getByCategory(category, 1);
+            BasePlatform platform;
+            UserDao userdao = DaoFactory.getUserDao(getActivity());
+            List<Room> seleinterestRoom;
+            if (mPage == 1) {
+                seleinterestRoom = userdao.seleinterestRoom(MyApplication.user.getUserId());
+            } else {
+                seleinterestRoom = userdao.selehistoryRoom(MyApplication.user.getUserId());
             }
-            adapter = new RoomListAdapter(getActivity(),rooms);
+            List<Room> rooms = new ArrayList<>();
+            for (Room room : seleinterestRoom) {
+                platform = PlatformFactory.createPlatform(room.getPlatform());
+                rooms.add(platform.getRoomById(room.getRoomId()));
+                Log.d("roomifo",room.toString());
+            }
+            adapter = new RoomListAdapter(getActivity(), rooms);
             return null;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(!isRefreshing) {
+            if (!isRefreshing) {
                 progressDialog = ProgressDialog.show(getActivity(), "", "数据载入中...", false);
                 progressDialog.setCancelable(true);
             }

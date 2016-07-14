@@ -2,7 +2,7 @@ package xmu.edu.a3plus5.zootv.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
+import android.support.v4.view.GravityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -29,14 +30,18 @@ import xmu.edu.a3plus5.zootv.dao.UserDao;
 import xmu.edu.a3plus5.zootv.entity.History;
 import xmu.edu.a3plus5.zootv.entity.Interest;
 import xmu.edu.a3plus5.zootv.entity.Room;
+import xmu.edu.a3plus5.zootv.entity.User;
 import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.ui.WebActivity;
+import xmu.edu.a3plus5.zootv.ui.fragment.PieceFragment;
 
 public class RoomListAdapter extends BaseSwipeAdapter {
 
     private Context mContext;
     List<Room> rooms;
     private UserDao userdao;
+    private User user=null;
+    private Room room;
 
 
     public RoomListAdapter(Context mContext, List<Room> rooms) {
@@ -44,6 +49,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
         this.mContext = mContext;
 
         userdao = DaoFactory.getUserDao(mContext);
+        user=MyApplication.user;
     }
 
     @Override
@@ -95,17 +101,27 @@ public class RoomListAdapter extends BaseSwipeAdapter {
         viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Room room = rooms.get(position);
+                room = rooms.get(position);
+                //根据roomId 和 platform 唯一确认一个room，若数据库中有room，则不加入
+
+                if(!userdao.ifhaveRoom(room))
+                    room=userdao.addRoom(room);
                 Intent intent = new Intent(mContext, WebActivity.class);
                 intent.putExtra("url", room.getLink());
                 mContext.startActivity(intent);
-                //根据roomId 和 platform 唯一确认一个room，若数据库中有room，则不加入
+
                 //然后在history中加入room，如果之前有，则删除再插到第一条
-                userdao.addhistory(1, 1);
-                Toast.makeText(mContext, "历史记录~~", Toast.LENGTH_SHORT).show();
-                List<History> histories = userdao.selehistory(1);
-                for (int i = 0; i < histories.size(); i++) {
-                    Toast.makeText(mContext, histories.get(i) + " ** ", Toast.LENGTH_SHORT).show();
+                if(user.getUserName().equals("点击头像登录"))
+                    Toast.makeText(mContext, "请先登录哦~~", Toast.LENGTH_SHORT).show();
+                else{
+                    if(userdao.ifhavehistory(user.getUserId(), room.getRid()))
+                        userdao.deletehistory(user.getUserId(), room.getRid());
+                    userdao.addhistory(user.getUserId(), room.getRid());
+                    Toast.makeText(mContext, "成功添加历史记录~~", Toast.LENGTH_SHORT).show();
+                    List<Room> histories = userdao.selehistoryRoom(user.getUserId());
+                    for (int i = 0; i < histories.size(); i++) {
+                        Toast.makeText(mContext,  " 测试用: " + histories.get(i), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -113,14 +129,44 @@ public class RoomListAdapter extends BaseSwipeAdapter {
             @Override
             public void onClick(View view) {
 
-                userdao.addinterest(1, 1);
-                //据roomId 和 platform 唯一确认一个room，若数据库中有room，则不加入
+                room = rooms.get(position);
+                //根据roomId 和 platform 唯一确认一个room，若数据库中有room，则不加入
+                if(!userdao.ifhaveRoom(room))
+                    room=userdao.addRoom(room);
+
                 //点击查询是否被关注，并弹出相应提示
                 //查询关注表，之前有关注则删除，没关注则添加
-                Toast.makeText(mContext, "关注成功~~", Toast.LENGTH_SHORT).show();
-                List<Interest> interests = userdao.seleinterest(1);
-                for (int i = 0; i < interests.size(); i++) {
-                    Toast.makeText(mContext, interests.get(i) + " ** ", Toast.LENGTH_SHORT).show();
+                if(user.getUserName().equals("点击头像登录"))
+                    Toast.makeText(mContext, "请先登录再关注哦~~", Toast.LENGTH_SHORT).show();
+                else {
+                    if(userdao.ifhaveinterest(user.getUserId(), room.getRid())){
+                        new MaterialDialog.Builder(mContext)
+                                .title("真的要取消关注吗")
+                                .positiveText("忍心取消")
+                                .negativeText("我再看看")
+                                .callback(new MaterialDialog.ButtonCallback() {
+                                    @Override
+                                    public void onPositive(MaterialDialog dialog) {
+                                        userdao.deleteinterest(user.getUserId(), room.getRid());
+                                        Toast.makeText(mContext, "取消关注~~", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onNegative(MaterialDialog dialog) {
+                                    }
+                                })
+                                .show();
+                    }
+
+                    else {
+                        userdao.addinterest(user.getUserId(), room.getRid());
+                        Toast.makeText(mContext, "关注成功~~", Toast.LENGTH_SHORT).show();
+                        List<Room> interests = userdao.seleinterestRoom(user.getUserId());
+                        for (int i = 0; i < interests.size(); i++) {
+                            Toast.makeText(mContext,  " 测试用: " + interests.get(i), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
                 }
             }
         });

@@ -76,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/password_edit_text"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -99,12 +99,40 @@
             android:textColor="@color/white" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/social_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/email_login">
+        <TextView
+            android:id="@+id/social_l"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="其他登录"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_toLeftOf="@id/social_l"
+            android:layout_centerVertical="true"
+            android:background="@color/backgroundColorPress"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/social_l"
+            android:background="@color/backgroundColorPress"/>
+    </RelativeLayout>
+
     <Button
         android:id="@+id/sina_login_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/email_login"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/social_head"
         android:background="@drawable/login_button"
         android:backgroundTint="@color/colorPrimary"
         android:text="微博登录"

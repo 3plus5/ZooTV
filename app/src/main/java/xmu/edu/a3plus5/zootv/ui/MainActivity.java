@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity
         user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ("点击头像登录".equals(MyApplication.user.getUserName())) {
+                if ("点击头像登录" .equals(MyApplication.user.getUserName())) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivityForResult(intent, 1);
                     drawer.closeDrawer(GravityCompat.START);
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         userDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
+                if (!"点击头像登录" .equals(MyApplication.user.getUserName())) {
                     logout();
                 }
             }
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity
                         drawer.closeDrawer(GravityCompat.START);
                         Picasso.with(MainActivity.this).load(MyApplication.user.getUserPic()).into(user_photo);
                         userName.setText(MyApplication.user.getUserName());
-                        userDescription.setText("登录后课享受更多有趣的功能");
+                        userDescription.setText("登录后可享受更多有趣的功能");
                         Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
                         Platform qq = ShareSDK.getPlatform(QQ.NAME);
                         if (sina.isValid()) {
@@ -227,10 +227,10 @@ public class MainActivity extends AppCompatActivity
             bottomNavigationBar.selectTab(0);
 
             //登录时判断是否存入数据库
-            if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
+            if (!"点击头像登录" .equals(MyApplication.user.getUserName())) {
                 //不管数据库是否有数据，都返回user并赋值给MyApplication.user
-                if (true) {
-                    userdao.addUserbyUser(MyApplication.user);
+                if (userdao.selectuser(MyApplication.user) == null) {
+                    MyApplication.user = userdao.addUserbyUser(MyApplication.user);
                 }
             }
 

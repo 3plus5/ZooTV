@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Interest implements Serializable{
     private int interestId;     //关注ID
     private int userId;         //用户编号ID
-    private int roomId;        //房间编号id
+    private int rId;        //房间编号id
 
     public int getInterestId() {
         return interestId;
@@ -24,22 +24,22 @@ public class Interest implements Serializable{
     }
 
     public int getRoomId() {
-        return roomId;
+        return rId;
     }
 
     public void setRoomId(int roomId) {
-        this.roomId = roomId;
+        this.rId = roomId;
     }
 
-    public Interest(int interestId, int userId, int roomId) {
+    public Interest(int interestId, int userId, int rId) {
         this.interestId = interestId;
         this.userId = userId;
-        this.roomId = roomId;
+        this.rId = rId;
     }
 
-    public Interest(int userId, int roomId) {
+    public Interest(int userId, int rId) {
         this.userId = userId;
-        this.roomId = roomId;
+        this.rId = rId;
     }
 
     public Interest() {
@@ -50,7 +50,7 @@ public class Interest implements Serializable{
         return "Interest{" +
                 "interestId=" + interestId +
                 ", userId=" + userId +
-                ", roomId=" + roomId +
+                ", roomId=" + rId +
                 '}';
     }
 }
