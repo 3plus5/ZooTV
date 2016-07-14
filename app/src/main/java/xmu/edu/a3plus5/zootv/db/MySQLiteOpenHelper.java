@@ -48,6 +48,14 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
 //                +"foreign key(" + DBUtil.userId +") references" + DBUtil.User_TABLE_NAME + "("+ DBUtil.userId +")"
 //                +"foreign key(" + DBUtil.roomId +") references" + DBUtil.Room_TABLE_NAME + "("+ DBUtil.roomId +");";
         db.execSQL(History_table);
+
+        final String Propensity_table = "CREATE TABLE " + DBUtil.Propensity_TABLE_NAME + " ( "
+                + DBUtil.propensityId + " integer primary key autoincrement,"
+                + DBUtil.userId + " integer,"
+                + DBUtil.label + " text not null); ";
+//                +"foreign key(" + DBUtil.userId +") references" + DBUtil.User_TABLE_NAME + "("+ DBUtil.userId +")"
+//                +"foreign key(" + DBUtil.roomId +") references" + DBUtil.Room_TABLE_NAME + "("+ DBUtil.roomId +");";
+        db.execSQL(Propensity_table);
     }
 
     @Override

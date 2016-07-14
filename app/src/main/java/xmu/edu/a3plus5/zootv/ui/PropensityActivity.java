@@ -1,13 +1,10 @@
 package xmu.edu.a3plus5.zootv.ui;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,11 +23,9 @@ import xmu.edu.a3plus5.zootv.adapter.TextTagsAdapter;
 import xmu.edu.a3plus5.zootv.dao.DaoFactory;
 import xmu.edu.a3plus5.zootv.dao.UserDao;
 import xmu.edu.a3plus5.zootv.entity.Category;
-import xmu.edu.a3plus5.zootv.entity.Propensity;
 import xmu.edu.a3plus5.zootv.entity.User;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.network.PlatformFactory;
-import xmu.edu.a3plus5.zootv.network.ZooPlatform;
 import xmu.edu.a3plus5.zootv.widget.FlowLayout;
 
 public class PropensityActivity extends AppCompatActivity {
@@ -43,7 +38,7 @@ public class PropensityActivity extends AppCompatActivity {
     private TagCloudView tcy_hot_label;
     private FlowLayoutAdapter mMyLabelAdapter;
     private TextTagsAdapter mHotLabelAdapter;
-    private List<String> MyLabelLists, HotLabelLists;
+    private List<String> myLabelLists, HotLabelLists;
 
     private UserDao userDao;
     private User user = null;
@@ -61,8 +56,6 @@ public class PropensityActivity extends AppCompatActivity {
         user = MyApplication.user;
 
         new MyAsyncTask().execute();
-        initView();
-        initData();
     }
 
     private void initView() {
@@ -85,14 +78,14 @@ public class PropensityActivity extends AppCompatActivity {
         TextTagsAdapter.MyOnClickListener myOnClickListener = new TextTagsAdapter.MyOnClickListener() {
             @Override
             public void myOnClick(int position, String content) {
-                if (MyLabelLists.size() < 5) {
-                    Boolean isExits = isExist(MyLabelLists,
+                if (myLabelLists.size() < 5) {
+                    Boolean isExits = isExist(myLabelLists,
                             HotLabelLists.get(position));
                     if (isExits) {
                         Toast.makeText(PropensityActivity.this, "此标签已经添加啦", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    MyLabelLists.add(HotLabelLists.get(position));
+                    myLabelLists.add(HotLabelLists.get(position));
                     ChangeMyLabels();
                 } else {
                     Toast.makeText(PropensityActivity.this, "最多只能添加5个标签", Toast.LENGTH_LONG).show();
@@ -102,10 +95,10 @@ public class PropensityActivity extends AppCompatActivity {
         mHotLabelAdapter.setMyOnClickListener(myOnClickListener);
         tcy_hot_label.setAdapter(mHotLabelAdapter);
 
-        MyLabelLists = new ArrayList<>();
-        MyLabelLists = userDao.selelabels(user.getUserId());
-
-        mMyLabelAdapter = new FlowLayoutAdapter(PropensityActivity.this, MyLabelLists);
+        myLabelLists = new ArrayList<>();
+        myLabelLists = userDao.selelabels(user.getUserId());
+        mMyLabelAdapter = new FlowLayoutAdapter(PropensityActivity.this, myLabelLists);
+        ChangeMyLabels();
         tcy_my_label.setAdapter(mMyLabelAdapter);
         tcy_my_label.setItemClickListener(new TagCloudLayoutItemOnClick(0));
 
@@ -122,9 +115,9 @@ public class PropensityActivity extends AppCompatActivity {
      * 刷新我的标签数据
      */
     private void ChangeMyLabels() {
-        tv_remind.setVisibility(MyLabelLists.size() > 0 ? View.GONE
+        tv_remind.setVisibility(myLabelLists.size() > 0 ? View.GONE
                 : View.VISIBLE);
-        tcy_my_label.setVisibility(MyLabelLists.size() > 0 ? View.VISIBLE
+        tcy_my_label.setVisibility(myLabelLists.size() > 0 ? View.VISIBLE
                 : View.GONE);
         mMyLabelAdapter.notifyDataSetChanged();
     }
@@ -145,7 +138,7 @@ public class PropensityActivity extends AppCompatActivity {
         public void itemClick(int position) {
             switch (index) {
                 case 0:
-                    MyLabelLists.remove(MyLabelLists.get(position));
+                    myLabelLists.remove(myLabelLists.get(position));
                     ChangeMyLabels();
                     break;
                 default:
@@ -184,7 +177,7 @@ public class PropensityActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.propensity_done_button) {
             userDao.deletelabels(user.getUserId());
-            userDao.addlabel(user.getUserId(), MyLabelLists);
+            userDao.addlabel(user.getUserId(), myLabelLists);
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -202,6 +195,8 @@ public class PropensityActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            initView();
+            initData();
             progressDialog.dismiss();
         }
 
