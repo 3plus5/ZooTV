@@ -118,7 +118,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                         userdao.deletehistory(user.getUserId(), room.getRid());
                     userdao.addhistory(user.getUserId(), room.getRid());
                     Toast.makeText(mContext, "成功添加历史记录~~", Toast.LENGTH_SHORT).show();
-                    List<History> histories = userdao.selehistory(user.getUserId());
+                    List<Room> histories = userdao.selehistoryRoom(user.getUserId());
                     for (int i = 0; i < histories.size(); i++) {
                         Toast.makeText(mContext,  " 测试用: " + histories.get(i), Toast.LENGTH_SHORT).show();
                     }
@@ -161,7 +161,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                     else {
                         userdao.addinterest(user.getUserId(), room.getRid());
                         Toast.makeText(mContext, "关注成功~~", Toast.LENGTH_SHORT).show();
-                        List<Interest> interests = userdao.seleinterest(user.getUserId());
+                        List<Room> interests = userdao.seleinterestRoom(user.getUserId());
                         for (int i = 0; i < interests.size(); i++) {
                             Toast.makeText(mContext,  " 测试用: " + interests.get(i), Toast.LENGTH_SHORT).show();
 
