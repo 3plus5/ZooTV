@@ -1,5 +1,7 @@
 package xmu.edu.a3plus5.zootv.network;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,6 +18,7 @@ public class ZooPlatform extends BasePlatform{
 		platforms = new ArrayList<>();
 		platforms.add(PlatformFactory.createPlatform(DouYu));
 		platforms.add(PlatformFactory.createPlatform(Panda));
+		platforms.add(PlatformFactory.createPlatform(ZhanQi));
 	}
 	
 
@@ -38,6 +41,7 @@ public class ZooPlatform extends BasePlatform{
 		if(categories == null){
 			return null;
 		}
+		Log.d("catesize",categories.size()+"");
 		categories = categories.subList(0, 8);
 		return categories;
 	}
@@ -46,34 +50,47 @@ public class ZooPlatform extends BasePlatform{
 	public List<Room> search(String keyword) {
 		List<Room> rooms = new ArrayList<>();
 		for(BasePlatform platform : platforms)
-			rooms.addAll(platform.search(keyword));
+		{
+			List<Room> temp = platform.search(keyword);
+			if(temp != null)
+				rooms.addAll(temp);
+		}
 		Collections.sort(rooms);
 		return rooms;
 	}
 
 	@Override
 	public List<Category> getAllCategory() {
-		List<Category> categories = platforms.get(0).getAllCategory();
+		if(categories != null)
+			return categories;
+		categories = platforms.get(0).getAllCategory();
 		for(int i = 1; i < platforms.size(); i++)
 		{
 			List<Category> cates = platforms.get(i).getAllCategory();
-			for(Category t : categories)
-				for(Category c: cates)
+
+			categories.addAll(cates);
+			for(int j = 0; j < categories.size(); j++)
+			{
+				for(int k = j + 1; k < categories.size(); k++)
 				{
-					if(t.getName().equals(c.getName()))
+					if(categories.get(j).getName().equals(categories.get(k).getName()))
 					{
-						t.getCateMap().putAll(c.getCateMap());
+						categories.get(j).getCateMap().putAll(categories.get(k).getCateMap());
+						categories.remove(k);
+						break;
 					}
 				}
+			}
 		}
-		
+
 		List<Category> cates = new ArrayList<>();
 		for(Category category : categories)
 		{
 			if(category.getCateMap().size() > 1)
 				cates.add(category);
 		}
-		return cates;
+		categories = cates;
+		return categories;
 	}
 
 	@Override

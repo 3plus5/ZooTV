@@ -67,6 +67,8 @@ public class DouYuPlatform extends BasePlatform {
 
     @Override
     public List<Category> getAllCategory() {
+        if(categories != null)
+            return categories;
         Document doc = null;
         try {
             doc = Jsoup.connect("http://www.douyu.com/directory").get();

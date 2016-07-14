@@ -182,6 +182,7 @@ public class LoginFragment extends Fragment implements PlatformActionListener, H
         String mId = db.getUserId();
         String mphoto = db.getUserIcon();
         String mname = db.getUserName();
+        Log.d("loglog",mphoto);
         Intent intent = new Intent();
         User user = new User(mphoto, mname);
         MyApplication.user = user;

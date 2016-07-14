@@ -31,6 +31,7 @@ import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.dao.DaoFactory;
@@ -88,15 +89,21 @@ public class MainActivity extends AppCompatActivity
         user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivityForResult(intent, 1);
-                drawer.closeDrawer(GravityCompat.START);
+                if("点击头像登录".equals(MyApplication.user.getUserName())) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, 1);
+                    drawer.closeDrawer(GravityCompat.START);
+                }else{
+                    logout();
+                }
             }
         });
         userDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                logout();
+                if(!"点击头像登录".equals(MyApplication.user.getUserName())) {
+                    logout();
+                }
             }
         });
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
@@ -132,8 +139,12 @@ public class MainActivity extends AppCompatActivity
                         userName.setText(MyApplication.user.getUserName());
                         userDescription.setText("登录后课享受更多有趣的功能");
                         Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
+                        Platform qq = ShareSDK.getPlatform(QQ.NAME);
                         if (sina.isValid()){
                             sina.removeAccount();
+                        }
+                        if(qq.isValid()){
+                            qq.removeAccount();
                         }
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
                         bottomNavigationBar.selectTab(0);
@@ -265,8 +276,11 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
             bottomNavigationBar.selectTab(0);
             setTitle("斗鱼专区");
-        } else if (id == R.id.huya) {
-
+        } else if (id == R.id.zhanqi) {
+            MyApplication.setPlatform(BasePlatform.ZhanQi);
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            bottomNavigationBar.selectTab(0);
+            setTitle("战旗专区");
         } else if (id == R.id.xiongmao) {
             MyApplication.setPlatform(BasePlatform.Panda);
             getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();

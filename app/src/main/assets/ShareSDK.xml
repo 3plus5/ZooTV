@@ -61,13 +61,13 @@
     
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
 	<!--default-->
-	<!--<SinaWeibo-->
-		<!--Id="1"-->
-		<!--SortId="1"-->
-		<!--AppKey="568898243"-->
-		<!--AppSecret="38a4f8204cc784f81f9f0daaf31e02e3"-->
-		<!--RedirectUrl="http://www.sharesdk.cn"-->
-		<!--Enable="true" />-->
+	<SinaWeibo
+		Id="1"
+		SortId="1"
+		AppKey="568898243"
+		AppSecret="38a4f8204cc784f81f9f0daaf31e02e3"
+		RedirectUrl="http://www.sharesdk.cn"
+		Enable="true" />
 
 	<!--aplus-->
 	<!--<SinaWeibo-->
@@ -80,13 +80,13 @@
 		<!--Enable="true" />-->
 
 	<!--zootv-->
-    <SinaWeibo
-        Id="1"
-        SortId="1"
-		AppKey="2673402643"
-		AppSecret="2e8cc419d4b2a4c0845608081706ac59"
-        RedirectUrl="http://www.sharesdk.cn"
-        Enable="true" />
+    <!--<SinaWeibo-->
+        <!--Id="1"-->
+        <!--SortId="1"-->
+		<!--AppKey="2673402643"-->
+		<!--AppSecret="2e8cc419d4b2a4c0845608081706ac59"-->
+        <!--RedirectUrl="http://www.sharesdk.cn"-->
+        <!--Enable="true" />-->
 
     <TencentWeibo
         Id="2" 
@@ -373,7 +373,7 @@
     
      <Alipay
         Id="52"
-        SortId="52"  
+        SortId="52"
         AppId="2015072400185895"
         Enable="true"/>
 
