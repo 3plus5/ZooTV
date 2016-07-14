@@ -116,7 +116,6 @@ public class PropensityActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
     }
 
     /**

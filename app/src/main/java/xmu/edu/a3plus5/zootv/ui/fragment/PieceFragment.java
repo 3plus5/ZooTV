@@ -94,6 +94,7 @@ public class PieceFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        progressDialog.dismiss();
         progressDialog = null;
     }
 

@@ -62,6 +62,7 @@ public class CategoryGridFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        progressDialog.dismiss();
         progressDialog = null;
     }
 
@@ -79,7 +80,8 @@ public class CategoryGridFragment extends Fragment {
             gridView.setLayoutParams(params);
             gridView.setColumnWidth(dm.widthPixels / NUM);
             gridView.setStretchMode(GridView.NO_STRETCH);
-            progressDialog.dismiss();
+            if (progressDialog != null)
+                progressDialog.dismiss();
         }
 
         @Override
@@ -93,7 +95,7 @@ public class CategoryGridFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(getActivity(),"","数据载入中...",false);
+            progressDialog = ProgressDialog.show(getActivity(), "", "数据载入中...", false);
             progressDialog.setCancelable(true);
         }
     }
