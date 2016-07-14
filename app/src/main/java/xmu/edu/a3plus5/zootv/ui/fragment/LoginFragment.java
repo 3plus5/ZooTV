@@ -36,6 +36,7 @@ import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.entity.MyUser;
@@ -124,7 +125,6 @@ public class LoginFragment extends Fragment implements PlatformActionListener, H
                 }
             });
         }
-
     }
 
     //
@@ -141,6 +141,24 @@ public class LoginFragment extends Fragment implements PlatformActionListener, H
                 @Override
                 public void run() {
                     authorize(qq);
+                }
+            });
+        }
+
+    }
+
+    public void onWeChatLogin() {
+        Log.v(TAG, "webchat");
+        final Platform wechat = ShareSDK.getPlatform(Wechat.NAME);
+        mLoginType = MyUser.WECHAT;
+        if (wechat.isValid()) {
+            Log.v(TAG, "已授权");
+            getInfo(wechat);
+        } else {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    authorize(wechat);
                 }
             });
         }
@@ -164,13 +182,15 @@ public class LoginFragment extends Fragment implements PlatformActionListener, H
         String mId = db.getUserId();
         String mphoto = db.getUserIcon();
         String mname = db.getUserName();
+        Log.d("loglog",mphoto);
         Intent intent = new Intent();
-        User user = new User(mId, mname, mphoto);
+        User user = new User(mphoto, mname);
         MyApplication.user = user;
         Bundle bundle = new Bundle();
         bundle.putSerializable("userInfo", user);
         intent.putExtras(bundle);
         getActivity().setResult(1, intent);
+        Log.d("loglog", user.toString());
         getActivity().finish();
 //        JSONObject jsonObject=new JSONObject();
 

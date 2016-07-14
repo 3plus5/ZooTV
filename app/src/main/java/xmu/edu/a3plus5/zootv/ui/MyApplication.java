@@ -37,9 +37,12 @@ public class MyApplication extends Application {
         applicationContext = this;
         instance = this;
         user = new User();
-        user.setUserName("点击头像登录");
-        user.setUserPhoto(R.drawable.push_chat_default+"");
         initImageLoader();
+    }
+
+    public static void initUser(){
+        user.setUserName("点击头像登录");
+        user.setUserPic(R.drawable.push_chat_default+"");
     }
 
     public static void setPlatform(String mplatform){

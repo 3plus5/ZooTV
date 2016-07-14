@@ -36,6 +36,7 @@ public class PieceFragment extends Fragment {
     RecyclerView recyclerView;
     @Bind(R.id.pull_to_refresh)
     PullToRefreshView pullToRefreshView;
+    ProgressDialog progressDialog;
 
     private static PieceFragment pieceFragment;
     private boolean isRefreshing = false;
@@ -83,13 +84,17 @@ public class PieceFragment extends Fragment {
         new RoomsAsyncTask().execute();
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        progressDialog = null;
+    }
 
     class RoomsAsyncTask extends AsyncTask<Void, Void, Void> {
 
         MainMultiAdapter mainMultiAdapter;
         LinearLayoutManager manager;
-        ProgressDialog progressDialog;
+
 
         @Override
         protected void onPostExecute(Void aVoid) {
@@ -113,7 +118,11 @@ public class PieceFragment extends Fragment {
             pieceHeaders.add(new PieceHeader("热门", "12", "www.douyu.com"));
             pieceHeaders.add(new PieceHeader("推荐", "12", "www.douyu.com"));
             pieceHeaders.add(new PieceHeader("英雄联盟", "12", "www.douyu.com"));
-            mainMultiAdapter = new MainMultiAdapter(getActivity(), pieceHeaders, rooms.subList(0,10), categories);
+            if(rooms.size() > 10) {
+                mainMultiAdapter = new MainMultiAdapter(getActivity(), pieceHeaders, rooms.subList(0, 10), categories);
+            }else{
+                mainMultiAdapter = new MainMultiAdapter(getActivity(), pieceHeaders, rooms, categories);
+            }
             return null;
         }
 

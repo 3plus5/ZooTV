@@ -4,6 +4,8 @@ package xmu.edu.a3plus5.zootv.entity;
 import java.text.DecimalFormat;
 
 public class Room implements Comparable<Room>{
+
+	private int rid;                //编号
 	private String link;	  		//链接
 	private String title;	    	//标题
 	private String anchor;			//主播
@@ -30,7 +32,13 @@ public class Room implements Comparable<Room>{
 		this.cate = cate;
 	}
 
+	public int getRid() {
+		return rid;
+	}
 
+	public void setRid(int rid) {
+		this.rid = rid;
+	}
 
 	public String getLink() {
 		return link;

@@ -49,7 +49,9 @@ public class PandaPlatform extends BasePlatform {
 
     @Override
     public List<Category> getAllCategory() {
-        ArrayList<Category> retList = new ArrayList<Category>();
+        if(categories != null)
+            return categories;
+        categories = new ArrayList<Category>();
 
         String jsonLink = "http://static.api.m.panda.tv/android_hd/cate.json";
 
@@ -71,14 +73,14 @@ public class PandaPlatform extends BasePlatform {
 
                 cate.setPicUrl(obj.getString("img"));
 
-                retList.add(cate);
+                categories.add(cate);
             }
         } catch (IOException | JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        return retList;
+        return categories;
     }
 
     @Override
