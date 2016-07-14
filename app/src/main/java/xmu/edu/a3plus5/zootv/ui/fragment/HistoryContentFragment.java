@@ -118,13 +118,13 @@ public class HistoryContentFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        progressDialog.dismiss();
         progressDialog = null;
     }
 
     class RoomsAsyncTask extends AsyncTask<Void, Void, Void> {
 
         RoomListAdapter adapter;
-        List<Room> rooms;
         LinearLayoutManager manager;
 
         @Override
@@ -145,16 +145,18 @@ public class HistoryContentFragment extends Fragment {
             BasePlatform platform;
             UserDao userdao = DaoFactory.getUserDao(getActivity());
             List<Room> seleinterestRoom;
-            if (mPage == 1) {
-                seleinterestRoom = userdao.seleinterestRoom(MyApplication.user.getUserId());
-            } else {
-                seleinterestRoom = userdao.selehistoryRoom(MyApplication.user.getUserId());
-            }
             List<Room> rooms = new ArrayList<>();
-            for (Room room : seleinterestRoom) {
-                platform = PlatformFactory.createPlatform(room.getPlatform());
-                rooms.add(platform.getRoomById(room.getRoomId()));
-                Log.d("roomifo",room.toString());
+            if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
+                if (mPage == 1) {
+                    seleinterestRoom = userdao.seleinterestRoom(MyApplication.user.getUserId());
+                } else {
+                    seleinterestRoom = userdao.selehistoryRoom(MyApplication.user.getUserId());
+                }
+                for (Room room : seleinterestRoom) {
+                    platform = PlatformFactory.createPlatform(room.getPlatform());
+                    rooms.add(platform.getRoomById(room.getRoomId()));
+                    Log.d("roomifo", room.toString());
+                }
             }
             adapter = new RoomListAdapter(getActivity(), rooms);
             return null;

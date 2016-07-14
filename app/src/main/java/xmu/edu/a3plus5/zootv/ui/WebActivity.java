@@ -43,7 +43,7 @@ public class WebActivity extends SwipeBackActivity {
 
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
-        Log.d("ppurl",url);
+        Log.d("ppurl", url);
 //        webView.loadUrl("http://www.quanmin.tv");
         webView.loadUrl(url);
         WebSettings webSettings = webView.getSettings();
@@ -102,6 +102,7 @@ public class WebActivity extends SwipeBackActivity {
 
     public class myWebChromeClient extends WebChromeClient {
         private View xprogressvideo;
+
         // 播放网络视频时全屏会被调用的方法
         @Override
         public void onShowCustomView(View view, CustomViewCallback callback) {
@@ -118,6 +119,7 @@ public class WebActivity extends SwipeBackActivity {
             video_fullView.setVisibility(View.VISIBLE);
             webView.setVisibility(View.INVISIBLE);
         }
+
         // 视频播放退出全屏会被调用的
         @Override
         public void onHideCustomView() {
@@ -143,6 +145,7 @@ public class WebActivity extends SwipeBackActivity {
     public boolean inCustomView() {
         return (xCustomView != null);
     }
+
     /**
      * 全屏时按返加键执行退出全屏方法
      */
@@ -171,7 +174,7 @@ public class WebActivity extends SwipeBackActivity {
     protected void onPause() {
         super.onPause();
         webView.onPause();
-        webView.pauseTimers();
+//        webView.pauseTimers();
     }
 
 
@@ -192,17 +195,19 @@ public class WebActivity extends SwipeBackActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode == KeyEvent.KEYCODE_BACK ) {
-    	/* if(webView.canGoBack()){
-    		 webView.goBack();// 返回前一个页面
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        /* if(webView.canGoBack()){
+             webView.goBack();// 返回前一个页面
              return true;
     	 }*/
             if (inCustomView()) {
                 // webViewDetails.loadUrl("about:blank");
                 hideCustomView();
 
-            } else if(webView.canGoBack()){
+            } else if (webView.canGoBack()) {
                 webView.goBack();// 返回前一个页面
+            } else {
+                super.onKeyDown(keyCode, event);
             }
             return true;
         }
