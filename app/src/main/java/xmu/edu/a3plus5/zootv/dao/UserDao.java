@@ -36,7 +36,7 @@ public interface UserDao {
     /*
     查看我的关注兴趣
      */
-    public List<Interest> seleinterest(int userid);
+    public List<Room> seleinterestRoom(int userid);
     /*
     加入用户历史观看记录
      */
@@ -52,7 +52,7 @@ public interface UserDao {
     /*
     查看我的历史记录
      */
-    public List<History> selehistory(int userid);
+    public List<Room> selehistoryRoom(int userid);
 
     /*
     添加我的选择标签
@@ -67,10 +67,14 @@ public interface UserDao {
     /*
     添加房间记录
     */
-    public boolean addRoom(Room room);
+    public Room addRoom(Room room);
     /*
     判断房间是否存在
     */
     public boolean ifhaveRoom(Room room);
-    
+    /*
+    根据信息获取房间
+     */
+    public Room selectroom(Room room);
+
 }

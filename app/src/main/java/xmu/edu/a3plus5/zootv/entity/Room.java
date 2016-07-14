@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 
 public class Room implements Comparable<Room>{
 
-	private int rid;               //编号
+	private int rid;                //编号
 	private String link;	  		//链接
 	private String title;	    	//标题
 	private String anchor;			//主播
@@ -133,6 +133,12 @@ public class Room implements Comparable<Room>{
 	public String toString()
 	{
 		return String.format(" platform:%s\n title:%s\n roomId:%s\n link:%s\n cate:%s\n anchor:%s\n watchingNum:%s\n popularity:%d\n picUrl:%s\n", platform, title, roomId, link, cate, anchor, watchingNum, popularity, picUrl);
+	}
+
+	public Room(int rid, String platform, String roomId) {
+		this.rid = rid;
+		this.platform = platform;
+		this.roomId = roomId;
 	}
 
 	public void setWatchingNumByPopularity()

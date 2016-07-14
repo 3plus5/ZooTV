@@ -40,6 +40,10 @@ public class PlatformFactory {
                 return (T) createPlatform(PandaPlatform.class);
             case BasePlatform.Zoo:
                 return (T) createPlatform(ZooPlatform.class);
+            case BasePlatform.ZhanQi:
+                return (T) createPlatform(ZhanQiPlatform.class);
+            case BasePlatform.QuanMin:
+                return (T) createPlatform(QuanMinPlatform.class);
             default:
                 return null;
         }

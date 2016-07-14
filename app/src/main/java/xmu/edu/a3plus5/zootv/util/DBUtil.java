@@ -19,7 +19,7 @@ public class DBUtil {
     public static final String signCount="signCount";
     public static final String logCount="logCount";
 
-    public static final String rid="rid";
+    public static final String rid="rId";
     public static final String roomId="roomId";
     public static final String link="link";
     public static final String title="title";

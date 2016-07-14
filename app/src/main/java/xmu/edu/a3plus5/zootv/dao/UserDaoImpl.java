@@ -76,6 +76,7 @@ public class UserDaoImpl implements  UserDao{
         long i=0;
         i = db.insert(DBUtil.User_TABLE_NAME, null, values);
         User myuser=selectuser(user);
+        close(db);
         return myuser;
     }
 
@@ -83,7 +84,7 @@ public class UserDaoImpl implements  UserDao{
         User myuser=null;
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[]={DBUtil.userId,DBUtil.userName,DBUtil.userPic,DBUtil.signCount,DBUtil.logCount};
-        String selection=DBUtil.userName+"="+user.getUserName()+" and "+DBUtil.userPic+"="+user.getUserPic();
+        String selection=DBUtil.userName+"='"+user.getUserName()+"' and "+DBUtil.userPic+"='"+user.getUserPic()+"'";
         Cursor cur=db.query(DBUtil.User_TABLE_NAME,columns,selection,null,null,null,null,null);
         if(cur.getCount()!=0){
             cur.moveToFirst();
@@ -166,42 +167,70 @@ public class UserDaoImpl implements  UserDao{
         db.delete(DBUtil.History_TABLE_NAME,whereClause,whereargs);
     }
 
-    public List<Interest> seleinterest(int userid){
-        List<Interest> myinterests=new ArrayList<Interest>();
+    public List<Room> seleinterestRoom(int userid){
+        List<Integer> rids=new ArrayList<Integer>();
         SQLiteDatabase db = helper.getReadableDatabase();
-        String columns[]={DBUtil.interestId,DBUtil.rid};
+        String columns[]={DBUtil.rid};
         String selection=DBUtil.userId+"="+userid;
         Cursor cur=db.query(DBUtil.Interest_TABLE_NAME,columns,selection,null,null,null,null,null);
         if(cur.getCount()!=0){
             cur.moveToFirst();
             do{
-                int interestid=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.interestId));
                 int rId=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.rid));
-                Interest interest=new Interest(interestid,userid,rId);
-                myinterests.add(interest);
+                rids.add(rId);
             }while(cur.moveToNext());
         }
+
+        List<Room> myrooms=new ArrayList<Room>();
+        for(int i=0;i<rids.size();i++){
+            String columns2[]={DBUtil.platform,DBUtil.roomId};
+            String selection2=DBUtil.rid+"="+rids.get(i);
+            cur=db.query(DBUtil.Interest_TABLE_NAME,columns2,selection2,null,null,null,null,null);
+            if(cur.getCount()!=0){
+                cur.moveToFirst();
+                do{
+                    String platform=cur.getString(cur.getColumnIndexOrThrow(DBUtil.platform));
+                    String roomId=cur.getString(cur.getColumnIndexOrThrow(DBUtil.roomId));
+                    Room myroom=new Room(rids.get(i),platform,roomId);
+                    myrooms.add(myroom);
+                }while(cur.moveToNext());
+            }
+        }
         close(db,cur);
-        return myinterests;
+        return myrooms;
     }
 
-    public List<History> selehistory(int userid){
-        List<History> myhistorys=new ArrayList<History>();
+    public List<Room> selehistoryRoom(int userid){
+        List<Integer> rids=new ArrayList<Integer>();
         SQLiteDatabase db = helper.getReadableDatabase();
-        String columns[]={DBUtil.historyId,DBUtil.rid};
+        String columns[]={DBUtil.rid};
         String selection=DBUtil.userId+"="+userid;
         Cursor cur=db.query(DBUtil.History_TABLE_NAME,columns,selection,null,null,null,null,null);
         if(cur.getCount()!=0){
             cur.moveToFirst();
             do{
-                int historyid=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.historyId));
                 int rId=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.rid));
-                History history=new History(historyid,userid,rId);
-                myhistorys.add(history);
+                rids.add(rId);
             }while(cur.moveToNext());
         }
+
+        List<Room> myrooms=new ArrayList<Room>();
+        for(int i=0;i<rids.size();i++){
+            String columns2[]={DBUtil.platform,DBUtil.roomId};
+            String selection2=DBUtil.rid+"="+rids.get(i);
+            cur=db.query(DBUtil.History_TABLE_NAME,columns2,selection2,null,null,null,null,null);
+            if(cur.getCount()!=0){
+                cur.moveToFirst();
+                do{
+                    String platform=cur.getString(cur.getColumnIndexOrThrow(DBUtil.platform));
+                    String roomId=cur.getString(cur.getColumnIndexOrThrow(DBUtil.roomId));
+                    Room myroom=new Room(rids.get(i),platform,roomId);
+                    myrooms.add(myroom);
+                }while(cur.moveToNext());
+            }
+        }
         close(db,cur);
-        return myhistorys;
+        return myrooms;
     }
 
     public boolean addlabel(int userid,String[] labels){
@@ -242,7 +271,7 @@ public class UserDaoImpl implements  UserDao{
         return mylabels;
     }
 
-    public boolean addRoom(Room room){
+    public Room addRoom(Room room){
         boolean flag=false;
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -250,10 +279,9 @@ public class UserDaoImpl implements  UserDao{
         values.put(DBUtil.roomId , room.getRoomId());
         long i=0;
         i = db.insert(DBUtil.Room_TABLE_NAME, null, values);
-        if(i!=0)
-            flag=true;
+        Room myroom=selectroom(room);
         close(db);
-        return flag;
+        return myroom;
     }
 
     public boolean ifhaveRoom(Room room){
@@ -267,5 +295,21 @@ public class UserDaoImpl implements  UserDao{
             flag=true;
         close(db,cur);
         return flag;
+    }
+
+    public Room selectroom(Room room){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String columns[]={DBUtil.rid,DBUtil.platform,DBUtil.roomId};
+        String selection=DBUtil.platform+"='"+room.getPlatform()+"' and "+DBUtil.roomId+"='"+room.getRoomId() +"'";
+        Cursor cur=db.query(DBUtil.Room_TABLE_NAME,columns,selection,null,null,null,null,null);
+        if(cur.getCount()!=0){
+            cur.moveToFirst();
+            do{
+                int rid=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.rid));
+                room.setRid(rid);
+            }while(cur.moveToNext());
+        }
+        close(db,cur);
+        return room;
     }
 }

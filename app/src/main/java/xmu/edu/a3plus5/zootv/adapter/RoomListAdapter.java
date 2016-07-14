@@ -3,6 +3,7 @@ package xmu.edu.a3plus5.zootv.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.GravityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
@@ -101,8 +103,9 @@ public class RoomListAdapter extends BaseSwipeAdapter {
             public void onClick(View view) {
                 room = rooms.get(position);
                 //根据roomId 和 platform 唯一确认一个room，若数据库中有room，则不加入
+
                 if(!userdao.ifhaveRoom(room))
-                    userdao.addRoom(room);
+                    room=userdao.addRoom(room);
                 Intent intent = new Intent(mContext, WebActivity.class);
                 intent.putExtra("url", room.getLink());
                 mContext.startActivity(intent);
@@ -129,7 +132,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                 room = rooms.get(position);
                 //根据roomId 和 platform 唯一确认一个room，若数据库中有room，则不加入
                 if(!userdao.ifhaveRoom(room))
-                    userdao.addRoom(room);
+                    room=userdao.addRoom(room);
 
                 //点击查询是否被关注，并弹出相应提示
                 //查询关注表，之前有关注则删除，没关注则添加
@@ -170,7 +173,43 @@ public class RoomListAdapter extends BaseSwipeAdapter {
         viewHolder.share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "share", Toast.LENGTH_SHORT).show();
+                if ("点击头像登录".equals(MyApplication.user.getUserName())) {
+                    Toast.makeText(mContext, "亲~请先登录", Toast.LENGTH_SHORT).show();
+                } else {
+                    //实例化一个OnekeyShare对象
+                    OnekeyShare oks = new OnekeyShare();
+                    //设置Notification的显示图标和显示文字
+                    //oks.setNotification(R.drawable.ic_launcher, "ShareSDK demo");
+                    //设置短信地址或者是邮箱地址，如果没有可以不设置
+                    oks.setAddress("xiaochen1995226@163.com");
+                    //分享内容的标题
+                    oks.setTitle("#ZooTV# 我在看'" + rooms.get(position).getAnchor() + "'的直播间,一起来吧！");
+                    //标题对应的网址，如果没有可以不设置
+                    oks.setTitleUrl(rooms.get(position).getLink());
+                    //设置分享的文本内容
+                    oks.setText(rooms.get(position).getTitle());
+                    //设置分享照片的本地路径，如果没有可以不设置
+                    //oks.setImagePath(AtyDetailActivity.TEST_IMAGE);
+                    //设置分享照片的url地址，如果没有可以不设置
+                    oks.setImageUrl(rooms.get(position).getPicUrl());
+                    //微信和易信的分享的网络连接，如果没有可以不设置
+                    oks.setUrl(rooms.get(position).getLink());
+                    //oks.setUrl("http://www.baidu.com");
+                    //人人平台特有的评论字段，如果没有可以不设置
+                    oks.setComment("添加评论");
+                    //程序的名称或者是站点名称
+                    oks.setSite("ZooTV");
+                    //程序的名称或者是站点名称的链接地址
+                    oks.setSiteUrl("http://sharesdk.cn");
+                    //设置纬度
+                    //oks.setLatitude(23.122619f);
+                    //设置精度
+                    //oks.setLongitude(113.372338f);
+                    //设置是否是直接分享
+                    oks.setSilent(false);
+                    //显示
+                    oks.show(mContext);
+                }
             }
         });
     }

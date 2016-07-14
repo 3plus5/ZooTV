@@ -11,9 +11,9 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="斗鱼专区" />
         <item
-            android:id="@+id/huya"
+            android:id="@+id/zhanqi"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="虎牙专区" />
+            android:title="战旗专区" />
         <item
             android:id="@+id/xiongmao"
             android:icon="@drawable/ic_menu_manage"

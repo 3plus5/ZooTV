@@ -31,6 +31,7 @@ import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.dao.DaoFactory;
@@ -58,10 +59,15 @@ public class MainActivity extends AppCompatActivity
     TextView userName;
     TextView userDescription;
 
+    private PieceFragment pieceFragment;
+    private CategoryFragment categoryFragment;
+    private HistoryTabFragment historyTabFragment;
+    private ProfileFragment profileFragment;
+
     private long exitTime = 0;
     int lastSelectedPosition = 0;
 
-//    private static User myuser;
+    //    private static User myuser;
     private UserDao userdao;
 
     @Override
@@ -74,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 //        myuser=new User("@drawable/room","test",1,1);
-        userdao= DaoFactory.getUserDao(MainActivity.this);
+        userdao = DaoFactory.getUserDao(MainActivity.this);
 
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -88,15 +94,21 @@ public class MainActivity extends AppCompatActivity
         user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivityForResult(intent, 1);
-                drawer.closeDrawer(GravityCompat.START);
+                if ("点击头像登录" .equals(MyApplication.user.getUserName())) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, 1);
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    logout();
+                }
             }
         });
         userDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                logout();
+                if (!"点击头像登录" .equals(MyApplication.user.getUserName())) {
+                    logout();
+                }
             }
         });
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
@@ -115,7 +127,12 @@ public class MainActivity extends AppCompatActivity
 
 //        getSupportFragmentManager().beginTransaction().replace(R.id.ad_fragment, new AdPagerFragment()).commit();
 //        getSupportFragmentManager().beginTransaction().replace(R.id.category_fragment, new CategoryViewPagerFragment()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        pieceFragment = new PieceFragment();
+        ft.add(R.id.main_content, pieceFragment);
+        ft.commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
     }
 
     public void logout() {
@@ -132,8 +149,12 @@ public class MainActivity extends AppCompatActivity
                         userName.setText(MyApplication.user.getUserName());
                         userDescription.setText("登录后可享受更多有趣的功能");
                         Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
-                        if (sina.isValid()){
+                        Platform qq = ShareSDK.getPlatform(QQ.NAME);
+                        if (sina.isValid()) {
                             sina.removeAccount();
+                        }
+                        if (qq.isValid()) {
+                            qq.removeAccount();
                         }
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
                         bottomNavigationBar.selectTab(0);
@@ -169,7 +190,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && data != null) {
             User user = (User) data.getSerializableExtra("userInfo");
-            Log.d("loglog2",user.toString());
+            Log.d("loglog2", user.toString());
             Picasso.with(MainActivity.this).load(user.getUserPic()).into(user_photo);
             userName.setText(user.getUserName());
             userDescription.setText("登出");
@@ -177,10 +198,10 @@ public class MainActivity extends AppCompatActivity
             bottomNavigationBar.selectTab(0);
 
             //登录时判断是否存入数据库
-            if(!"点击头像登录".equals(MyApplication.user.getUserName())) {
+            if (!"点击头像登录" .equals(MyApplication.user.getUserName())) {
                 //不管数据库是否有数据，都返回user并赋值给MyApplication.user
-                if(userdao.selectuser(MyApplication.user)==null){
-                    MyApplication.user=userdao.addUserbyUser(MyApplication.user);
+                if (userdao.selectuser(MyApplication.user) == null) {
+                    MyApplication.user = userdao.addUserbyUser(MyApplication.user);
                 }
             }
 
@@ -252,24 +273,46 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (pieceFragment != null) ft.remove(pieceFragment);
+        if (categoryFragment != null) ft.remove(categoryFragment);
+        if (historyTabFragment != null) ft.remove(historyTabFragment);
+        if (profileFragment != null) ft.remove(profileFragment);
+
+        pieceFragment = null;
+        categoryFragment = null;
+        historyTabFragment = null;
+        profileFragment = null;
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.zoo) {
             MyApplication.setPlatform(BasePlatform.Zoo);
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            pieceFragment = new PieceFragment();
+            ft.add(R.id.main_content, pieceFragment).commit();
             bottomNavigationBar.selectTab(0);
             setTitle("ZooTV");
         } else if (id == R.id.douyu) {
             MyApplication.setPlatform(BasePlatform.DouYu);
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            pieceFragment = new PieceFragment();
+            ft.add(R.id.main_content, pieceFragment).commit();
             bottomNavigationBar.selectTab(0);
             setTitle("斗鱼专区");
-        } else if (id == R.id.huya) {
-
+        } else if (id == R.id.zhanqi) {
+            MyApplication.setPlatform(BasePlatform.ZhanQi);
+            //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            pieceFragment = new PieceFragment();
+            ft.add(R.id.main_content, pieceFragment).commit();
+            bottomNavigationBar.selectTab(0);
+            setTitle("战旗专区");
         } else if (id == R.id.xiongmao) {
             MyApplication.setPlatform(BasePlatform.Panda);
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            pieceFragment = new PieceFragment();
+            ft.add(R.id.main_content, pieceFragment).commit();
             bottomNavigationBar.selectTab(0);
             setTitle("熊猫专区");
         } else if (id == R.id.chushou) {
@@ -288,16 +331,52 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         switch (position) {
             case 0:
-                ft.replace(R.id.main_content, new PieceFragment());
+                if (categoryFragment != null) ft.hide(categoryFragment);
+                if (historyTabFragment != null) ft.hide(historyTabFragment);
+                if (profileFragment != null) ft.hide(profileFragment);
+                if (pieceFragment == null) {
+                    pieceFragment = new PieceFragment();
+                    ft.add(R.id.main_content, pieceFragment);
+                } else {
+                    ft.show(pieceFragment);
+                }
+                //ft.replace(R.id.main_content, new PieceFragment());
                 break;
             case 1:
-                ft.replace(R.id.main_content, new CategoryFragment());
+                if (pieceFragment != null) ft.hide(pieceFragment);
+                if (historyTabFragment != null) ft.hide(historyTabFragment);
+                if (profileFragment != null) ft.hide(profileFragment);
+                if (categoryFragment == null) {
+                    categoryFragment = new CategoryFragment();
+                    ft.add(R.id.main_content, categoryFragment);
+                } else {
+                    ft.show(categoryFragment);
+                }
+                //ft.replace(R.id.main_content, new CategoryFragment());
                 break;
             case 2:
-                ft.replace(R.id.main_content, new HistoryTabFragment());
+                if (pieceFragment != null) ft.hide(pieceFragment);
+                if (categoryFragment != null) ft.hide(categoryFragment);
+                if (profileFragment != null) ft.hide(profileFragment);
+                if (historyTabFragment == null) {
+                    historyTabFragment = new HistoryTabFragment();
+                    ft.add(R.id.main_content, historyTabFragment);
+                } else {
+                    ft.show(historyTabFragment);
+                }
+                //ft.replace(R.id.main_content, new HistoryTabFragment());
                 break;
             case 3:
-                ft.replace(R.id.main_content, new ProfileFragment());
+                if (pieceFragment != null) ft.hide(pieceFragment);
+                if (categoryFragment != null) ft.hide(categoryFragment);
+                if (historyTabFragment != null) ft.hide(historyTabFragment);
+                if (profileFragment == null) {
+                    profileFragment = new ProfileFragment();
+                    ft.add(R.id.main_content, profileFragment);
+                } else {
+                    ft.show(profileFragment);
+                }
+                //ft.replace(R.id.main_content, new ProfileFragment());
                 break;
         }
         ft.commit();
