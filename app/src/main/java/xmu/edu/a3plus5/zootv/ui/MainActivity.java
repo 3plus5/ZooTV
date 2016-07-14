@@ -143,6 +143,17 @@ public class MainActivity extends AppCompatActivity
                 .callback(new MaterialDialog.ButtonCallback() {
                     @Override
                     public void onPositive(MaterialDialog dialog) {
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        if (pieceFragment != null) ft.remove(pieceFragment);
+                        if (categoryFragment != null) ft.remove(categoryFragment);
+                        if (historyTabFragment != null) ft.remove(historyTabFragment);
+                        if (profileFragment != null) ft.remove(profileFragment);
+
+                        pieceFragment = null;
+                        categoryFragment = null;
+                        historyTabFragment = null;
+                        profileFragment = null;
+
                         MyApplication.initUser();
                         drawer.closeDrawer(GravityCompat.START);
                         Picasso.with(MainActivity.this).load(MyApplication.user.getUserPic()).into(user_photo);
@@ -156,7 +167,10 @@ public class MainActivity extends AppCompatActivity
                         if (qq.isValid()) {
                             qq.removeAccount();
                         }
-                        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+                        //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+                        pieceFragment = new PieceFragment();
+                        ft.add(R.id.main_content, pieceFragment);
+                        ft.commit();
                         bottomNavigationBar.selectTab(0);
                     }
 
@@ -188,13 +202,28 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (pieceFragment != null) ft.remove(pieceFragment);
+        if (categoryFragment != null) ft.remove(categoryFragment);
+        if (historyTabFragment != null) ft.remove(historyTabFragment);
+        if (profileFragment != null) ft.remove(profileFragment);
+
+        pieceFragment = null;
+        categoryFragment = null;
+        historyTabFragment = null;
+        profileFragment = null;
+
         if (requestCode == 1 && data != null) {
             User user = (User) data.getSerializableExtra("userInfo");
             Log.d("loglog2", user.toString());
             Picasso.with(MainActivity.this).load(user.getUserPic()).into(user_photo);
             userName.setText(user.getUserName());
             userDescription.setText("登出");
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            pieceFragment = new PieceFragment();
+            ft.add(R.id.main_content, pieceFragment);
+            ft.commit();
             bottomNavigationBar.selectTab(0);
 
             //登录时判断是否存入数据库
