@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("cgf", "resume");
         if (!NetState.isNetworkConnected()) {
             Intent intent = new Intent(MainActivity.this, NoNetworkActivity.class);
             startActivity(intent);
@@ -195,25 +196,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("cgf", "pause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("cgf", "stop");
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d("cgf", "destroy");
         ShareSDK.stopSDK();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (pieceFragment != null) ft.remove(pieceFragment);
-        if (categoryFragment != null) ft.remove(categoryFragment);
-        if (historyTabFragment != null) ft.remove(historyTabFragment);
-        if (profileFragment != null) ft.remove(profileFragment);
-
-        pieceFragment = null;
-        categoryFragment = null;
-        historyTabFragment = null;
-        profileFragment = null;
 
         if (requestCode == 1 && data != null) {
             User user = (User) data.getSerializableExtra("userInfo");
@@ -222,6 +225,8 @@ public class MainActivity extends AppCompatActivity
             userName.setText(user.getUserName());
             userDescription.setText("登出");
             //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            clearFragment(ft);
             pieceFragment = new PieceFragment();
             ft.add(R.id.main_content, pieceFragment);
             ft.commit();
@@ -301,15 +306,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (pieceFragment != null) ft.remove(pieceFragment);
-        if (categoryFragment != null) ft.remove(categoryFragment);
-        if (historyTabFragment != null) ft.remove(historyTabFragment);
-        if (profileFragment != null) ft.remove(profileFragment);
-
-        pieceFragment = null;
-        categoryFragment = null;
-        historyTabFragment = null;
-        profileFragment = null;
+        clearFragment(ft);
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -417,5 +414,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTabReselected(int position) {
 
+    }
+
+    public void clearFragment(FragmentTransaction ft)
+    {
+        if (pieceFragment != null) ft.remove(pieceFragment);
+        if (categoryFragment != null) ft.remove(categoryFragment);
+        if (historyTabFragment != null) ft.remove(historyTabFragment);
+        if (profileFragment != null) ft.remove(profileFragment);
+
+        pieceFragment = null;
+        categoryFragment = null;
+        historyTabFragment = null;
+        profileFragment = null;
     }
 }

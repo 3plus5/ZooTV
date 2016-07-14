@@ -83,7 +83,10 @@
             android:theme="@style/AppThemeBack"
             android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
-        <activity android:name=".ui.NoNetworkActivity"/>
+        <activity android:name=".ui.NoNetworkActivity"
+            android:theme="@style/AppThemeBack" />
+        <activity android:name=".ui.PropensityActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
