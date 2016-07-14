@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
     private long exitTime = 0;
     int lastSelectedPosition = 0;
 
-//    private static User myuser;
+    //    private static User myuser;
     private UserDao userdao;
 
     @Override
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 //        myuser=new User("@drawable/room","test",1,1);
-        userdao= DaoFactory.getUserDao(MainActivity.this);
+        userdao = DaoFactory.getUserDao(MainActivity.this);
 
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -94,11 +94,11 @@ public class MainActivity extends AppCompatActivity
         user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if("点击头像登录".equals(MyApplication.user.getUserName())) {
+                if ("点击头像登录".equals(MyApplication.user.getUserName())) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivityForResult(intent, 1);
                     drawer.closeDrawer(GravityCompat.START);
-                }else{
+                } else {
                     logout();
                 }
             }
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         userDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!"点击头像登录".equals(MyApplication.user.getUserName())) {
+                if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
                     logout();
                 }
             }
@@ -150,10 +150,10 @@ public class MainActivity extends AppCompatActivity
                         userDescription.setText("登录后课享受更多有趣的功能");
                         Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
                         Platform qq = ShareSDK.getPlatform(QQ.NAME);
-                        if (sina.isValid()){
+                        if (sina.isValid()) {
                             sina.removeAccount();
                         }
-                        if(qq.isValid()){
+                        if (qq.isValid()) {
                             qq.removeAccount();
                         }
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && data != null) {
             User user = (User) data.getSerializableExtra("userInfo");
-            Log.d("loglog2",user.toString());
+            Log.d("loglog2", user.toString());
             Picasso.with(MainActivity.this).load(user.getUserPic()).into(user_photo);
             userName.setText(user.getUserName());
             userDescription.setText("登出");
@@ -198,9 +198,9 @@ public class MainActivity extends AppCompatActivity
             bottomNavigationBar.selectTab(0);
 
             //登录时判断是否存入数据库
-            if(!"点击头像登录".equals(MyApplication.user.getUserName())) {
+            if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
                 //不管数据库是否有数据，都返回user并赋值给MyApplication.user
-                if(true){
+                if (true) {
                     userdao.addUserbyUser(MyApplication.user);
                 }
             }
@@ -274,10 +274,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (pieceFragment != null)   ft.remove(pieceFragment);
-        if (categoryFragment != null)   ft.remove(categoryFragment);
-        if (historyTabFragment != null)   ft.remove(historyTabFragment);
-        if (profileFragment != null)   ft.remove(profileFragment);
+        if (pieceFragment != null) ft.remove(pieceFragment);
+        if (categoryFragment != null) ft.remove(categoryFragment);
+        if (historyTabFragment != null) ft.remove(historyTabFragment);
+        if (profileFragment != null) ft.remove(profileFragment);
 
         pieceFragment = null;
         categoryFragment = null;
@@ -303,7 +303,9 @@ public class MainActivity extends AppCompatActivity
             setTitle("斗鱼专区");
         } else if (id == R.id.zhanqi) {
             MyApplication.setPlatform(BasePlatform.ZhanQi);
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            pieceFragment = new PieceFragment();
+            ft.add(R.id.main_content, pieceFragment).commit();
             bottomNavigationBar.selectTab(0);
             setTitle("战旗专区");
         } else if (id == R.id.xiongmao) {
