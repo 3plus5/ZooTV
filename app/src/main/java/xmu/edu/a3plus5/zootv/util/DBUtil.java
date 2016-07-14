@@ -11,11 +11,11 @@ public class DBUtil {
     public static final String Room_TABLE_NAME="ROOM";            //定义数据库房间表
     public static final String Interest_TABLE_NAME="INTEREST";   //定义数据库关注表
     public static final String History_TABLE_NAME="HISTORY";     //定义数据库历史记录表
+    public static final String Propensity_TABLE_NAME="PROPENSITY"; //定义数据库兴趣标签表
 
     public static final String userId="userId";
     public static final String userPic="userPic";
     public static final String userName="userName";
-    public static final String userPwd="userPwd";
     public static final String signCount="signCount";
     public static final String logCount="logCount";
 
@@ -32,5 +32,6 @@ public class DBUtil {
     public static final String interestId="interestId";
     public static final String historyId="historyId";
 
+    public static final String label="label";
 
 }
