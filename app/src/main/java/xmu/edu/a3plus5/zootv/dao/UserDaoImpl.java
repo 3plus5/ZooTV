@@ -185,7 +185,7 @@ public class UserDaoImpl implements  UserDao{
         for(int i=0;i<rids.size();i++){
             String columns2[]={DBUtil.platform,DBUtil.roomId};
             String selection2=DBUtil.rid+"="+rids.get(i);
-            cur=db.query(DBUtil.Interest_TABLE_NAME,columns2,selection2,null,null,null,null,null);
+            cur=db.query(DBUtil.Room_TABLE_NAME,columns2,selection2,null,null,null,null,null);
             if(cur.getCount()!=0){
                 cur.moveToFirst();
                 do{
@@ -218,7 +218,7 @@ public class UserDaoImpl implements  UserDao{
         for(int i=0;i<rids.size();i++){
             String columns2[]={DBUtil.platform,DBUtil.roomId};
             String selection2=DBUtil.rid+"="+rids.get(i);
-            cur=db.query(DBUtil.History_TABLE_NAME,columns2,selection2,null,null,null,null,null);
+            cur=db.query(DBUtil.Room_TABLE_NAME,columns2,selection2,null,null,null,null,null);
             if(cur.getCount()!=0){
                 cur.moveToFirst();
                 do{
