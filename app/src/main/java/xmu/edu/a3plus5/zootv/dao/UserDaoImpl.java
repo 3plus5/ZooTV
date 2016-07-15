@@ -233,15 +233,15 @@ public class UserDaoImpl implements  UserDao{
         return myrooms;
     }
 
-    public boolean addlabel(int userid,String[] labels){
+    public boolean addlabel(int userid,List<String> labels){
         boolean flag=true;
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        for(int i=0;i<labels.length;i++)
+        for(int i=0;i<labels.size();i++)
         {
             ContentValues values = new ContentValues();
             values.put(DBUtil.userId , userid);
-            values.put(DBUtil.label , labels[i]);
+            values.put(DBUtil.label , labels.get(i));
             long index=0;
             index = db.insert(DBUtil.Propensity_TABLE_NAME, null, values);
             if(index==0){
@@ -252,6 +252,15 @@ public class UserDaoImpl implements  UserDao{
         close(db);
         return flag;
 
+    }
+
+    public boolean deletelabels(int userid)
+    {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String whereClause = DBUtil.userId+"=?";
+        String[] whereargs={String.valueOf(userid)};
+        db.delete(DBUtil.Propensity_TABLE_NAME,whereClause,whereargs);
+        return true;
     }
 
     public List<String> selelabels(int userid){
@@ -312,4 +321,10 @@ public class UserDaoImpl implements  UserDao{
         close(db,cur);
         return room;
     }
+
+    public void wipecache(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete(DBUtil.History_TABLE_NAME,null,null);
+    }
+
 }

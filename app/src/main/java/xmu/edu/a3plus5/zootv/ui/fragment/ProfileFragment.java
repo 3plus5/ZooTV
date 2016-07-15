@@ -22,9 +22,11 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.entity.Propensity;
 import xmu.edu.a3plus5.zootv.ui.LoginActivity;
 import xmu.edu.a3plus5.zootv.ui.MainActivity;
 import xmu.edu.a3plus5.zootv.ui.MyApplication;
+import xmu.edu.a3plus5.zootv.ui.PropensityActivity;
 
 /**
  * Created by asus1 on 2016/7/12.
@@ -36,19 +38,33 @@ public class ProfileFragment extends Fragment {
     @Bind(R.id.user_name)
     TextView userName;
 
+    private View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        if(savedInstanceState != null)
+        {
+            return view;
+        }
+
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this,view);
         userName.setText(MyApplication.user.getUserName());
         Picasso.with(getActivity()).load(MyApplication.user.getUserPic()).into(userPhoto);
         return view;
     }
 
-    @OnClick(R.id.profile_login)
+    @OnClick(R.id.userPhoto)
     public void login(){
         Intent intent = new Intent(getActivity(), LoginActivity.class);
+        getActivity().startActivityForResult(intent, 1);
+    }
+
+    @OnClick(R.id.profile_propensity_setting)
+    public void setPropensity()
+    {
+        Intent intent = new Intent(getActivity(), PropensityActivity.class);
         getActivity().startActivityForResult(intent, 1);
     }
 }

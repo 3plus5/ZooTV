@@ -24,6 +24,8 @@ public class HistoryTabFragment extends Fragment {
     @Bind(R.id.history_sliding_tabs)
     TabLayout tabLayout;
 
+    private View view;
+
     private FragmentManager fm;
     private HistoryFragmentPagerAdapter pagerAdapter;
 
@@ -37,7 +39,12 @@ public class HistoryTabFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history_tab, container, false);
+        if(savedInstanceState != null)
+        {
+            return view;
+        }
+
+        view = inflater.inflate(R.layout.fragment_history_tab, container, false);
 
         ButterKnife.bind(this, view);
 

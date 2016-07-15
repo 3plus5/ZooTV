@@ -89,13 +89,13 @@ public class LoginFragment extends Fragment implements PlatformActionListener, H
         if (getArguments() != null) {
             mType = getArguments().getInt("Type");
         }
-//        handler=new Handler(this);
+        handler=new Handler(this);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-//        if(outState==null)
-//            super.onSaveInstanceState(outState);
+        if(outState==null)
+            super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -182,7 +182,6 @@ public class LoginFragment extends Fragment implements PlatformActionListener, H
         String mId = db.getUserId();
         String mphoto = db.getUserIcon();
         String mname = db.getUserName();
-        Log.d("loglog",mphoto);
         Intent intent = new Intent();
         User user = new User(mphoto, mname);
         MyApplication.user = user;
@@ -190,7 +189,6 @@ public class LoginFragment extends Fragment implements PlatformActionListener, H
         bundle.putSerializable("userInfo", user);
         intent.putExtras(bundle);
         getActivity().setResult(1, intent);
-        Log.d("loglog", user.toString());
         getActivity().finish();
 //        JSONObject jsonObject=new JSONObject();
 

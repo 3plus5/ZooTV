@@ -38,6 +38,8 @@ public class PieceFragment extends Fragment {
     PullToRefreshView pullToRefreshView;
     ProgressDialog progressDialog;
 
+    private View view;
+
     private static PieceFragment pieceFragment;
     private boolean isRefreshing = false;
 
@@ -51,7 +53,12 @@ public class PieceFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.piece_content, container, false);
+        if(savedInstanceState != null)
+        {
+            return view;
+        }
+
+        view = inflater.inflate(R.layout.piece_content, container, false);
 
         ButterKnife.bind(this, view);
         setUpRecyclerView();
@@ -87,6 +94,7 @@ public class PieceFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        progressDialog.dismiss();
         progressDialog = null;
     }
 

@@ -1,7 +1,9 @@
 package xmu.edu.a3plus5.zootv.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -94,7 +97,7 @@ public class MainActivity extends AppCompatActivity
         user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ("点击头像登录" .equals(MyApplication.user.getUserName())) {
+                if ("点击头像登录".equals(MyApplication.user.getUserName())) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivityForResult(intent, 1);
                     drawer.closeDrawer(GravityCompat.START);
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity
         userDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!"点击头像登录" .equals(MyApplication.user.getUserName())) {
+                if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
                     logout();
                 }
             }
@@ -143,6 +146,17 @@ public class MainActivity extends AppCompatActivity
                 .callback(new MaterialDialog.ButtonCallback() {
                     @Override
                     public void onPositive(MaterialDialog dialog) {
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        if (pieceFragment != null) ft.remove(pieceFragment);
+                        if (categoryFragment != null) ft.remove(categoryFragment);
+                        if (historyTabFragment != null) ft.remove(historyTabFragment);
+                        if (profileFragment != null) ft.remove(profileFragment);
+
+                        pieceFragment = null;
+                        categoryFragment = null;
+                        historyTabFragment = null;
+                        profileFragment = null;
+
                         MyApplication.initUser();
                         drawer.closeDrawer(GravityCompat.START);
                         Picasso.with(MainActivity.this).load(MyApplication.user.getUserPic()).into(user_photo);
@@ -156,7 +170,10 @@ public class MainActivity extends AppCompatActivity
                         if (qq.isValid()) {
                             qq.removeAccount();
                         }
-                        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+                        //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+                        pieceFragment = new PieceFragment();
+                        ft.add(R.id.main_content, pieceFragment);
+                        ft.commit();
                         bottomNavigationBar.selectTab(0);
                     }
 
@@ -170,8 +187,34 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("main","start");
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("main","restart");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("main","pause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("main","stop");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        Log.d("cgf", "resume");
         if (!NetState.isNetworkConnected()) {
             Intent intent = new Intent(MainActivity.this, NoNetworkActivity.class);
             startActivity(intent);
@@ -182,29 +225,35 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d("cgf", "destroy");
         ShareSDK.stopSDK();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == 1 && data != null) {
             User user = (User) data.getSerializableExtra("userInfo");
-            Log.d("loglog2", user.toString());
             Picasso.with(MainActivity.this).load(user.getUserPic()).into(user_photo);
             userName.setText(user.getUserName());
             userDescription.setText("登出");
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            clearFragment(ft);
+            pieceFragment = new PieceFragment();
+            ft.add(R.id.main_content, pieceFragment);
+            ft.commit();
             bottomNavigationBar.selectTab(0);
 
             //登录时判断是否存入数据库
-            if (!"点击头像登录" .equals(MyApplication.user.getUserName())) {
-                //不管数据库是否有数据，都返回user并赋值给MyApplication.user
-                if (userdao.selectuser(MyApplication.user) == null) {
-                    MyApplication.user = userdao.addUserbyUser(MyApplication.user);
-                }
+            //不管数据库是否有数据，都返回user并赋值给MyApplication.user
+            if (userdao.selectuser(user) == null) {
+                MyApplication.user = userdao.addUserbyUser(user);
+            }else {
+                MyApplication.user = userdao.selectuser(user);
             }
-
+            Log.d("loglog", MyApplication.user.toString());
         }
     }
 
@@ -274,15 +323,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (pieceFragment != null) ft.remove(pieceFragment);
-        if (categoryFragment != null) ft.remove(categoryFragment);
-        if (historyTabFragment != null) ft.remove(historyTabFragment);
-        if (profileFragment != null) ft.remove(profileFragment);
-
-        pieceFragment = null;
-        categoryFragment = null;
-        historyTabFragment = null;
-        profileFragment = null;
+        clearFragment(ft);
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -390,5 +431,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTabReselected(int position) {
 
+    }
+
+    public void clearFragment(FragmentTransaction ft)
+    {
+        if (pieceFragment != null) ft.remove(pieceFragment);
+        if (categoryFragment != null) ft.remove(categoryFragment);
+        if (historyTabFragment != null) ft.remove(historyTabFragment);
+        if (profileFragment != null) ft.remove(profileFragment);
+
+        pieceFragment = null;
+        categoryFragment = null;
+        historyTabFragment = null;
+        profileFragment = null;
     }
 }

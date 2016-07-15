@@ -32,6 +32,7 @@ public class DBUtil {
     public static final String interestId="interestId";
     public static final String historyId="historyId";
 
+    public static final String propensityId="propensityId";
     public static final String label="label";
 
 }

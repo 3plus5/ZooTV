@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,6 +34,12 @@ public class RoomListActivity extends SwipeBackActivity {
             toolbar.setTitle(query);
             getSupportFragmentManager().beginTransaction().replace(R.id.room_list,RoomListFragment.getRoomListFragment(query)).commit();
         }
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 //        setSupportActionBar(toolbar);
         SwipeBackLayout mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
