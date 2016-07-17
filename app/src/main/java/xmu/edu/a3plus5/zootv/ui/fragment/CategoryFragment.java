@@ -34,7 +34,7 @@ public class CategoryFragment extends Fragment{
         }
 
         view = inflater.inflate(R.layout.category,null);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.category_frequent,new CategoryViewPagerFragment()).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.category_frequent,CategoryViewPagerFragment.getCategoryViewPagerFragment("category")).commit();
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.category_all,new CategoryGridFragment()).commit();
         return view;
     }

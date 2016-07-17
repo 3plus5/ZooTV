@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.squareup.picasso.Picasso;
@@ -27,6 +28,7 @@ import xmu.edu.a3plus5.zootv.ui.LoginActivity;
 import xmu.edu.a3plus5.zootv.ui.MainActivity;
 import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.ui.PropensityActivity;
+import xmu.edu.a3plus5.zootv.widget.PieDialog;
 
 /**
  * Created by asus1 on 2016/7/12.
@@ -43,28 +45,36 @@ public class ProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(savedInstanceState != null)
-        {
+        if (savedInstanceState != null) {
             return view;
         }
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         userName.setText(MyApplication.user.getUserName());
         Picasso.with(getActivity()).load(MyApplication.user.getUserPic()).into(userPhoto);
         return view;
     }
 
     @OnClick(R.id.userPhoto)
-    public void login(){
+    public void login() {
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         getActivity().startActivityForResult(intent, 1);
     }
 
     @OnClick(R.id.profile_propensity_setting)
-    public void setPropensity()
-    {
+    public void setPropensity() {
         Intent intent = new Intent(getActivity(), PropensityActivity.class);
         getActivity().startActivityForResult(intent, 1);
+    }
+
+    @OnClick(R.id.profile_propensity_statistic)
+    public void showInterestDialog() {
+        if ("点击头像登录".equals(MyApplication.user.getUserName())) {
+            Toast.makeText(getActivity(), "您尚未登录哦", Toast.LENGTH_SHORT).show();
+        } else {
+            PieDialog pieDialog = new PieDialog();
+            pieDialog.show(getFragmentManager(), "PieDialog");
+        }
     }
 }

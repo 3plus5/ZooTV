@@ -38,14 +38,17 @@ public class ZhanQiPlatform extends BasePlatform {
     }
 
     @Override
-    public List<Category> getAllCategory() {
-        if (categories != null)
-            return categories;
-        categories = new ArrayList<Category>();
+    public List<Category> getAllCategory()
+    {
+        //if (categories != null)
+            //return categories;
+        
+        List<Category> categories = new ArrayList<Category>();
 
         String jsonLink = "http://www.zhanqi.tv/api/static/game.lists/100-1.json";
 
-        try {
+        try 
+        {
             String jsonStr = Jsoup.connect(jsonLink).ignoreContentType(true).execute().body();
 
             JSONObject json = new JSONObject(jsonStr);
@@ -69,7 +72,9 @@ public class ZhanQiPlatform extends BasePlatform {
 
                 categories.add(c);
             }
-        } catch (IOException | JSONException e) {
+        } 
+        catch (IOException | JSONException e) 
+        {
             e.printStackTrace();
         }
         return categories;
@@ -123,9 +128,11 @@ public class ZhanQiPlatform extends BasePlatform {
         return roomList;
     }
 
+    //一次返回120个
     @Override
-    public List<Room> getMostPopular() {
-        String jsonLink = "http://www.zhanqi.tv/api/static/live.hots/10-1.json";
+    public List<Room> getMostPopular() 
+    {
+        String jsonLink = "http://www.zhanqi.tv/api/static/live.hots/120-1.json";
 
         return this.getRoomListByZhanQiAPI(jsonLink);
     }
@@ -228,10 +235,16 @@ public class ZhanQiPlatform extends BasePlatform {
         return roomList;
     }
 
-//    public static void main(String[] args) {
-//        List<Room> ret = new ZhanQiPlatform().search("66666");
-//        for (Room r : ret)
-//            System.out.println(r);
-//    }
+   public static void main(String[] args) 
+   {
+        List<Category> cateList = new ZhanQiPlatform().getPopularCategory();
+        
+        List<Room> roomList = new ZhanQiPlatform().getRecommendedRoomByCateList(cateList);
+        
+        System.out.println(roomList.size());
+        
+        for(Room r: roomList)
+        	System.out.println(r);
+    }
 
 }

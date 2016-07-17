@@ -49,7 +49,7 @@ public class PandaPlatform extends BasePlatform {
 
     @Override
     public List<Category> getAllCategory() {
-        if(categories != null)
+        if (categories != null)
             return categories;
         categories = new ArrayList<Category>();
 
@@ -83,11 +83,18 @@ public class PandaPlatform extends BasePlatform {
         return categories;
     }
 
+    //一次返回120个
     @Override
     public List<Room> getMostPopular() {
-        String jsonLink = "http://static.api.m.panda.tv/android_hd/alllist_.json?pageno=1";
+        List<Room> roomList = new ArrayList<Room>();
 
-        return this.getRoomListByPandaAPI(jsonLink);
+        for (int i = 1; i <= 12; i++) {
+            String jsonLink = "http://static.api.m.panda.tv/android_hd/alllist_.json?pageno=" + i;
+
+            roomList.addAll(this.getRoomListByPandaAPI(jsonLink));
+        }
+
+        return roomList;
     }
 
     @Override
@@ -237,7 +244,7 @@ public class PandaPlatform extends BasePlatform {
 
     public static void main(String[] args) {
         /*
-		List<Category> cate = new PandaPlatform().getPopularCategory();
+        List<Category> cate = new PandaPlatform().getPopularCategory();
 		Category c = cate.get(0);
 		
 		List<Room> roomList = new PandaPlatform().getByCategory(c, 1);
