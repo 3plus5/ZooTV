@@ -82,4 +82,9 @@ public interface UserDao {
      */
     public Room selectroom(Room room);
 
+    /*
+    清空缓存
+    */
+    public void wipecache();
+
 }

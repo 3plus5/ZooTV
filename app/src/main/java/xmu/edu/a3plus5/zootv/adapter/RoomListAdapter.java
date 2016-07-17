@@ -163,11 +163,6 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                     } else {
                         userdao.addinterest(MyApplication.user.getUserId(), room.getRid());
                         Toast.makeText(mContext, "关注成功~~", Toast.LENGTH_SHORT).show();
-//                        List<Room> interests = userdao.seleinterestRoom(MyApplication.user.getUserId());
-//                        for (int i = 0; i < interests.size(); i++) {
-//                            Toast.makeText(mContext, " 测试用: " + interests.get(i), Toast.LENGTH_SHORT).show();
-//
-//                        }
                     }
                 }
             }

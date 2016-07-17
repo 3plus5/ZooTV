@@ -256,7 +256,10 @@ public class UserDaoImpl implements  UserDao{
 
     public boolean deletelabels(int userid)
     {
-        //具体实现...
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String whereClause = DBUtil.userId+"=?";
+        String[] whereargs={String.valueOf(userid)};
+        db.delete(DBUtil.Propensity_TABLE_NAME,whereClause,whereargs);
         return true;
     }
 
@@ -318,4 +321,10 @@ public class UserDaoImpl implements  UserDao{
         close(db,cur);
         return room;
     }
+
+    public void wipecache(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete(DBUtil.History_TABLE_NAME,null,null);
+    }
+
 }
