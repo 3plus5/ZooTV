@@ -123,16 +123,22 @@ public class CategoryViewPagerFragment extends Fragment {
                     historyRooms = userDao.selehistoryRoom(MyApplication.user.getUserId());
                     for (Room room : historyRooms) {
                         platform = PlatformFactory.createPlatform(room.getPlatform());
+                        BasePlatform platform1 = PlatformFactory.createPlatform(MyApplication.platform);
                         room = platform.getRoomById(room.getRoomId());
-                        Category category = platform.getCategoryByName(room.getCate());
-                        Iterator iterator = categories.iterator();
-                        while (iterator.hasNext()){
-                            Category cate = (Category) iterator.next();
-                            if(cate.getName().equals(category.getName())){
-                                iterator.remove();
+                        Category category = platform1.getCategoryByName(room.getCate());
+                        if(category != null) {
+                            Iterator iterator = categories.iterator();
+                            while (iterator.hasNext()) {
+                                Category cate = (Category) iterator.next();
+                                if (cate.getName().equals(category.getName())) {
+                                    iterator.remove();
+                                }
                             }
+//                        BasePlatform mplatform = PlatformFactory.createPlatform(MyApplication.platform);
+//                        if (mplatform.getCategoryByName(category.getName()) != null) {
+                            categories.add(category);
+//                        }
                         }
-                        categories.add(category);
                     }
                     Collections.reverse(categories);
                 }

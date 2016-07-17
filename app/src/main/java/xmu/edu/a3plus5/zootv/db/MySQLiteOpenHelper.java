@@ -9,11 +9,12 @@ import com.ashokvarma.bottomnavigation.utils.Utils;
 import xmu.edu.a3plus5.zootv.util.DBUtil;
 
 
-public class MySQLiteOpenHelper extends SQLiteOpenHelper{
+public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     private Context context;
-    public MySQLiteOpenHelper(Context context){
-        super(context, DBUtil.DATABASE_NAME,null,DBUtil.DATABASE_VERSION);
-        this.context=context;
+
+    public MySQLiteOpenHelper(Context context) {
+        super(context, DBUtil.DATABASE_NAME, null, DBUtil.DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override

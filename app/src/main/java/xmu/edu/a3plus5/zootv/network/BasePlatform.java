@@ -67,7 +67,11 @@ public abstract class BasePlatform {
             for (int j = 0; j < portion.length; j++) {
                 List<Room> rooms = this.getByCategory(cateList.get(j), 1);
                 if(rooms.size() != 0) {
-                    roomList.addAll(rooms.subList(0, portion[j]));
+                    if(rooms.size() >= portion[j]) {
+                        roomList.addAll(rooms.subList(0, portion[j]));
+                    }else{
+                        roomList.addAll(rooms);
+                    }
                 }
             }
         }

@@ -75,12 +75,18 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             itemView = LayoutInflater.from(context).inflate(R.layout.piece_item, parent, false);
             return new ContentViewHolder(itemView, new ContentViewHolder.MyViewHolderClicks() {
                 @Override
-                public void onItem(int position) {
+                public void onItem(final int position) {
                     if (position != 1 && position != 2) {
-                        Intent intent = new Intent(context, RoomListActivity.class);
-                        BasePlatform platform = PlatformFactory.createPlatform(MyApplication.platform);
-                        intent.putExtra("category", platform.getCategoryByName(labels.get(position - 1)));
-                        context.startActivity(intent);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(context, RoomListActivity.class);
+                                BasePlatform platform = PlatformFactory.createPlatform(MyApplication.platform);
+                                intent.putExtra("category", platform.getCategoryByName(labels.get(position - 1)));
+                                context.startActivity(intent);
+                            }
+                        }).start();
+
                     }
                 }
             }, pieces);
