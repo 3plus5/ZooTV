@@ -81,8 +81,6 @@ public class MainActivity extends AppCompatActivity
         ShareSDK.initSDK(this);
         MyApplication.initUser();
         setSupportActionBar(toolbar);
-
-//        myuser=new User("@drawable/room","test",1,1);
         userdao = DaoFactory.getUserDao(MainActivity.this);
 
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

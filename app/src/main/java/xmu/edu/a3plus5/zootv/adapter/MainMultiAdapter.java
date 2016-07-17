@@ -2,6 +2,7 @@ package xmu.edu.a3plus5.zootv.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -26,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,6 +35,10 @@ import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.PieceHeader;
 import xmu.edu.a3plus5.zootv.entity.Room;
+import xmu.edu.a3plus5.zootv.network.BasePlatform;
+import xmu.edu.a3plus5.zootv.network.PlatformFactory;
+import xmu.edu.a3plus5.zootv.ui.MyApplication;
+import xmu.edu.a3plus5.zootv.ui.RoomListActivity;
 import xmu.edu.a3plus5.zootv.widget.MyGridView;
 
 /**
@@ -40,8 +46,8 @@ import xmu.edu.a3plus5.zootv.widget.MyGridView;
  */
 public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<PieceHeader> pieceHeaders;
-    List<Room> rooms;
+    List<String> labels;
+    Map<String,List> pieces;
     Context context;
     List<Category> categories;
 
@@ -55,24 +61,35 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         CONTENT_TYPE
     }
 
-    public MainMultiAdapter(Context context, List<PieceHeader> pieceHeaders, List<Room> rooms, List<Category> categories) {
+    public MainMultiAdapter(Context context, List<String> labels, Map<String,List> pieces, List<Category> categories) {
         this.context = context;
-        this.pieceHeaders = pieceHeaders;
-        this.rooms = rooms;
+        this.labels = labels;
+        this.pieces = pieces;
         this.categories = categories;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View itemView;
         if (viewType == ITEM_TYPE.CONTENT_TYPE.ordinal()) {
             itemView = LayoutInflater.from(context).inflate(R.layout.piece_item, parent, false);
             return new ContentViewHolder(itemView, new ContentViewHolder.MyViewHolderClicks() {
                 @Override
-                public void onItem(int position) {
-                    Toast.makeText(context, "点击了 " + pieceHeaders.get(position - 1).getTitle(), Toast.LENGTH_SHORT).show();
+                public void onItem(final int position) {
+                    if (position != 1 && position != 2) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(context, RoomListActivity.class);
+                                BasePlatform platform = PlatformFactory.createPlatform(MyApplication.platform);
+                                intent.putExtra("category", platform.getCategoryByName(labels.get(position - 1)));
+                                context.startActivity(intent);
+                            }
+                        }).start();
+
+                    }
                 }
-            }, rooms);
+            }, pieces);
         } else {
             itemView = LayoutInflater.from(context).inflate(R.layout.main_header, parent, false);
             return new HeaderViewHolder(itemView, context, categories);
@@ -82,9 +99,9 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ContentViewHolder) {
-            PieceHeader item = pieceHeaders.get(position - 1);
-            ((ContentViewHolder) holder).title.setText(item.getTitle());
-            RoomListAdapter adapter = new RoomListAdapter(context, rooms);
+            String item = labels.get(position - 1);
+            ((ContentViewHolder) holder).title.setText(item);
+            RoomListAdapter adapter = new RoomListAdapter(context, pieces.get(item));
             adapter.setMode(Attributes.Mode.Multiple);
             ((ContentViewHolder) holder).myGridView.setAdapter(adapter);
             ((ContentViewHolder) holder).myGridView.setSelected(false);
@@ -138,7 +155,7 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        return pieceHeaders.size() + 1;
+        return labels.size() + 1;
     }
 
     @Override
@@ -158,13 +175,13 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Bind(R.id.item_gridView)
         MyGridView myGridView;
 
-        List<Room> rooms;
+        Map<String,List> pieces;
 
-        public ContentViewHolder(View itemView, MyViewHolderClicks listener, List<Room> rooms) {
+        public ContentViewHolder(View itemView, MyViewHolderClicks listener, Map<String,List> pieces) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mListener = listener;
-            this.rooms = rooms;
+            this.pieces = pieces;
             header.setOnClickListener(this);
         }
 

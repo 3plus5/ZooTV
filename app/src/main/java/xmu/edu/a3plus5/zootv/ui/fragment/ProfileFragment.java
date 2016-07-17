@@ -41,6 +41,7 @@ import xmu.edu.a3plus5.zootv.ui.LoginActivity;
 import xmu.edu.a3plus5.zootv.ui.MainActivity;
 import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.ui.PropensityActivity;
+import xmu.edu.a3plus5.zootv.widget.PieDialog;
 
 /**
  * Created by asus1 on 2016/7/12.
@@ -280,6 +281,16 @@ public class ProfileFragment extends Fragment {
             }
         } else {
             signButton.setClickable(false);
+        }
+    }
+
+    @OnClick(R.id.profile_propensity_statistic)
+    public void showInterestDialog() {
+        if ("点击头像登录".equals(MyApplication.user.getUserName())) {
+            Toast.makeText(getActivity(), "您尚未登录哦", Toast.LENGTH_SHORT).show();
+        } else {
+            PieDialog pieDialog = new PieDialog();
+            pieDialog.show(getFragmentManager(), "PieDialog");
         }
     }
 }

@@ -37,7 +37,6 @@
             android:id="@+id/gridView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/backgroundColor"
             android:verticalSpacing="0.5dp"
             />
 

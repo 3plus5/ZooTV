@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,19 @@ import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.adapter.CategoryGridAdapter;
+import xmu.edu.a3plus5.zootv.dao.DaoFactory;
+import xmu.edu.a3plus5.zootv.dao.UserDao;
 import xmu.edu.a3plus5.zootv.entity.Category;
+import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.network.PlatformFactory;
 import xmu.edu.a3plus5.zootv.ui.MyApplication;
@@ -37,12 +44,14 @@ public class CategoryViewPagerFragment extends Fragment {
     @Bind(R.id.gridView)
     MyGridView gridView;
 
-    private static CategoryViewPagerFragment categoryViewPagerFragment;
+    String type;
 
-    public static synchronized CategoryViewPagerFragment getCategoryViewPagerFragment() {
-        if (categoryViewPagerFragment == null) {
-            categoryViewPagerFragment = new CategoryViewPagerFragment();
-        }
+
+    public static CategoryViewPagerFragment getCategoryViewPagerFragment(String type) {
+        CategoryViewPagerFragment categoryViewPagerFragment = new CategoryViewPagerFragment();
+        Bundle args = new Bundle();
+        args.putString("Type", type);
+        categoryViewPagerFragment.setArguments(args);
         return categoryViewPagerFragment;
     }
 
@@ -50,6 +59,12 @@ public class CategoryViewPagerFragment extends Fragment {
     private int NUM = 4; // 每行显示个数
 
     private int LIEWIDTH;//每列宽度
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        type = getArguments().getString("Type");
+    }
 
     @Nullable
     @Override
@@ -63,10 +78,11 @@ public class CategoryViewPagerFragment extends Fragment {
         return view;
     }
 
-    class MyAsyncTask extends AsyncTask<Void,Void,Void>{
+    class MyAsyncTask extends AsyncTask<Void, Void, Void> {
 
         CategoryGridAdapter categoryGridAdapter;
         List<Category> categories;
+
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -83,7 +99,7 @@ public class CategoryViewPagerFragment extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Intent intent = new Intent(getActivity(), RoomListActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("category",categories.get(i));
+                    bundle.putSerializable("category", categories.get(i));
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -93,8 +109,56 @@ public class CategoryViewPagerFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            BasePlatform douYuPlatform = PlatformFactory.createPlatform(MyApplication.platform);
-            categories = douYuPlatform.getPopularCategory();
+            if ("home".equals(type)) {
+                categories = new ArrayList<>();
+                BasePlatform platform = PlatformFactory.createPlatform(MyApplication.platform);
+                categories = platform.getPopularCategory().subList(0, 8);
+                categoryGridAdapter = new CategoryGridAdapter(getActivity(), categories, "category");
+            } else {
+                categories = new ArrayList<>();
+                List<Room> historyRooms;
+                BasePlatform platform;
+                UserDao userDao = DaoFactory.getUserDao(getActivity());
+                if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
+                    historyRooms = userDao.selehistoryRoom(MyApplication.user.getUserId());
+                    for (Room room : historyRooms) {
+                        platform = PlatformFactory.createPlatform(room.getPlatform());
+                        BasePlatform platform1 = PlatformFactory.createPlatform(MyApplication.platform);
+                        room = platform.getRoomById(room.getRoomId());
+                        Category category = platform1.getCategoryByName(room.getCate());
+                        if(category != null) {
+                            Iterator iterator = categories.iterator();
+                            while (iterator.hasNext()) {
+                                Category cate = (Category) iterator.next();
+                                if (cate.getName().equals(category.getName())) {
+                                    iterator.remove();
+                                }
+                            }
+//                        BasePlatform mplatform = PlatformFactory.createPlatform(MyApplication.platform);
+//                        if (mplatform.getCategoryByName(category.getName()) != null) {
+                            categories.add(category);
+//                        }
+                        }
+                    }
+                    Collections.reverse(categories);
+                }
+                if (categories.size() >= 8) {
+                    categories = categories.subList(0, 7);
+                } else {
+                    BasePlatform platform1 = PlatformFactory.createPlatform(MyApplication.platform);
+                    List<Category> moreCates = platform1.getAllCategory().subList(0, 8);
+//                    Iterator iterator = moreCates.iterator();
+//                    while (iterator.hasNext()){
+//                        Category cate = (Category) iterator.next();
+//                        for(Category category : categories){
+//                            if(category.getName().equals(cate.getName())){
+//                                iterator.remove();
+//                            }
+//                        }
+//                    }
+                    categories.addAll(moreCates);
+                }
+            }
             categoryGridAdapter = new CategoryGridAdapter(getActivity(), categories, "category");
             return null;
         }

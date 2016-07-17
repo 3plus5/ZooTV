@@ -17,6 +17,7 @@ import com.daimajia.swipe.util.Attributes;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -155,8 +156,8 @@ public class HistoryContentFragment extends Fragment {
                 for (Room room : seleinterestRoom) {
                     platform = PlatformFactory.createPlatform(room.getPlatform());
                     rooms.add(platform.getRoomById(room.getRoomId()));
-                    Log.d("roomifo", room.toString());
                 }
+                Collections.reverse(rooms);
             }
             adapter = new RoomListAdapter(getActivity(), rooms);
             return null;

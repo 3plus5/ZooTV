@@ -15,12 +15,16 @@ import android.view.ViewGroup;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.adapter.MainMultiAdapter;
+import xmu.edu.a3plus5.zootv.dao.DaoFactory;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.PieceHeader;
 import xmu.edu.a3plus5.zootv.entity.Room;
@@ -53,8 +57,7 @@ public class PieceFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(savedInstanceState != null)
-        {
+        if (savedInstanceState != null) {
             return view;
         }
 
@@ -109,7 +112,7 @@ public class PieceFragment extends Fragment {
             super.onPostExecute(aVoid);
             recyclerView.setLayoutManager(manager);
             recyclerView.setAdapter(mainMultiAdapter);
-            if(progressDialog != null) {
+            if (progressDialog != null) {
                 progressDialog.dismiss();
             }
             pullToRefreshView.setRefreshing(false);
@@ -121,23 +124,57 @@ public class PieceFragment extends Fragment {
             manager = new LinearLayoutManager(getActivity());
             BasePlatform platform = PlatformFactory.createPlatform(MyApplication.platform);
             List<Category> categories = platform.getPopularCategory();
-            List<Room> rooms = platform.getByCategory(categories.get(0), 1);
-            List<PieceHeader> pieceHeaders = new ArrayList<>();
-            pieceHeaders.add(new PieceHeader("热门", "12", "www.douyu.com"));
-            pieceHeaders.add(new PieceHeader("推荐", "12", "www.douyu.com"));
-            pieceHeaders.add(new PieceHeader("英雄联盟", "12", "www.douyu.com"));
-            if(rooms.size() > 10) {
-                mainMultiAdapter = new MainMultiAdapter(getActivity(), pieceHeaders, rooms.subList(0, 10), categories);
-            }else{
-                mainMultiAdapter = new MainMultiAdapter(getActivity(), pieceHeaders, rooms, categories);
+
+            List<Category> selectCates = new ArrayList<>();
+            List<String> labels = new ArrayList<>();
+            labels.add("热门");
+            labels.add("推荐");
+            List<String> selectLabels = DaoFactory.getUserDao(getActivity()).selelabels(MyApplication.user.getUserId());
+            labels.addAll(selectLabels);
+            if (selectLabels.size() != 0) {
+                for (String label : selectLabels) {
+                    Category category = platform.getCategoryByName(label);
+                    if (category != null) {
+                        selectCates.add(category);
+                    } else {
+                        labels.remove(label);
+                    }
+                }
+            } else {
+                //没有选择标签，则随机从最热标签中选3个
+                List<Category> popularCategories = platform.getPopularCategory();
+                Random random = new Random();
+                for (int i = 0; i < 3; i++) {
+                    selectCates.add(popularCategories.get(random.nextInt(popularCategories.size())));
+                }
             }
+            Map<String, List> pieces = new HashMap<>();
+            pieces.put("热门", platform.getMostPopularByPage(1));
+            pieces.put("推荐", platform.getRecommendedRoomByCateList(selectCates));
+            List<String> selelabels = DaoFactory.getUserDao(getActivity()).selelabels(MyApplication.user.getUserId());
+            for (String label : selelabels) {
+                Category category = platform.getCategoryByName(label);
+                if (category != null) {
+                    List<Room> rooms1 = platform.getByCategory(category, 1);
+                    if (rooms1.size() > 6) {
+                        pieces.put(label, rooms1.subList(0, 6));
+                    } else {
+                        if(rooms1.size() == 0){
+                            labels.remove(label);
+                        }else {
+                            pieces.put(label, rooms1);
+                        }
+                    }
+                }
+            }
+            mainMultiAdapter = new MainMultiAdapter(getActivity(), labels, pieces, categories);
             return null;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(!isRefreshing) {
+            if (!isRefreshing) {
                 progressDialog = ProgressDialog.show(getActivity(), "", "数据载入中...", false);
                 progressDialog.setCancelable(true);
             }
