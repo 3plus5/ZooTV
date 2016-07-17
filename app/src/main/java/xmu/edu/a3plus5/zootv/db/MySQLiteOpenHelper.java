@@ -24,7 +24,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
                 + DBUtil.userPic + " text not null,"
                 + DBUtil.userName + " text not null,"
                 + DBUtil.signCount + " text not null,"
-                + DBUtil.logCount + " text not null);";
+                + DBUtil.lastSignDate + " text not null);";
         db.execSQL(User_table);
 
         final String Room_table = "CREATE TABLE " + DBUtil.Room_TABLE_NAME + " ( "

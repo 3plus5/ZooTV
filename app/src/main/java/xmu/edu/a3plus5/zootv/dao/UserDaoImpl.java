@@ -56,7 +56,7 @@ public class UserDaoImpl implements  UserDao{
         values.put(DBUtil.userPic, userPic);
         values.put(DBUtil.userName, userName);
         values.put(DBUtil.signCount, 0);
-        values.put(DBUtil.logCount, 0);
+        values.put(DBUtil.lastSignDate, "2000-01-01");
         long i=0;
         i = db.insert(DBUtil.User_TABLE_NAME, null, values);
         if(i!=0)
@@ -72,7 +72,7 @@ public class UserDaoImpl implements  UserDao{
         values.put(DBUtil.userPic, user.getUserPic());
         values.put(DBUtil.userName, user.getUserName());
         values.put(DBUtil.signCount, user.getSignCount());
-        values.put(DBUtil.logCount, user.getLogCount());
+        values.put(DBUtil.lastSignDate, user.getLastSignDate());
         long i=0;
         i = db.insert(DBUtil.User_TABLE_NAME, null, values);
         User myuser=selectuser(user);
@@ -83,7 +83,7 @@ public class UserDaoImpl implements  UserDao{
     public User selectuser(User user){
         User myuser=null;
         SQLiteDatabase db = helper.getReadableDatabase();
-        String columns[]={DBUtil.userId,DBUtil.userName,DBUtil.userPic,DBUtil.signCount,DBUtil.logCount};
+        String columns[]={DBUtil.userId,DBUtil.userName,DBUtil.userPic,DBUtil.signCount,DBUtil.lastSignDate};
         String selection=DBUtil.userName+"='"+user.getUserName()+"' and "+DBUtil.userPic+"='"+user.getUserPic()+"'";
         Cursor cur=db.query(DBUtil.User_TABLE_NAME,columns,selection,null,null,null,null,null);
         if(cur.getCount()!=0){
@@ -91,8 +91,8 @@ public class UserDaoImpl implements  UserDao{
             do{
                 int userid=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.userId));
                 int signcount=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.signCount));
-                int logcount=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.logCount));
-                myuser =new User(userid,user.getUserPic(),user.getUserName(),signcount,logcount);
+                String lastSignDate=cur.getString(cur.getColumnIndexOrThrow(DBUtil.lastSignDate));
+                myuser =new User(userid,user.getUserPic(),user.getUserName(),signcount,lastSignDate);
             }while(cur.moveToNext());
         }
         close(db,cur);
@@ -256,7 +256,10 @@ public class UserDaoImpl implements  UserDao{
 
     public boolean deletelabels(int userid)
     {
-        //具体实现...
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String whereClause = DBUtil.userId+"=?";
+        String[] whereargs={String.valueOf(userid)};
+        db.delete(DBUtil.Propensity_TABLE_NAME,whereClause,whereargs);
         return true;
     }
 
@@ -318,4 +321,64 @@ public class UserDaoImpl implements  UserDao{
         close(db,cur);
         return room;
     }
+
+    public void wipecache(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete(DBUtil.History_TABLE_NAME,null,null);
+    }
+
+    @Override
+    public int searchSignCount(int userid) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String columns[]={DBUtil.signCount};
+        String selection=DBUtil.userId+"="+userid;
+        Cursor cur=db.query(DBUtil.User_TABLE_NAME,columns,selection,null,null,null,null,null);
+        int signCount = 0;
+        if(cur.getCount()!=0){
+            cur.moveToFirst();
+            signCount = cur.getInt(cur.getColumnIndexOrThrow(DBUtil.signCount));
+        }
+        close(db,cur);
+
+        return signCount;
+    }
+
+    @Override
+    public String searchLastSignDate(int userid) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String columns[]={DBUtil.lastSignDate};
+        String selection=DBUtil.userId+"="+userid;
+        Cursor cur=db.query(DBUtil.User_TABLE_NAME,columns,selection,null,null,null,null,null);
+        String lastSignDate = "2000-01-01";
+        if(cur.getCount()!=0){
+            cur.moveToFirst();
+            lastSignDate = cur.getString(cur.getColumnIndexOrThrow(DBUtil.lastSignDate));
+        }
+        close(db,cur);
+
+        return lastSignDate;
+    }
+
+    @Override
+    public boolean updateSignCount(int userid, int signCount) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DBUtil.signCount, signCount);
+        String whereClause = DBUtil.userId+"=?";
+        String[] whereargs={String.valueOf(userid)};
+        db.update(DBUtil.User_TABLE_NAME, values, whereClause, whereargs);
+        return true;
+    }
+
+    @Override
+    public boolean updateSignDate(int userid, String lastSignDate) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DBUtil.lastSignDate, lastSignDate);
+        String whereClause = DBUtil.userId+"=?";
+        String[] whereargs={String.valueOf(userid)};
+        db.update(DBUtil.User_TABLE_NAME, values, whereClause, whereargs);
+        return false;
+    }
+
 }

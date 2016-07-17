@@ -17,7 +17,7 @@ public class DBUtil {
     public static final String userPic="userPic";
     public static final String userName="userName";
     public static final String signCount="signCount";
-    public static final String logCount="logCount";
+    public static final String lastSignDate="lastSignDate";
 
     public static final String rid="rId";
     public static final String roomId="roomId";

@@ -7,30 +7,31 @@ public class User implements Serializable {
     private String userPic;   //第三方账号头像
     private String userName;  //第三方账号名
     private int signCount;    //用户签到次数
-    private int logCount;     //用户登录次数
+    private String lastSignDate;   //用户上次签到日期
 
     public User() {
     }
 
-    public User(int userId, String userPic, String userName, int signCount, int logCount) {
+    public User(int userId, String userPic, String userName, int signCount, String lastSignDate) {
         this.userId = userId;
         this.userPic = userPic;
         this.userName = userName;
         this.signCount = signCount;
-        this.logCount = logCount;
+        this.lastSignDate = lastSignDate;
     }
 
     public User(String userPic, String userName) {
-        this.userId = userId;
         this.userPic = userPic;
         this.userName = userName;
+        this.signCount = 0;
+        this.lastSignDate = "2000-01-01";
     }
 
-    public User(String userPic, String userName, int signCount, int logCount) {
+    public User(String userPic, String userName, int signCount, String lastSignDate) {
         this.userPic = userPic;
         this.userName = userName;
         this.signCount = signCount;
-        this.logCount = logCount;
+        this.lastSignDate = lastSignDate;
     }
 
     public int getUserId() {
@@ -65,12 +66,12 @@ public class User implements Serializable {
         this.signCount = signCount;
     }
 
-    public int getLogCount() {
-        return logCount;
+    public String getLastSignDate() {
+        return lastSignDate;
     }
 
-    public void setLogCount(int logCount) {
-        this.logCount = logCount;
+    public void setLastSignDate(String lastSignDate) {
+        this.lastSignDate = lastSignDate;
     }
 
     @Override
@@ -80,7 +81,7 @@ public class User implements Serializable {
                 ", userPic='" + userPic + '\'' +
                 ", userName='" + userName + '\'' +
                 ", signCount=" + signCount +
-                ", logCount=" + logCount +
+                ", lastSignDate=" + lastSignDate +
                 '}';
     }
 }
