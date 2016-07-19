@@ -129,8 +129,10 @@ public class MainActivity extends AppCompatActivity
 //        getSupportFragmentManager().beginTransaction().replace(R.id.ad_fragment, new AdPagerFragment()).commit();
 //        getSupportFragmentManager().beginTransaction().replace(R.id.category_fragment, new CategoryViewPagerFragment()).commit();
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         pieceFragment = new PieceFragment();
+        Bundle bundle = getIntent().getExtras();
+        pieceFragment.setArguments(bundle);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.main_content, pieceFragment);
         ft.commit();
         //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();

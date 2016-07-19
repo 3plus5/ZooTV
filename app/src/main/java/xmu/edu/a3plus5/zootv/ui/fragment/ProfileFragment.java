@@ -37,6 +37,7 @@ import xmu.edu.a3plus5.zootv.dao.DaoFactory;
 import xmu.edu.a3plus5.zootv.dao.UserDao;
 import xmu.edu.a3plus5.zootv.entity.Propensity;
 import xmu.edu.a3plus5.zootv.entity.User;
+import xmu.edu.a3plus5.zootv.ui.FeedBackActivity;
 import xmu.edu.a3plus5.zootv.ui.LoginActivity;
 import xmu.edu.a3plus5.zootv.ui.MainActivity;
 import xmu.edu.a3plus5.zootv.ui.MyApplication;
@@ -218,7 +219,8 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.profile_suggestion)
     public void provideSuggestion()
     {
-
+        Intent intent = new Intent(getActivity(), FeedBackActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.profile_version)

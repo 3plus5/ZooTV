@@ -83,7 +83,7 @@ public class PandaPlatform extends BasePlatform {
         return categories;
     }
 
-    //一次返回120个
+    //一次返回12个
     @Override
     public List<Room> getMostPopular() {
         List<Room> roomList = new ArrayList<Room>();

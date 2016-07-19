@@ -69,7 +69,6 @@ public class ZooPlatform extends BasePlatform {
         for (BasePlatform platform : platforms) {
             int begin = (page - 1) * portion[i];
             int end = page * portion[i] - 1;
-
             roomList.addAll(platform.getMostPopular().subList(begin, end + 1));
 
             i++;

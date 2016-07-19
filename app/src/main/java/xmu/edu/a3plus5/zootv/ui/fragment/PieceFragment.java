@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.ArrayList;
@@ -64,7 +66,32 @@ public class PieceFragment extends Fragment {
         view = inflater.inflate(R.layout.piece_content, container, false);
 
         ButterKnife.bind(this, view);
-        setUpRecyclerView();
+
+        Log.d("pieceFragment", "in create method");
+
+        Gson gson = new Gson();
+        Bundle bundle = getArguments();
+
+        if(bundle != null){
+            String labelsString = bundle.getString("labelsString");
+            String piecesString = bundle.getString("piecesString");
+            String categoriesString = bundle.getString("categoriesString");
+            List<String> labels = gson.fromJson(labelsString, new TypeToken<List<String>>(){}.getType());
+            Map<String, List> pieces = gson.fromJson(piecesString, new TypeToken<HashMap<String, List<Room>>>(){}.getType());
+            List<Category> categories = gson.fromJson(categoriesString, new TypeToken<List<Category>>(){}.getType());
+
+            Log.d("splashLabels", labelsString);
+            Log.d("splashPieces", piecesString);
+            Log.d("splashCategories", categoriesString);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(new MainMultiAdapter(getActivity(), labels, pieces, categories));
+        } else{
+            setUpRecyclerView();
+        }
+
+        //setUpRecyclerView();
+
         pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -97,7 +124,7 @@ public class PieceFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
         progressDialog = null;
     }
 
