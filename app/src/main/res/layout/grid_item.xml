@@ -24,7 +24,7 @@
                 android:id="@+id/attention"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/star" />
+                android:src="@drawable/follow_pressed" />
         </LinearLayout>
 
         <LinearLayout
@@ -98,10 +98,11 @@
 
             <ImageView
                 android:id="@+id/platform_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:paddingTop="5dp"
-                android:src="@drawable/ic_action_camera" />
+                android:paddingRight="3dp"
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/room_title"

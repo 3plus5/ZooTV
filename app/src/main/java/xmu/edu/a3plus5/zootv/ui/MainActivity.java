@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity
                 messageTextView.setTextSize(18);
                 ImageView imageView = new ImageView(this);
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(50, 50));
-                imageView.setImageResource(R.drawable.push_chat_default);
+//                imageView.setImageResource(R.drawable.logo);
                 linearLayout.addView(imageView, 0);
                 toast.show();
                 exitTime = System.currentTimeMillis();

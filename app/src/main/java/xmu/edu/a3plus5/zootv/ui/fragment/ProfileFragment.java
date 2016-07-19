@@ -170,6 +170,16 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    @OnClick(R.id.profile_propensity_statistic)
+    public void showInterestDialog() {
+        if ("点击头像登录".equals(MyApplication.user.getUserName())) {
+            Toast.makeText(getActivity(), "您尚未登录哦", Toast.LENGTH_SHORT).show();
+        } else {
+            PieDialog pieDialog = new PieDialog();
+            pieDialog.show(getFragmentManager(), "PieDialog");
+        }
+    }
+
     @OnClick(R.id.profile_cache_clear)
     public void clearCache()
     {
@@ -286,13 +296,5 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.profile_propensity_statistic)
-    public void showInterestDialog() {
-        if ("点击头像登录".equals(MyApplication.user.getUserName())) {
-            Toast.makeText(getActivity(), "您尚未登录哦", Toast.LENGTH_SHORT).show();
-        } else {
-            PieDialog pieDialog = new PieDialog();
-            pieDialog.show(getFragmentManager(), "PieDialog");
-        }
-    }
+
 }

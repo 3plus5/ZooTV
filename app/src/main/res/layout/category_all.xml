@@ -23,7 +23,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/category_head_image"
-            android:paddingLeft="5dp"
             android:text="全部"
             android:textSize="@dimen/piece_title" />
     </RelativeLayout>

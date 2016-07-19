@@ -79,7 +79,7 @@
                     android:layout_height="25dp"
                     android:layout_margin="10dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_action_send" />
+                    android:src="@drawable/sign_complete" />
 
             </RelativeLayout>
         </LinearLayout>
@@ -103,7 +103,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/hand" />
+                    android:src="@drawable/personal" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -125,7 +125,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/hand" />
+                    android:src="@drawable/follow_pressed" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -246,7 +246,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_launcher" />
+                    android:src="@drawable/feedback" />
 
                 <TextView
                     android:layout_width="match_parent"
