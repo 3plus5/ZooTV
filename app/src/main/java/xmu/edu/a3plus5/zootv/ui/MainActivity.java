@@ -271,10 +271,6 @@ public class MainActivity extends AppCompatActivity
                 TextView messageTextView = (TextView) linearLayout.getChildAt(0);
                 messageTextView.setPadding(10, 0, 0, 0);
                 messageTextView.setTextSize(18);
-                ImageView imageView = new ImageView(this);
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(50, 50));
-//                imageView.setImageResource(R.drawable.logo);
-                linearLayout.addView(imageView, 0);
                 toast.show();
                 exitTime = System.currentTimeMillis();
                 return;
@@ -357,9 +353,19 @@ public class MainActivity extends AppCompatActivity
             bottomNavigationBar.selectTab(0);
             setTitle("熊猫专区");
         } else if (id == R.id.chushou) {
-
+            MyApplication.setPlatform(BasePlatform.Zoo);
+            //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            pieceFragment = new PieceFragment();
+            ft.add(R.id.main_content, pieceFragment).commit();
+            bottomNavigationBar.selectTab(0);
+            setTitle("ZooTV");
         } else if (id == R.id.huomao) {
-
+            MyApplication.setPlatform(BasePlatform.Zoo);
+            //getSupportFragmentManager().beginTransaction().replace(R.id.main_content, new PieceFragment()).commit();
+            pieceFragment = new PieceFragment();
+            ft.add(R.id.main_content, pieceFragment).commit();
+            bottomNavigationBar.selectTab(0);
+            setTitle("ZooTV");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

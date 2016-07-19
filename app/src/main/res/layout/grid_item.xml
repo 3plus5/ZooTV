@@ -37,7 +37,7 @@
                 android:id="@+id/share"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/ic_action_share_white" />
+                android:src="@drawable/share_pressed" />
         </LinearLayout>
 
     </LinearLayout>

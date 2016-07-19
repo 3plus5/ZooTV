@@ -24,7 +24,7 @@
                 android:id="@+id/userPhoto"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/push_chat_default" />
+                android:src="@drawable/image_head" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -169,7 +169,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/hand" />
+                    android:src="@drawable/l_beauty_on_p" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -200,7 +200,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_launcher" />
+                    android:src="@drawable/image_clear_cache" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -223,7 +223,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_launcher" />
+                    android:src="@drawable/image_abouting" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -246,7 +246,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/feedback" />
+                    android:src="@drawable/image_notice" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -269,7 +269,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_launcher" />
+                    android:src="@drawable/image_player_config_pressed" />
 
                 <TextView
                     android:layout_width="match_parent"

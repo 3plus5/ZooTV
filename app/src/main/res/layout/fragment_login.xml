@@ -21,14 +21,14 @@
     <!--app:hintTextAppearance="@style/TextAppearance.AppCompat">-->
 
     <!--<Button-->
-        <!--android:id="@+id/email_login_btn"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@drawable/login_button"-->
-        <!--android:backgroundTint="@color/colorPrimaryDark"-->
-        <!--android:text="邮箱登录"-->
-        <!--android:textColor="@color/white" />-->
+    <!--android:id="@+id/email_login_btn"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="@drawable/login_button"-->
+    <!--android:backgroundTint="@color/colorPrimaryDark"-->
+    <!--android:text="邮箱登录"-->
+    <!--android:textColor="@color/white" />-->
 
     <TextView
         android:id="@+id/email_login_btn"
@@ -36,8 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="邮箱登录"
-        android:textSize="20sp"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/email_edit_text"
@@ -103,49 +103,59 @@
         android:id="@+id/social_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/email_login">
+        android:layout_below="@+id/email_login"
+        android:layout_marginTop="30dp">
+
         <TextView
             android:id="@+id/social_l"
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="其他登录"/>
+            android:text="其他登录" />
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_toLeftOf="@id/social_l"
             android:layout_centerVertical="true"
-            android:background="@color/backgroundColorPress"/>
+            android:layout_toLeftOf="@id/social_l"
+            android:background="@color/backgroundColorPress" />
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/social_l"
-            android:background="@color/backgroundColorPress"/>
+            android:background="@color/backgroundColorPress" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/sina_login_btn"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_below="@+id/social_head"
-        android:background="@drawable/login_button"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="微博登录"
-        android:textColor="@color/white" />
+        android:paddingTop="10dp">
 
-    <Button
-        android:id="@+id/qq_login_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sina_login_btn"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/login_qq_button"
-        android:backgroundTint="@color/md_material_blue_600"
-        android:text="QQ登录"
-        android:textColor="@color/white" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/qq_login_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/qq_s" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/sina_login_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="30dp"
+            android:layout_toLeftOf="@id/qq_login_btn"
+            android:src="@drawable/weibo_s" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@id/qq_login_btn"
+            android:src="@drawable/wechat_s" />
+    </RelativeLayout>
 </RelativeLayout>

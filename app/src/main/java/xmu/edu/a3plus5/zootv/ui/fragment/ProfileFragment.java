@@ -94,14 +94,13 @@ public class ProfileFragment extends Fragment {
     }
 
     @OnClick(R.id.profile_sign_btn)
-    public void dailySignTest()
-    {
+    public void dailySignTest() {
         signCount = signProgressBar.getProgress();
         if (signCount < 7) {
             signCount += 1;
             signProgressBar.setProgress(signCount);
         }
-        if(signCount == 7) {
+        if (signCount == 7) {
             //抽奖
             View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_present, null);
             final Dialog dialog = new Dialog(getActivity(), R.style.Translucent_NoTitle);
@@ -127,7 +126,7 @@ public class ProfileFragment extends Fragment {
                     signCount += 1;
                     signProgressBar.setProgress(signCount);
                 }
-                if(signCount == 7) {
+                if (signCount == 7) {
                     //抽奖
                     View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_present, null);
                     final Dialog dialog = new Dialog(getActivity(), R.style.Translucent_NoTitle);
@@ -144,7 +143,7 @@ public class ProfileFragment extends Fragment {
                     signCount = 0;
                     signProgressBar.setProgress(signCount);
                 }
-            } else if(daysBetween(lastSignDate, nowDate) > 1) {
+            } else if (daysBetween(lastSignDate, nowDate) > 1) {
                 signCount = 1;
                 signProgressBar.setProgress(signCount);
             }
@@ -181,62 +180,61 @@ public class ProfileFragment extends Fragment {
     }
 
     @OnClick(R.id.profile_cache_clear)
-    public void clearCache()
-    {
-        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Are you sure?")
-                .setContentText("Won't be able to recover this file!")
-                .setCancelText("No,cancel plx!")
-                .setConfirmText("Yes,delete it!")
-                .showCancelButton(true)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        // reuse previous dialog instance, keep widget user state, reset them if you need
-                        sDialog.setTitleText("Cancelled!")
-                                .setContentText("Your imaginary file is safe :)")
-                                .setConfirmText("OK")
-                                .showCancelButton(false)
-                                .setCancelClickListener(null)
-                                .setConfirmClickListener(null)
-                                .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                    }
-                })
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        Log.d("cgf", "wipe cache");
-                        userDao.wipecache();
+    public void clearCache() {
+        if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("确定清空历史记录吗?")
+                    .setContentText("清除后将无法恢复文件~")
+                    .setCancelText("不，我要留着!")
+                    .setConfirmText("给我删了!")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            // reuse previous dialog instance, keep widget user state, reset them if you need
+                            sDialog.setTitleText("取消啦!")
+                                    .setContentText("你的文件还安全地留着 :)")
+                                    .setConfirmText("OK")
+                                    .showCancelButton(false)
+                                    .setCancelClickListener(null)
+                                    .setConfirmClickListener(null)
+                                    .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            userDao.wipecache(MyApplication.user.getUserId());
 
-                        sDialog.setTitleText("Deleted!")
-                                .setContentText("Your imaginary file has been deleted!")
-                                .setConfirmText("OK")
-                                .showCancelButton(false)
-                                .setCancelClickListener(null)
-                                .setConfirmClickListener(null)
-                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                    }
-                })
-                .show();
+                            sDialog.setTitleText("删除啦!")
+                                    .setContentText("历史记录不复存在!")
+                                    .setConfirmText("OK")
+                                    .showCancelButton(false)
+                                    .setCancelClickListener(null)
+                                    .setConfirmClickListener(null)
+                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        }
+                    })
+                    .show();
+        }else{
+            Toast.makeText(getActivity(),"请先登录",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OnClick(R.id.profile_about_us)
-    public void aboutUs()
-    {
-
+    public void aboutUs() {
+        Toast.makeText(getActivity(),"我只是来卖个萌的=￣ω￣=",Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.profile_suggestion)
-    public void provideSuggestion()
-    {
+    public void provideSuggestion() {
         Intent intent = new Intent(getActivity(), FeedBackActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.profile_version)
-    public void detectVersion()
-    {
-        Toast.makeText(getActivity(), "版本检测中，请稍后", Toast.LENGTH_SHORT).show();
+    public void detectVersion() {
+        Toast.makeText(getActivity(), "版本检测中，请稍后...", Toast.LENGTH_SHORT).show();
         Toast.makeText(getActivity(), "当前已是最新版本", Toast.LENGTH_SHORT).show();
     }
 

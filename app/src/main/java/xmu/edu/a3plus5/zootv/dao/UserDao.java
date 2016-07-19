@@ -96,7 +96,12 @@ public interface UserDao {
     /*
     清空缓存
     */
-    public void wipecache();
+    public void wipecache(int userId);
+
+    /*
+   计算缓存
+    */
+    public String calcache(int userId);
 
     /**
      * 获取签到次数

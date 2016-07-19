@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
         values.put(DBUtil.userName, userName);
         values.put(DBUtil.signCount, 0);
         values.put(DBUtil.lastSignDate, "2000-01-01");
-        long i=0;
+        long i = 0;
         i = db.insert(DBUtil.User_TABLE_NAME, null, values);
         if (i != 0)
             flag = true;
@@ -73,7 +73,7 @@ public class UserDaoImpl implements UserDao {
         values.put(DBUtil.userName, user.getUserName());
         values.put(DBUtil.signCount, user.getSignCount());
         values.put(DBUtil.lastSignDate, user.getLastSignDate());
-        long i=0;
+        long i = 0;
         i = db.insert(DBUtil.User_TABLE_NAME, null, values);
         User myuser = selectuser(user);
         close(db);
@@ -83,17 +83,17 @@ public class UserDaoImpl implements UserDao {
     public User selectuser(User user) {
         User myuser = null;
         SQLiteDatabase db = helper.getReadableDatabase();
-        String columns[]={DBUtil.userId,DBUtil.userName,DBUtil.userPic,DBUtil.signCount,DBUtil.lastSignDate};
-        String selection=DBUtil.userName+"='"+user.getUserName()+"' and "+DBUtil.userPic+"='"+user.getUserPic()+"'";
-        Cursor cur=db.query(DBUtil.User_TABLE_NAME,columns,selection,null,null,null,null,null);
-        if(cur.getCount()!=0){
+        String columns[] = {DBUtil.userId, DBUtil.userName, DBUtil.userPic, DBUtil.signCount, DBUtil.lastSignDate};
+        String selection = DBUtil.userName + "='" + user.getUserName() + "' and " + DBUtil.userPic + "='" + user.getUserPic() + "'";
+        Cursor cur = db.query(DBUtil.User_TABLE_NAME, columns, selection, null, null, null, null, null);
+        if (cur.getCount() != 0) {
             cur.moveToFirst();
-            do{
-                int userid=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.userId));
-                int signcount=cur.getInt(cur.getColumnIndexOrThrow(DBUtil.signCount));
-                String lastSignDate=cur.getString(cur.getColumnIndexOrThrow(DBUtil.lastSignDate));
-                myuser =new User(userid,user.getUserPic(),user.getUserName(),signcount,lastSignDate);
-            }while(cur.moveToNext());
+            do {
+                int userid = cur.getInt(cur.getColumnIndexOrThrow(DBUtil.userId));
+                int signcount = cur.getInt(cur.getColumnIndexOrThrow(DBUtil.signCount));
+                String lastSignDate = cur.getString(cur.getColumnIndexOrThrow(DBUtil.lastSignDate));
+                myuser = new User(userid, user.getUserPic(), user.getUserName(), signcount, lastSignDate);
+            } while (cur.moveToNext());
         }
         close(db, cur);
         return myuser;
@@ -320,23 +320,18 @@ public class UserDaoImpl implements UserDao {
         return room;
     }
 
-    public void wipecache() {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        db.delete(DBUtil.History_TABLE_NAME, null, null);
-    }
-
     @Override
     public int searchSignCount(int userid) {
         SQLiteDatabase db = helper.getReadableDatabase();
-        String columns[]={DBUtil.signCount};
-        String selection=DBUtil.userId+"="+userid;
-        Cursor cur=db.query(DBUtil.User_TABLE_NAME,columns,selection,null,null,null,null,null);
+        String columns[] = {DBUtil.signCount};
+        String selection = DBUtil.userId + "=" + userid;
+        Cursor cur = db.query(DBUtil.User_TABLE_NAME, columns, selection, null, null, null, null, null);
         int signCount = 0;
-        if(cur.getCount()!=0){
+        if (cur.getCount() != 0) {
             cur.moveToFirst();
             signCount = cur.getInt(cur.getColumnIndexOrThrow(DBUtil.signCount));
         }
-        close(db,cur);
+        close(db, cur);
 
         return signCount;
     }
@@ -344,15 +339,15 @@ public class UserDaoImpl implements UserDao {
     @Override
     public String searchLastSignDate(int userid) {
         SQLiteDatabase db = helper.getReadableDatabase();
-        String columns[]={DBUtil.lastSignDate};
-        String selection=DBUtil.userId+"="+userid;
-        Cursor cur=db.query(DBUtil.User_TABLE_NAME,columns,selection,null,null,null,null,null);
+        String columns[] = {DBUtil.lastSignDate};
+        String selection = DBUtil.userId + "=" + userid;
+        Cursor cur = db.query(DBUtil.User_TABLE_NAME, columns, selection, null, null, null, null, null);
         String lastSignDate = "2000-01-01";
-        if(cur.getCount()!=0){
+        if (cur.getCount() != 0) {
             cur.moveToFirst();
             lastSignDate = cur.getString(cur.getColumnIndexOrThrow(DBUtil.lastSignDate));
         }
-        close(db,cur);
+        close(db, cur);
 
         return lastSignDate;
     }
@@ -362,8 +357,8 @@ public class UserDaoImpl implements UserDao {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBUtil.signCount, signCount);
-        String whereClause = DBUtil.userId+"=?";
-        String[] whereargs={String.valueOf(userid)};
+        String whereClause = DBUtil.userId + "=?";
+        String[] whereargs = {String.valueOf(userid)};
         db.update(DBUtil.User_TABLE_NAME, values, whereClause, whereargs);
         return true;
     }
@@ -373,10 +368,38 @@ public class UserDaoImpl implements UserDao {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBUtil.lastSignDate, lastSignDate);
-        String whereClause = DBUtil.userId+"=?";
-        String[] whereargs={String.valueOf(userid)};
+        String whereClause = DBUtil.userId + "=?";
+        String[] whereargs = {String.valueOf(userid)};
         db.update(DBUtil.User_TABLE_NAME, values, whereClause, whereargs);
         return false;
+    }
+
+    @Override
+    public void wipecache(int userid) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String whereClause = DBUtil.userId + "=?";
+        String[] whereargs = {String.valueOf(userid)};
+        db.delete(DBUtil.History_TABLE_NAME, whereClause, whereargs);
+    }
+
+    @Override
+    public String calcache(int userid) {
+        int datasize = 0;
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String columns[] = {"CONCAT(ROUND(DATA_LENGTH/1024/1024,2),'MB') AS DATA_LENGTH"};
+        //String selection = DBUtil.userId + "=" + userid ;
+        String selection = "table_schema='zabbix' and table_name='HISTORY'";
+        Cursor cur = db.query("information_schema.TABLES WHERE", columns, selection, null, null, null, null, null);
+
+        if (cur.getCount() != 0) {
+            cur.moveToFirst();
+            do {
+                datasize = cur.getInt(cur.getColumnIndexOrThrow("DATA_LENGTH"));
+            } while (cur.moveToNext());
+        }
+        close(db, cur);
+        return String.valueOf(datasize);
+
     }
 
 }
