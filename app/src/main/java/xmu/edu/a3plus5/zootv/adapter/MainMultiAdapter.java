@@ -281,13 +281,13 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tips = new ImageView[imgIdArray.length];
             for (int i = 0; i < tips.length; i++) {
                 ImageView imageView = new ImageView(context);
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(3, 3));
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(6, 6));
                 tips[i] = imageView;
                 if (i == 0) {
-                    Picasso.with(context).load(R.drawable.ic_action_star).into(tips[i]);
+                    Picasso.with(context).load(R.drawable.point_darkgray).into(tips[i]);
 //                    tips[i].setBackgroundResource(R.drawable.ic_action_star);
                 } else {
-                    Picasso.with(context).load(R.drawable.ic_stars).into(tips[i]);
+                    Picasso.with(context).load(R.drawable.point_lightgray).into(tips[i]);
 //                    tips[i].setBackgroundResource(R.drawable.ic_stars);
                 }
 
@@ -399,9 +399,9 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private void setImageBackground(int selectItems) {
             for (int i = 0; i < tips.length; i++) {
                 if (i == selectItems) {
-                    tips[i].setBackgroundResource(R.drawable.ic_action_star);
+                    tips[i].setBackgroundResource(R.drawable.point_darkgray);
                 } else {
-                    tips[i].setBackgroundResource(R.drawable.ic_stars);
+                    tips[i].setBackgroundResource(R.drawable.point_lightgray);
                 }
             }
         }

@@ -15,8 +15,8 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <!-- 蓝牙分享所需的权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -24,7 +24,7 @@
     <application
         android:name=".ui.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
@@ -32,31 +32,31 @@
         tools:replace="icon">
         <activity
             android:name="com.mob.tools.MobUIShell"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
 
             <!-- 调用新浪原生SDK，需要注册的回调activity -->
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <!--微信分享回调 -->
+        <!-- 微信分享回调 -->
         <activity
             android:name="cn.sharesdk.demo.wxapi.WXEntryActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".ui.MainActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,9 +65,9 @@
         </activity>
         <activity
             android:name=".ui.WebActivity"
+            android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
-            android:theme="@style/AppThemeBack"
-            android:configChanges="orientation|screenSize"/>
+            android:theme="@style/AppThemeBack" />
         <activity
             android:name=".ui.RoomListActivity"
             android:theme="@style/AppThemeBack" />
@@ -77,12 +77,16 @@
         <activity
             android:name=".ui.LoginActivity"
             android:theme="@style/AppThemeBack"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-        </activity>
-        <activity android:name=".ui.NoNetworkActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".ui.NoNetworkActivity"
             android:theme="@style/AppThemeBack" />
-        <activity android:name=".ui.PropensityActivity"
+        <activity
+            android:name=".ui.PropensityActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.FeedBackActivity"
+            android:theme="@style/AppThemeBack" />
     </application>
 
 </manifest>

@@ -31,6 +31,7 @@ import xmu.edu.a3plus5.zootv.entity.History;
 import xmu.edu.a3plus5.zootv.entity.Interest;
 import xmu.edu.a3plus5.zootv.entity.Room;
 import xmu.edu.a3plus5.zootv.entity.User;
+import xmu.edu.a3plus5.zootv.network.BasePlatform;
 import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.ui.WebActivity;
 import xmu.edu.a3plus5.zootv.ui.fragment.PieceFragment;
@@ -69,12 +70,13 @@ public class RoomListAdapter extends BaseSwipeAdapter {
         ImageView share = (ImageView) view.findViewById(R.id.share);
         ImageView room = (ImageView) view.findViewById(R.id.room_photo);
         TextView title = (TextView) view.findViewById(R.id.room_title);
+        ImageView icon = (ImageView) view.findViewById(R.id.platform_icon);
         TextView author = (TextView) view.findViewById(R.id.room_author);
         TextView audience = (TextView) view.findViewById(R.id.room_audience);
 
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.room_up);
 
-        ViewHolder viewHolder = new ViewHolder(attention, share, room, title, author, audience, linearLayout);
+        ViewHolder viewHolder = new ViewHolder(attention, share, room, title,icon, author, audience, linearLayout);
         view.setTag(viewHolder);
 
         return view;
@@ -93,6 +95,14 @@ public class RoomListAdapter extends BaseSwipeAdapter {
         viewHolder.title.setText(rooms.get(position).getTitle());
         viewHolder.author.setText(rooms.get(position).getAnchor());
         viewHolder.audience.setText(rooms.get(position).getWatchingNum());
+        if (BasePlatform.DouYu.equals(rooms.get(position).getPlatform())){
+            viewHolder.icon.setImageResource(R.drawable.icon_gx_yu_wan);
+        }else if (BasePlatform.Panda.equals(rooms.get(position).getPlatform())){
+            viewHolder.icon.setImageResource(R.drawable.pandalogo);
+        }else if (BasePlatform.ZhanQi.equals(rooms.get(position).getPlatform())){
+            viewHolder.icon.setImageResource(R.drawable.zq_logo);
+        }
+
         Picasso.with(mContext).load(rooms.get(position).getPicUrl()).into(viewHolder.room);
 
         viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -235,15 +245,17 @@ public class RoomListAdapter extends BaseSwipeAdapter {
         public ImageView share;
         public ImageView room;
         public TextView title;
+        public ImageView icon;
         public TextView author;
         public TextView audience;
         public LinearLayout linearLayout;
 
-        public ViewHolder(ImageView attention, ImageView share, ImageView room, TextView title, TextView author, TextView audience, LinearLayout linearLayout) {
+        public ViewHolder(ImageView attention, ImageView share, ImageView room, TextView title,ImageView icon, TextView author, TextView audience, LinearLayout linearLayout) {
             this.attention = attention;
             this.share = share;
             this.room = room;
             this.title = title;
+            this.icon = icon;
             this.author = author;
             this.audience = audience;
             this.linearLayout = linearLayout;
