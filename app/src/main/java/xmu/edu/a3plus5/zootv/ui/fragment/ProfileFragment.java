@@ -173,7 +173,7 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.profile_propensity_statistic)
     public void showInterestDialog() {
         if ("点击头像登录".equals(MyApplication.user.getUserName())) {
-            Toast.makeText(getActivity(), "您尚未登录哦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
         } else {
             PieDialog pieDialog = new PieDialog();
             pieDialog.show(getFragmentManager(), "PieDialog");
@@ -183,41 +183,45 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.profile_cache_clear)
     public void clearCache()
     {
-        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Are you sure?")
-                .setContentText("Won't be able to recover this file!")
-                .setCancelText("No,cancel plx!")
-                .setConfirmText("Yes,delete it!")
-                .showCancelButton(true)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        // reuse previous dialog instance, keep widget user state, reset them if you need
-                        sDialog.setTitleText("Cancelled!")
-                                .setContentText("Your imaginary file is safe :)")
-                                .setConfirmText("OK")
-                                .showCancelButton(false)
-                                .setCancelClickListener(null)
-                                .setConfirmClickListener(null)
-                                .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                    }
-                })
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        Log.d("cgf", "wipe cache");
-                        userDao.wipecache();
+        if (MyApplication.user.getUserName().equals("点击头像登录")) {
+            Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
+        } else {
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("您确定要清空吗？")
+                    .setContentText("此操作执行后将不能被撤销")
+                    .setCancelText("不，还是算了")
+                    .setConfirmText("是，确定清空")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            // reuse previous dialog instance, keep widget user state, reset them if you need
+                            sDialog.setTitleText("操作已取消!")
+                                    .setContentText("您的缓存仍被保留:)")
+                                    .setConfirmText("确定")
+                                    .showCancelButton(false)
+                                    .setCancelClickListener(null)
+                                    .setConfirmClickListener(null)
+                                    .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            Log.d("cgf", "wipe cache");
+                            userDao.wipecache();
 
-                        sDialog.setTitleText("Deleted!")
-                                .setContentText("Your imaginary file has been deleted!")
-                                .setConfirmText("OK")
-                                .showCancelButton(false)
-                                .setCancelClickListener(null)
-                                .setConfirmClickListener(null)
-                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                    }
-                })
-                .show();
+                            sDialog.setTitleText("操作已执行!")
+                                    .setContentText("您的缓存已被清空:)")
+                                    .setConfirmText("确定")
+                                    .showCancelButton(false)
+                                    .setCancelClickListener(null)
+                                    .setConfirmClickListener(null)
+                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        }
+                    })
+                    .show();
+        }
     }
 
     @OnClick(R.id.profile_about_us)
@@ -229,8 +233,12 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.profile_suggestion)
     public void provideSuggestion()
     {
-        Intent intent = new Intent(getActivity(), FeedBackActivity.class);
-        startActivity(intent);
+        if (MyApplication.user.getUserName().equals("点击头像登录")) {
+            Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getActivity(), FeedBackActivity.class);
+            startActivity(intent);
+        }
     }
 
     @OnClick(R.id.profile_version)
