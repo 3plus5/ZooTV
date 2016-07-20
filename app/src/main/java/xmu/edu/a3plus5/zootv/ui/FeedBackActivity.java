@@ -7,7 +7,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import java.util.HashMap;
 
@@ -21,6 +24,7 @@ import cn.sharesdk.system.email.Email;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.adapter.FeedBackAdapter;
 
 public class FeedBackActivity extends SwipeBackActivity {
 
@@ -28,6 +32,10 @@ public class FeedBackActivity extends SwipeBackActivity {
     Toolbar toolbar;
     @Bind(R.id.feedBackText)
     EditText feedBackText;
+    @Bind(R.id.feedBack_list)
+    ListView feedBackList;
+
+    private String[] feedbacks = {"加载数据速度慢", "视频加载异常", "总是登录失败", "数据丢失", "占用内存过大", "其他功能异常"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,14 @@ public class FeedBackActivity extends SwipeBackActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        feedBackList.setAdapter(new FeedBackAdapter(this, feedbacks));
+        feedBackList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                feedBackText.setText(feedbacks[i]);
             }
         });
 

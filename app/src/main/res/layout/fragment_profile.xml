@@ -37,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="点击登录"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"/>
 
                 <RelativeLayout
@@ -75,8 +75,8 @@
 
                 <ImageView
                     android:id="@+id/profile_sign_btn"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_margin="10dp"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/sign_complete" />
@@ -100,8 +100,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:src="@drawable/personal" />
 
@@ -122,8 +122,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:src="@drawable/follow_pressed" />
 
@@ -144,8 +144,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:src="@drawable/hand" />
 
@@ -166,8 +166,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:src="@drawable/l_beauty_on_p" />
 
@@ -197,8 +197,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/image_clear_cache" />
 
@@ -206,7 +206,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="清空缓存"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:paddingLeft="10dp"/>
             </LinearLayout>
 
@@ -220,8 +220,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/image_abouting" />
 
@@ -229,7 +229,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="关于我们"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:paddingLeft="10dp"/>
             </LinearLayout>
 
@@ -243,8 +243,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/image_notice" />
 
@@ -252,7 +252,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="意见反馈"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:paddingLeft="10dp"/>
             </LinearLayout>
 
@@ -266,8 +266,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/image_player_config_pressed" />
 
@@ -275,8 +275,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="版本信息"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:paddingLeft="10dp"/>
+
+                <!--<TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1.0.2"
+                    android:textSize="12sp"/>-->
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -78,8 +78,8 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         userName.setText(MyApplication.user.getUserName());
-        Picasso.with(getActivity()).load(MyApplication.user.getUserPic()).into(userPhoto);
-
+//        Picasso.with(getActivity()).load(MyApplication.user.getUserPic()).into(userPhoto);
+        userPhoto.setImageDrawable(getResources().getDrawable(R.drawable.push_chat_default));
         userDao = DaoFactory.getUserDao(getActivity());
 
         //JudgeSignStatus();
@@ -172,7 +172,7 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.profile_propensity_statistic)
     public void showInterestDialog() {
         if ("点击头像登录".equals(MyApplication.user.getUserName())) {
-            Toast.makeText(getActivity(), "您尚未登录哦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
         } else {
             PieDialog pieDialog = new PieDialog();
             pieDialog.show(getFragmentManager(), "PieDialog");
@@ -181,20 +181,22 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.profile_cache_clear)
     public void clearCache() {
-        if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
+        if (MyApplication.user.getUserName().equals("点击头像登录")) {
+            Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
+        } else {
             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("确定清空历史记录吗?")
-                    .setContentText("清除后将无法恢复文件~")
-                    .setCancelText("不，我要留着!")
-                    .setConfirmText("给我删了!")
+                    .setTitleText("您确定要清空吗？")
+                    .setContentText("此操作执行后将不能被撤销")
+                    .setCancelText("不，还是算了")
+                    .setConfirmText("是，确定清空")
                     .showCancelButton(true)
                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
                             // reuse previous dialog instance, keep widget user state, reset them if you need
-                            sDialog.setTitleText("取消啦!")
-                                    .setContentText("你的文件还安全地留着 :)")
-                                    .setConfirmText("OK")
+                            sDialog.setTitleText("操作已取消!")
+                                    .setContentText("您的缓存仍被保留:)")
+                                    .setConfirmText("确定")
                                     .showCancelButton(false)
                                     .setCancelClickListener(null)
                                     .setConfirmClickListener(null)
@@ -204,11 +206,12 @@ public class ProfileFragment extends Fragment {
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
+                            Log.d("cgf", "wipe cache");
                             userDao.wipecache(MyApplication.user.getUserId());
 
-                            sDialog.setTitleText("删除啦!")
-                                    .setContentText("历史记录不复存在!")
-                                    .setConfirmText("OK")
+                            sDialog.setTitleText("操作已执行!")
+                                    .setContentText("您的缓存已被清空:)")
+                                    .setConfirmText("确定")
                                     .showCancelButton(false)
                                     .setCancelClickListener(null)
                                     .setConfirmClickListener(null)
@@ -216,20 +219,22 @@ public class ProfileFragment extends Fragment {
                         }
                     })
                     .show();
-        }else{
-            Toast.makeText(getActivity(),"请先登录",Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnClick(R.id.profile_about_us)
     public void aboutUs() {
-        Toast.makeText(getActivity(),"我只是来卖个萌的=￣ω￣=",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "我只是来卖个萌的=￣ω￣=", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.profile_suggestion)
     public void provideSuggestion() {
-        Intent intent = new Intent(getActivity(), FeedBackActivity.class);
-        startActivity(intent);
+        if (MyApplication.user.getUserName().equals("点击头像登录")) {
+            Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getActivity(), FeedBackActivity.class);
+            startActivity(intent);
+        }
     }
 
     @OnClick(R.id.profile_version)
