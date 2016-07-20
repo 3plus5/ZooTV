@@ -117,10 +117,10 @@ public class MainActivity extends AppCompatActivity
                 .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC
                 );
         bottomNavigationBar
-                .addItem(new BottomNavigationItem(R.drawable.ic_action_explore, "首页").setActiveColor(R.color.orange))
-                .addItem(new BottomNavigationItem(R.drawable.ic_action_explore, "分类").setActiveColor(R.color.orange))
-                .addItem(new BottomNavigationItem(R.drawable.ic_action_explore, "记录").setActiveColor(R.color.orange))
-                .addItem(new BottomNavigationItem(R.drawable.ic_action_explore, "个人").setActiveColor(R.color.orange))
+                .addItem(new BottomNavigationItem(R.drawable.ic_home_black_36dp, "首页").setActiveColor(R.color.orange))
+                .addItem(new BottomNavigationItem(R.drawable.ic_apps_black_36dp, "分类").setActiveColor(R.color.orange))
+                .addItem(new BottomNavigationItem(R.drawable.ic_query_builder_black_36dp, "记录").setActiveColor(R.color.orange))
+                .addItem(new BottomNavigationItem(R.drawable.ic_person_black_36dp, "个人").setActiveColor(R.color.orange))
                 .setFirstSelectedPosition(lastSelectedPosition)
                 .initialise();
 
