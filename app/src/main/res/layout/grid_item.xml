@@ -17,27 +17,27 @@
         <LinearLayout
             android:layout_width="40dp"
             android:layout_height="60dp"
-            android:background="#333"
+            android:background="#ddd"
             android:gravity="center">
 
             <ImageView
                 android:id="@+id/attention"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/follow_pressed" />
+                android:src="@drawable/ic_favorite_grey600_36dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="40dp"
             android:layout_height="60dp"
-            android:background="#666"
+            android:background="#555"
             android:gravity="center">
 
             <ImageView
                 android:id="@+id/share"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/share_pressed" />
+                android:src="@drawable/ic_action_share_white" />
         </LinearLayout>
 
     </LinearLayout>

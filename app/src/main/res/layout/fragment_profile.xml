@@ -79,7 +79,7 @@
                     android:layout_height="30dp"
                     android:layout_margin="10dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/sign_complete" />
+                    android:src="@drawable/ic_create_black_36dp" />
 
             </RelativeLayout>
         </LinearLayout>
@@ -147,7 +147,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/hand" />
+                    android:src="@drawable/pie42" />
 
                 <TextView
                     android:layout_width="match_parent"

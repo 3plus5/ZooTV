@@ -125,43 +125,47 @@ public class ProfileFragment extends Fragment {
     }
 
     public void dailySign() {
-        try {
-            if (daysBetween(lastSignDate, nowDate) == 1) {
-                if (signCount < 7) {
-                    signCount += 1;
-                    signProgressBar.setProgress(signCount);
-                }
-                if (signCount == 7) {
-                    //抽奖
-                    View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_present, null);
-                    final Dialog dialog = new Dialog(getActivity(), R.style.Translucent_NoTitle);
-                    dialog.setContentView(dialogView);
-                    dialog.show();
-                    ImageView presentImage = (ImageView) dialogView.findViewById(R.id.present_image);
-                    presentImage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
+        if (MyApplication.user.getUserName().equals("点击头像登录")) {
+            Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                if (daysBetween(lastSignDate, nowDate) == 1) {
+                    if (signCount < 7) {
+                        signCount += 1;
+                        signProgressBar.setProgress(signCount);
+                    }
+                    if (signCount == 7) {
+                        //抽奖
+                        View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_present, null);
+                        final Dialog dialog = new Dialog(getActivity(), R.style.Translucent_NoTitle);
+                        dialog.setContentView(dialogView);
+                        dialog.show();
+                        ImageView presentImage = (ImageView) dialogView.findViewById(R.id.present_image);
+                        presentImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
 
-                    signCount = 0;
+                        signCount = 0;
+                        signProgressBar.setProgress(signCount);
+                    }
+                } else if (daysBetween(lastSignDate, nowDate) > 1) {
+                    signCount = 1;
                     signProgressBar.setProgress(signCount);
                 }
-            } else if (daysBetween(lastSignDate, nowDate) > 1) {
-                signCount = 1;
-                signProgressBar.setProgress(signCount);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
 
-        } catch (ParseException e) {
-            e.printStackTrace();
+            userDao.updateSignCount(MyApplication.user.getUserId(), signCount);
+            userDao.updateSignDate(MyApplication.user.getUserId(), nowDate);
+
+            signButton.setImageDrawable(getResources().getDrawable(R.drawable.sign_complete));
+            signButton.setClickable(false);
         }
-
-        userDao.updateSignCount(MyApplication.user.getUserId(), signCount);
-        userDao.updateSignDate(MyApplication.user.getUserId(), nowDate);
-
-        signButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_done_black));
-        signButton.setClickable(false);
     }
 
     @OnClick(R.id.profile_propensity_setting)
@@ -289,11 +293,13 @@ public class ProfileFragment extends Fragment {
             lastSignDate = userDao.searchLastSignDate(MyApplication.user.getUserId());
             try {
                 if (daysBetween(lastSignDate, nowDate) == 0) {
-                    signButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_done_black));
+                    signButton.setImageDrawable(getResources().getDrawable(R.drawable.sign_complete));
                     signButton.setClickable(false);
                 } else if (daysBetween(lastSignDate, nowDate) == 1) {
+                    signButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_create_black_36dp));
                     signButton.setClickable(true);
                 } else if (daysBetween(lastSignDate, nowDate) > 1) {
+                    signButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_create_black_36dp));
                     signButton.setClickable(true);
                 }
             } catch (ParseException e) {

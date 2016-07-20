@@ -69,7 +69,7 @@ public class CategoryGridAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
         if ("home".equals(type) && i == count - 1) {
-            Picasso.with(context).load(R.drawable.view_more).into(viewHolder.circleImageView);
+            Picasso.with(context).load(R.drawable.ic_keyboard_control_grey600_36dp).into(viewHolder.circleImageView);
             viewHolder.textView.setText("更多");
             viewHolder.item_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
