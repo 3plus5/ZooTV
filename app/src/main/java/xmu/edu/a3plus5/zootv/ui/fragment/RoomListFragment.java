@@ -157,7 +157,7 @@ public class RoomListFragment extends Fragment {
             if (category == null && searchQuery == null) {
                 rooms = platform.getByCategory(platform.getPopularCategory().get(0), 1);
             } else if (searchQuery != null) {
-                if (isNumeric(searchQuery)) {
+                if (isNumeric(searchQuery) && !MyApplication.platform.equals(BasePlatform.Zoo)) {
                     if (platform.getRoomById(searchQuery) != null) {
                         rooms = new ArrayList<>();
                         rooms.add(platform.getRoomById(searchQuery));

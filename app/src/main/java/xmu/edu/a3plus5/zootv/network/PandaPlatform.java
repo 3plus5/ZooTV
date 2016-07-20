@@ -51,7 +51,14 @@ public class PandaPlatform extends BasePlatform {
         String link = String.format("http://www.panda.tv/ajax_search?name=%s&order_cond=fans&pageno=%d&pagenum=%d",
                 keyword, 1, 1);
 
-        return this.getRoomListBySearchAjaxUrl(link);
+        List<Room> roomList = this.getRoomListBySearchAjaxUrl(link);
+
+        Room r = this.getRoomById(keyword);
+
+        if (r != null)
+            roomList.add(0, r);
+
+        return roomList;
     }
 
     @Override
@@ -105,7 +112,6 @@ public class PandaPlatform extends BasePlatform {
         return roomList;
     }
 
-
     @Override
     public Room getRoomById(String id) {
         Room room = null;
@@ -152,14 +158,13 @@ public class PandaPlatform extends BasePlatform {
         return room;
     }
 
-
     private List<Room> getRoomListBySearchAjaxUrl(String link) {
         ArrayList<Room> ret = new ArrayList<Room>();
 
         try {
             Document doc = Jsoup.connect(link).get();
 
-            System.out.println(doc);
+            //System.out.println(doc);
 
             String jsonStr = doc.body().text();
 
@@ -272,11 +277,13 @@ public class PandaPlatform extends BasePlatform {
 
     }
 
-
     public static void main(String[] args) {
-        Room r = new PandaPlatform().getRoomById("10015");
+        List<Room> ret = new PandaPlatform().search("10015");
 
-        System.out.println(r);
+        for (Room r : ret)
+            System.out.println(r);
+
+
     }
 
 }
