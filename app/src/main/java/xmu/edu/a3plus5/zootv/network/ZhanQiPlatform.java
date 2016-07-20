@@ -168,12 +168,12 @@ public class ZhanQiPlatform extends BasePlatform
 
             room.setCate(dataObject.getString("gameName"));
             
-            room.setStatus(super.statusMap.get(dataObject.getInt("status")));
-            if(inter % 5 == 0)
-            {
-                room.setStatus(inter % 2);
-            }
-            inter++;
+//            room.setStatus(super.statusMap.get(dataObject.getInt("status")));
+//            if(inter % 5 == 0)
+//            {
+//                room.setStatus(inter % 2);
+//            }
+//            inter++;
 
         } 
         catch (IOException | JSONException e)

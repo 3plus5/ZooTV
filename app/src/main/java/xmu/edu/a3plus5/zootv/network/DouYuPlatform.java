@@ -111,7 +111,6 @@ public class DouYuPlatform extends BasePlatform {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d("getpopu","douyu");
         return parseFromDoc(doc);
     }
 
@@ -145,7 +144,7 @@ public class DouYuPlatform extends BasePlatform {
             room.setPopularity(dataObject.getLong("online"));
             room.setWatchingNumByPopularity();
 
-            room.setStatus(super.statusMap.get(dataObject.getInt("room_status")));
+//            room.setStatus(super.statusMap.get(dataObject.getInt("room_status")));
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }

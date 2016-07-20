@@ -57,7 +57,7 @@ public class NotificationService extends Service {
         public void run() {
             try {
                 while (true) {
-                    sleep(1000);
+                    sleep(5000);
                     count++;
                     rooms = getInterest();
 

@@ -161,8 +161,11 @@ public class RoomListFragment extends Fragment {
                     if(platform.getRoomById(searchQuery)!=null){
                         rooms = new ArrayList<>();
                         rooms.add(platform.getRoomById(searchQuery));
+                        Log.d("search","1");
                     }else{
+                        Log.d("search","2");
                         rooms = platform.search(searchQuery);
+                        Log.d("search","3");
                     }
                 }else {
                     rooms = platform.search(searchQuery);

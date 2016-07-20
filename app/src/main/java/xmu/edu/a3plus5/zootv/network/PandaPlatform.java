@@ -199,7 +199,7 @@ public class PandaPlatform extends BasePlatform
 
                 room.setLink("http://m.panda.tv/room.html?roomid=" + room.getRoomId());
                 
-                room.setStatus(super.statusMap.get(obj.get("status")));
+//                room.setStatus(super.statusMap.get(obj.get("status")));
 
                 ret.add(room);
             }

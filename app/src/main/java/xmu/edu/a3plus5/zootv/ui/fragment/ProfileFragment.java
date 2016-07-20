@@ -57,6 +57,8 @@ public class ProfileFragment extends Fragment {
     ProgressBar signProgressBar;
     @Bind(R.id.profile_sign_btn)
     ImageView signButton;
+    @Bind(R.id.profile_cache_amount)
+    TextView cache;
 
     private View view;
 
@@ -76,7 +78,7 @@ public class ProfileFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
-
+//        cache.setText(DaoFactory.getUserDao(getActivity()).calcache(MyApplication.user.getUserId())+"KB");
         userName.setText(MyApplication.user.getUserName());
         if("点击头像登录".equals(MyApplication.user.getUserName())){
             userPhoto.setImageDrawable(getResources().getDrawable(R.drawable.push_chat_default));
