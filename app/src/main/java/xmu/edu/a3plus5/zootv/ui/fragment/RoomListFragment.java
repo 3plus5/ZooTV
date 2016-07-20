@@ -52,7 +52,7 @@ public class RoomListFragment extends Fragment {
         if (roomListFragment == null) {
             roomListFragment = new RoomListFragment();
         }
-        if(category != null) {
+        if (category != null) {
             Bundle args = new Bundle();
             args.putSerializable("category", category);
             roomListFragment.setArguments(args);
@@ -64,7 +64,7 @@ public class RoomListFragment extends Fragment {
         if (roomListFragment == null) {
             roomListFragment = new RoomListFragment();
         }
-        if(searchQuery != null) {
+        if (searchQuery != null) {
             Bundle args = new Bundle();
             args.putSerializable("searchQuery", searchQuery);
             roomListFragment.setArguments(args);
@@ -75,7 +75,7 @@ public class RoomListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             category = (Category) getArguments().getSerializable("category");
             searchQuery = (String) getArguments().getSerializable("searchQuery");
         }
@@ -142,7 +142,7 @@ public class RoomListFragment extends Fragment {
             super.onPostExecute(aVoid);
             adapter.setMode(Attributes.Mode.Multiple);
             gridView.setAdapter(adapter);
-            if(progressDialog != null) {
+            if (progressDialog != null) {
                 progressDialog.dismiss();
             }
             pullToRefreshView.setRefreshing(false);
@@ -154,30 +154,27 @@ public class RoomListFragment extends Fragment {
             manager = new LinearLayoutManager(getActivity());
             BasePlatform platform = PlatformFactory.createPlatform(MyApplication.platform);
 //            List<Category> categories = platform.getPopularCategory();
-            if(category == null && searchQuery == null){
+            if (category == null && searchQuery == null) {
                 rooms = platform.getByCategory(platform.getPopularCategory().get(0), 1);
-            }else if(searchQuery != null){
-                if(isNumeric(searchQuery)){
-                    if(platform.getRoomById(searchQuery)!=null){
+            } else if (searchQuery != null) {
+                if (isNumeric(searchQuery)) {
+                    if (platform.getRoomById(searchQuery) != null) {
                         rooms = new ArrayList<>();
                         rooms.add(platform.getRoomById(searchQuery));
-                        Log.d("search","1");
-                    }else{
-                        Log.d("search","2");
+                    } else {
                         rooms = platform.search(searchQuery);
-                        Log.d("search","3");
                     }
-                }else {
+                } else {
                     rooms = platform.search(searchQuery);
                 }
-            } else{
+            } else {
                 rooms = platform.getByCategory(category, 1);
             }
-            adapter = new RoomListAdapter(getActivity(),rooms);
+            adapter = new RoomListAdapter(getActivity(), rooms);
             return null;
         }
 
-        public boolean isNumeric(String str){
+        public boolean isNumeric(String str) {
             Pattern pattern = Pattern.compile("[0-9]*");
             return pattern.matcher(str).matches();
         }
@@ -185,7 +182,7 @@ public class RoomListFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(!isRefreshing) {
+            if (!isRefreshing) {
                 progressDialog = ProgressDialog.show(getActivity(), "", "数据载入中...", false);
                 progressDialog.setCancelable(true);
             }

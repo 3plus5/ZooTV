@@ -1,7 +1,5 @@
 package xmu.edu.a3plus5.zootv.network;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

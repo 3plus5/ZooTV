@@ -1,6 +1,7 @@
 package xmu.edu.a3plus5.zootv.network;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,22 +18,18 @@ import org.jsoup.select.Elements;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
 
-public class ZhanQiPlatform extends BasePlatform 
-{
+public class ZhanQiPlatform extends BasePlatform {
     private final String baseLink = "http://www.zhanqi.tv";
-    private int inter = 0;
 
-    public ZhanQiPlatform() 
-    {
-    	super.statusMap = new HashMap<Integer, Integer>();
-    	super.statusMap.put(0, 0);
-    	super.statusMap.put(4, 1);
+    public ZhanQiPlatform() {
+        super.statusMap = new HashMap<Integer, Integer>();
+        super.statusMap.put(0, 0);
+        super.statusMap.put(4, 1);
         //this.initialMap();
     }
 
     @Override
-    public List<Room> getByCategory(Category category, int page) 
-    {
+    public List<Room> getByCategory(Category category, int page) {
         String catUrl = category.getCateUrl(ZhanQi);
 
         if (catUrl == null)
@@ -44,17 +41,15 @@ public class ZhanQiPlatform extends BasePlatform
     }
 
     @Override
-    public List<Category> getAllCategory()
-    {
+    public List<Category> getAllCategory() {
         if (categories != null)
             return categories;
-        
+
         List<Category> categories = new ArrayList<Category>();
 
         String jsonLink = "http://www.zhanqi.tv/api/static/game.lists/100-1.json";
 
-        try 
-        {
+        try {
             String jsonStr = Jsoup.connect(jsonLink).ignoreContentType(true).execute().body();
 
             JSONObject json = new JSONObject(jsonStr);
@@ -78,9 +73,7 @@ public class ZhanQiPlatform extends BasePlatform
 
                 categories.add(c);
             }
-        } 
-        catch (IOException | JSONException e) 
-        {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return categories;
@@ -129,25 +122,30 @@ public class ZhanQiPlatform extends BasePlatform
 
     //一次返回120个
     @Override
-    public List<Room> getMostPopular() 
-    {
+    public List<Room> getMostPopular() {
         String jsonLink = "http://www.zhanqi.tv/api/static/live.hots/120-1.json";
 
         return this.getRoomListByZhanQiAPI(jsonLink);
     }
 
     @Override
-    public Room getRoomById(String id) 
-    {
+    public Room getRoomById(String id) {
         Room room = null;
+
+        try {
+            id = URLEncoder.encode(id, "utf-8");
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
 
         String jsonLink = String.format("http://www.zhanqi.tv/api/static/live.roomid/%s.json?sid=", id);
 
-        try 
-        {
+        try {
             String jsonStr = Jsoup.connect(jsonLink).ignoreContentType(true).execute().body();
 
             JSONObject json = new JSONObject(jsonStr);
+
+            if (json.getInt("code") == 1) return null;
 
             JSONObject dataObject = json.getJSONObject("data");
 
@@ -167,21 +165,14 @@ public class ZhanQiPlatform extends BasePlatform
             room.setWatchingNumByPopularity();
 
             room.setCate(dataObject.getString("gameName"));
-            
-//            room.setStatus(super.statusMap.get(dataObject.getInt("status")));
-//            if(inter % 5 == 0)
-//            {
-//                room.setStatus(inter % 2);
-//            }
-//            inter++;
 
-        } 
-        catch (IOException | JSONException e)
-        {
+            room.setStatus(super.statusMap.get(dataObject.getInt("status")));
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
         return room;
+
     }
 
     //根据房间的URL获取该房间ID,房间url用于进入该直播间,房间ID用于搜索该房间,只有战旗TV需要这么做
@@ -242,13 +233,11 @@ public class ZhanQiPlatform extends BasePlatform
         return roomList;
     }
 
-   public static void main(String[] args) 
-   {
-	   List<Category> categories = new ZhanQiPlatform().getPopularCategory();
-       
-       for(Category cate:categories)
-       	System.out.println(cate);
-        
+    public static void main(String[] args) {
+        Room r = new ZhanQiPlatform().getRoomById("3245");
+
+        System.out.println(r);
+
     }
 
 }
