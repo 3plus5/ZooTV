@@ -1,7 +1,5 @@
 package xmu.edu.a3plus5.zootv.network;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -115,9 +113,19 @@ public class DouYuPlatform extends BasePlatform {
     }
 
     @Override
-    public Room getRoomById(String id) {
-        Room room = null;
+    public Room getRoomById(String id) 
+    {
+    	Room room = null;
 
+        try 
+        {
+			id = URLEncoder.encode(id, "utf-8");
+		}
+        catch (UnsupportedEncodingException e1)
+        {
+			e1.printStackTrace();
+		}
+        
         String jsonLink = "http://open.douyucdn.cn/api/RoomApi/room/" + id;
 
         try {
@@ -125,6 +133,9 @@ public class DouYuPlatform extends BasePlatform {
 
             JSONObject json = new JSONObject(jsonStr);
 
+            if( !(json.getInt("error") == 0))
+            	return null;
+          
             JSONObject dataObject = json.getJSONObject("data");
 
             room = new Room(DouYu);
@@ -144,8 +155,10 @@ public class DouYuPlatform extends BasePlatform {
             room.setPopularity(dataObject.getLong("online"));
             room.setWatchingNumByPopularity();
 
-//            room.setStatus(super.statusMap.get(dataObject.getInt("room_status")));
-        } catch (IOException | JSONException e) {
+            room.setStatus(super.statusMap.get(dataObject.getInt("room_status")));
+        } 
+        catch (IOException | JSONException e)
+        {
             e.printStackTrace();
         }
 
@@ -153,11 +166,11 @@ public class DouYuPlatform extends BasePlatform {
     }
 
 
-    public static void main(String[] args) {
-        List<Category> categories = new DouYuPlatform().getPopularCategory();
-
-        for (Category cate : categories)
-            System.out.println(cate);
+    public static void main(String[] args) 
+    {
+    	Room r  = new DouYuPlatform().getRoomById("10015");
+        
+        System.out.println(r);
 
     }
 }

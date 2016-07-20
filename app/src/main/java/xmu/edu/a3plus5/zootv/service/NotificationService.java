@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.IBinder;
 import android.util.Log;
+import android.util.MutableBoolean;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class NotificationService extends Service {
 
     int count = 0;
     private List<Room> rooms;
+    private boolean isLogin = false;
 
     public NotificationService() {
     }
@@ -56,27 +58,27 @@ public class NotificationService extends Service {
         @Override
         public void run() {
             try {
-                while (true) {
+                for (int i = 0; true; ) {
                     sleep(5000);
-                    count++;
-                    rooms = getInterest();
-
-                    if (rooms != null) {
-                        for (Room r : rooms) {
-                            Room cur = PlatformFactory.createPlatform(r.getPlatform()).getRoomById(r.getRoomId());
-                            r.setAnchor(cur.getAnchor());
-                            r.setTitle(cur.getTitle());
-                            r.setStatus(cur.getStatus());
-                        }
+                    if ("点击头像登录".equals(MyApplication.user.getUserName())) {
+                        isLogin = false;
                     }
+                    if (!isLogin)
+                        rooms = getInterest();
                     if (rooms != null) {
+                        isLogin = true;
                         for (Room r : rooms) {
+                            int beforeStatus = r.getStatus();
                             Room cur = PlatformFactory.createPlatform(r.getPlatform()).getRoomById(r.getRoomId());
-                            if (r.getStatus() == 0 && cur.getStatus() == 1) {
+                            r.setStatus(cur.getStatus());
+                            if (beforeStatus == 0 && r.getStatus() == 1) {
+                                r.setAnchor(cur.getAnchor());
+                                r.setTitle(cur.getTitle());
+                                count++;
                                 showNotification(r);
                             }
-                            r.setStatus(cur.getStatus());
                         }
+                        i++;
                     }
                 }
             } catch (InterruptedException e) {
@@ -86,8 +88,12 @@ public class NotificationService extends Service {
     }
 
     private List<Room> getInterest() {
-        List<Room> rooms = DaoFactory.getUserDao(getApplicationContext()).selehistoryRoom(MyApplication.user.getUserId());
-        return rooms;
+        if ("点击头像登录".equals(MyApplication.user.getUserName())) {
+            return null;
+        } else {
+            List<Room> rooms = DaoFactory.getUserDao(getApplicationContext()).seleinterestRoom(MyApplication.user.getUserId());
+            return rooms;
+        }
     }
 
     //弹出Notification
@@ -100,7 +106,7 @@ public class NotificationService extends Service {
                 .setSmallIcon(R.drawable.logo)
                 .setTicker("您关注的主播" + room.getAnchor() + "开播了哦~")
                 .setContentTitle("ZooTV")
-                .setContentText("您关注的主播"+ room.getAnchor() + "开播了哦~")
+                .setContentText("您关注的主播" + room.getAnchor() + "开播了哦~")
                 .setDefaults(Notification.DEFAULT_SOUND)
                 .setVibrate(new long[]{0, 200, 200, 200})
                 .setLights(Color.GREEN, 1000, 1000)
