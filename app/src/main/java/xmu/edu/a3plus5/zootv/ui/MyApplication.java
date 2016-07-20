@@ -2,8 +2,13 @@ package xmu.edu.a3plus5.zootv.ui;
 
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.os.IBinder;
+import android.util.Log;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -17,6 +22,7 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.entity.User;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
+import xmu.edu.a3plus5.zootv.service.NotificationService;
 
 /**
  * Created by Administrator on 2015/7/3.
@@ -38,6 +44,9 @@ public class MyApplication extends Application {
         instance = this;
         user = new User();
         initImageLoader();
+        Intent intent = new Intent(getApplicationContext(),NotificationService.class);
+        bindService(intent, conn, BIND_AUTO_CREATE);
+        startService(intent);
     }
 
     public static void initUser(){
@@ -95,5 +104,14 @@ public class MyApplication extends Application {
         activityVisible = false;
         id = "";
     }
+
+    ServiceConnection conn = new ServiceConnection() {
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.v(TAG, "onServiceConnected");
+        }
+        public void onServiceDisconnected(ComponentName name) {
+            Log.v(TAG, "onServiceDisconnected");
+        }
+    };
 
 }

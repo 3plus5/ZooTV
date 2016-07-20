@@ -18,19 +18,18 @@
             android:id="@+id/xiongmao"
             android:icon="@drawable/panda1"
             android:title="熊猫专区" />
+
+        <item android:title="敬请期待">
+            <menu>
+                <item
+                    android:id="@+id/chushou"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="触手专区" />
+                <item
+                    android:id="@+id/huomao"
+                    android:icon="@drawable/ic_menu_send"
+                    android:title="火猫专区" />
+            </menu>
+        </item>
     </group>
-
-    <item android:title="敬请期待">
-        <menu>
-            <item
-                android:id="@+id/chushou"
-                android:icon="@drawable/ic_menu_share"
-                android:title="触手专区" />
-            <item
-                android:id="@+id/huomao"
-                android:icon="@drawable/ic_menu_send"
-                android:title="火猫专区" />
-        </menu>
-    </item>
-
 </menu>

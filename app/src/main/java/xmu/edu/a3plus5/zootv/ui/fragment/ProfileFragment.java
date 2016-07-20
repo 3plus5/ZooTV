@@ -78,8 +78,8 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         userName.setText(MyApplication.user.getUserName());
-        Picasso.with(getActivity()).load(MyApplication.user.getUserPic()).into(userPhoto);
-
+//        Picasso.with(getActivity()).load(MyApplication.user.getUserPic()).into(userPhoto);
+        userPhoto.setImageDrawable(getResources().getDrawable(R.drawable.push_chat_default));
         userDao = DaoFactory.getUserDao(getActivity());
 
         //JudgeSignStatus();
@@ -94,14 +94,13 @@ public class ProfileFragment extends Fragment {
     }
 
     @OnClick(R.id.profile_sign_btn)
-    public void dailySignTest()
-    {
+    public void dailySignTest() {
         signCount = signProgressBar.getProgress();
         if (signCount < 7) {
             signCount += 1;
             signProgressBar.setProgress(signCount);
         }
-        if(signCount == 7) {
+        if (signCount == 7) {
             //抽奖
             View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_present, null);
             final Dialog dialog = new Dialog(getActivity(), R.style.Translucent_NoTitle);
@@ -127,7 +126,7 @@ public class ProfileFragment extends Fragment {
                     signCount += 1;
                     signProgressBar.setProgress(signCount);
                 }
-                if(signCount == 7) {
+                if (signCount == 7) {
                     //抽奖
                     View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_present, null);
                     final Dialog dialog = new Dialog(getActivity(), R.style.Translucent_NoTitle);
@@ -144,7 +143,7 @@ public class ProfileFragment extends Fragment {
                     signCount = 0;
                     signProgressBar.setProgress(signCount);
                 }
-            } else if(daysBetween(lastSignDate, nowDate) > 1) {
+            } else if (daysBetween(lastSignDate, nowDate) > 1) {
                 signCount = 1;
                 signProgressBar.setProgress(signCount);
             }
@@ -181,8 +180,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @OnClick(R.id.profile_cache_clear)
-    public void clearCache()
-    {
+    public void clearCache() {
         if (MyApplication.user.getUserName().equals("点击头像登录")) {
             Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
         } else {
@@ -209,7 +207,7 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
                             Log.d("cgf", "wipe cache");
-                            userDao.wipecache();
+                            userDao.wipecache(MyApplication.user.getUserId());
 
                             sDialog.setTitleText("操作已执行!")
                                     .setContentText("您的缓存已被清空:)")
@@ -225,14 +223,12 @@ public class ProfileFragment extends Fragment {
     }
 
     @OnClick(R.id.profile_about_us)
-    public void aboutUs()
-    {
-
+    public void aboutUs() {
+        Toast.makeText(getActivity(), "我只是来卖个萌的=￣ω￣=", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.profile_suggestion)
-    public void provideSuggestion()
-    {
+    public void provideSuggestion() {
         if (MyApplication.user.getUserName().equals("点击头像登录")) {
             Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
         } else {
@@ -242,9 +238,8 @@ public class ProfileFragment extends Fragment {
     }
 
     @OnClick(R.id.profile_version)
-    public void detectVersion()
-    {
-        Toast.makeText(getActivity(), "版本检测中，请稍后", Toast.LENGTH_SHORT).show();
+    public void detectVersion() {
+        Toast.makeText(getActivity(), "版本检测中，请稍后...", Toast.LENGTH_SHORT).show();
         Toast.makeText(getActivity(), "当前已是最新版本", Toast.LENGTH_SHORT).show();
     }
 

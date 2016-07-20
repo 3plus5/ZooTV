@@ -2,10 +2,10 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-    card_view:cardUseCompatPadding="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true">
+    android:clickable="true"
+    card_view:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,9 +14,9 @@
 
         <RelativeLayout
             android:id="@+id/piece_head"
-            android:paddingTop="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp">
 
             <ImageView
                 android:id="@+id/piece_icon"
@@ -24,7 +24,7 @@
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
-                android:src="@drawable/ic_menu_send" />
+                android:src="@drawable/icon_hot" />
 
             <TextView
                 android:id="@+id/piece_title"
@@ -37,22 +37,29 @@
                 android:textSize="@dimen/piece_title"
                 android:textStyle="bold" />
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/piece_more"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingRight="10dp"
-                android:src="@drawable/ic_menu_send" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/piece_more"
-                android:paddingRight="5dp"
-                android:text="更多" />
+                android:layout_alignParentRight="true"
+                android:paddingRight="10dp">
+
+                <ImageView
+                    android:id="@+id/piece_more_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_menu_send" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/piece_more_icon"
+                    android:paddingRight="5dp"
+                    android:text="更多" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <xmu.edu.a3plus5.zootv.widget.MyGridView

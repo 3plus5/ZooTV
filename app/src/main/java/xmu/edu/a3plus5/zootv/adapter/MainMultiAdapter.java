@@ -47,7 +47,7 @@ import xmu.edu.a3plus5.zootv.widget.MyGridView;
 public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<String> labels;
-    Map<String,List> pieces;
+    Map<String, List> pieces;
     Context context;
     List<Category> categories;
 
@@ -61,7 +61,7 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         CONTENT_TYPE
     }
 
-    public MainMultiAdapter(Context context, List<String> labels, Map<String,List> pieces, List<Category> categories) {
+    public MainMultiAdapter(Context context, List<String> labels, Map<String, List> pieces, List<Category> categories) {
         this.context = context;
         this.labels = labels;
         this.pieces = pieces;
@@ -103,6 +103,16 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((ContentViewHolder) holder).title.setText(item);
             RoomListAdapter adapter = new RoomListAdapter(context, pieces.get(item));
             adapter.setMode(Attributes.Mode.Multiple);
+            if (position == 1) {
+                Picasso.with(context).load(R.drawable.icon_hot).into(((ContentViewHolder) holder).icon);
+            } else {
+                Picasso.with(context).load(R.drawable.icon_column).into(((ContentViewHolder) holder).icon);
+            }
+
+            if (position == 1 || position == 2) {
+                ((ContentViewHolder) holder).pieceMore.setVisibility(View.GONE);
+            }
+
             ((ContentViewHolder) holder).myGridView.setAdapter(adapter);
             ((ContentViewHolder) holder).myGridView.setSelected(false);
             ((ContentViewHolder) holder).myGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -174,10 +184,12 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         RelativeLayout header;
         @Bind(R.id.item_gridView)
         MyGridView myGridView;
+        @Bind(R.id.piece_more)
+        RelativeLayout pieceMore;
 
-        Map<String,List> pieces;
+        Map<String, List> pieces;
 
-        public ContentViewHolder(View itemView, MyViewHolderClicks listener, Map<String,List> pieces) {
+        public ContentViewHolder(View itemView, MyViewHolderClicks listener, Map<String, List> pieces) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mListener = listener;
