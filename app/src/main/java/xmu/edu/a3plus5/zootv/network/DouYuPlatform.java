@@ -1,11 +1,16 @@
 package xmu.edu.a3plus5.zootv.network;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,6 +20,12 @@ import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
 
 public class DouYuPlatform extends BasePlatform {
+
+    public DouYuPlatform() {
+        super.statusMap = new HashMap<Integer, Integer>();
+        super.statusMap.put(2, 0);
+        super.statusMap.put(1, 1);
+    }
 
     private List<Room> parseFromDoc(Document doc) {
         if (doc == null)
@@ -47,6 +58,7 @@ public class DouYuPlatform extends BasePlatform {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return parseFromDoc(doc);
     }
 
@@ -67,9 +79,11 @@ public class DouYuPlatform extends BasePlatform {
 
     @Override
     public List<Category> getAllCategory() {
-        if(categories != null)
+        if (categories != null)
             return categories;
+
         Document doc = null;
+
         try {
             doc = Jsoup.connect("http://www.douyu.com/directory").get();
             Elements elements = doc.select("li[class ^= unit]");
@@ -89,7 +103,6 @@ public class DouYuPlatform extends BasePlatform {
         }
     }
 
-
     @Override
     public List<Room> getMostPopular() {
         Document doc = null;
@@ -98,32 +111,54 @@ public class DouYuPlatform extends BasePlatform {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Log.d("getpopu","douyu");
         return parseFromDoc(doc);
     }
 
     @Override
-    public List<Category> getPopularCategory() {
-        List<Category> categories = getAllCategory();
-        if(categories == null){
-            return null;
-        }
-        categories = categories.subList(0, 8);
-        return categories;
-    }
-
-
-    @Override
     public Room getRoomById(String id) {
-        List<Room> rooms = search(id);
-        for (Room room : rooms)
-            if (room.getRoomId().equals(id))
-                return room;
-        return null;
+        Room room = null;
+
+        String jsonLink = "http://open.douyucdn.cn/api/RoomApi/room/" + id;
+
+        try {
+            String jsonStr = Jsoup.connect(jsonLink).ignoreContentType(true).execute().body();
+
+            JSONObject json = new JSONObject(jsonStr);
+
+            JSONObject dataObject = json.getJSONObject("data");
+
+            room = new Room(DouYu);
+
+            room.setRoomId(dataObject.getString("room_id"));
+
+            room.setCate(dataObject.getString("cate_name"));
+
+            room.setTitle(dataObject.getString("room_name"));
+
+            room.setAnchor(dataObject.getString("owner_name"));
+
+            room.setLink("http://www.douyu.com/" + room.getRoomId());
+
+            room.setPicUrl(dataObject.getString("room_thumb"));
+
+            room.setPopularity(dataObject.getLong("online"));
+            room.setWatchingNumByPopularity();
+
+            room.setStatus(super.statusMap.get(dataObject.getInt("room_status")));
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        return room;
     }
 
 
     public static void main(String[] args) {
-        List<Category> categories = new DouYuPlatform().getAllCategory();
-        System.out.println(new DouYuPlatform().getByCategory(categories.get(0), 1));
+        List<Category> categories = new DouYuPlatform().getPopularCategory();
+
+        for (Category cate : categories)
+            System.out.println(cate);
+
     }
 }

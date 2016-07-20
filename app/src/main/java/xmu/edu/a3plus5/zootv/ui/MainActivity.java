@@ -159,7 +159,8 @@ public class MainActivity extends AppCompatActivity
 
                         MyApplication.initUser();
                         drawer.closeDrawer(GravityCompat.START);
-                        Picasso.with(MainActivity.this).load(MyApplication.user.getUserPic()).into(user_photo);
+                        user_photo.setImageResource(R.drawable.push_chat_default);
+//                        Picasso.with(MainActivity.this).load(MyApplication.user.getUserPic()).into(user_photo);
                         userName.setText(MyApplication.user.getUserName());
                         userDescription.setText("登录后可享受更多有趣的功能");
                         Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);

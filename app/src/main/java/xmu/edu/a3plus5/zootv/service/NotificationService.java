@@ -10,12 +10,19 @@ import android.graphics.Color;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.List;
+
 import xmu.edu.a3plus5.zootv.R;
+import xmu.edu.a3plus5.zootv.dao.DaoFactory;
+import xmu.edu.a3plus5.zootv.entity.Room;
+import xmu.edu.a3plus5.zootv.network.PlatformFactory;
 import xmu.edu.a3plus5.zootv.ui.MainActivity;
+import xmu.edu.a3plus5.zootv.ui.MyApplication;
 
 public class NotificationService extends Service {
 
     int count = 0;
+    private List<Room> rooms;
 
     public NotificationService() {
     }
@@ -49,9 +56,28 @@ public class NotificationService extends Service {
         @Override
         public void run() {
             try {
-                while (true) {sleep(60000);
+                while (true) {
+                    sleep(1000);
                     count++;
-                    showNotification();
+                    rooms = getInterest();
+
+                    if (rooms != null) {
+                        for (Room r : rooms) {
+                            Room cur = PlatformFactory.createPlatform(r.getPlatform()).getRoomById(r.getRoomId());
+                            r.setAnchor(cur.getAnchor());
+                            r.setTitle(cur.getTitle());
+                            r.setStatus(cur.getStatus());
+                        }
+                    }
+                    if (rooms != null) {
+                        for (Room r : rooms) {
+                            Room cur = PlatformFactory.createPlatform(r.getPlatform()).getRoomById(r.getRoomId());
+                            if (r.getStatus() == 0 && cur.getStatus() == 1) {
+                                showNotification(r);
+                            }
+                            r.setStatus(cur.getStatus());
+                        }
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -59,17 +85,22 @@ public class NotificationService extends Service {
         }
     }
 
+    private List<Room> getInterest() {
+        List<Room> rooms = DaoFactory.getUserDao(getApplicationContext()).selehistoryRoom(MyApplication.user.getUserId());
+        return rooms;
+    }
+
     //弹出Notification
-    private void showNotification() {
+    private void showNotification(Room room) {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         PendingIntent pendingIntent3 = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class), 0);
         Notification notify = new Notification.Builder(this)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.logo)
-                .setTicker("您关注的主播开播了哦~")
+                .setTicker("您关注的主播" + room.getAnchor() + "开播了哦~")
                 .setContentTitle("ZooTV")
-                .setContentText("您关注的主播开播了哦~")
+                .setContentText("您关注的主播"+ room.getAnchor() + "开播了哦~")
                 .setDefaults(Notification.DEFAULT_SOUND)
                 .setVibrate(new long[]{0, 200, 200, 200})
                 .setLights(Color.GREEN, 1000, 1000)

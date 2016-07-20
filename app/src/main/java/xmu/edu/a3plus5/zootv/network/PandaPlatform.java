@@ -16,10 +16,17 @@ import org.jsoup.nodes.Document;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
 
-public class PandaPlatform extends BasePlatform {
+public class PandaPlatform extends BasePlatform 
+{
     private HashMap<String, String> cateMap;
+    private String baseLink = "http://m.panda.tv/room.html?roomid=";
 
-    public PandaPlatform() {
+    public PandaPlatform() 
+    {
+    	super.statusMap = new HashMap<Integer, Integer>();
+    	super.statusMap.put(2, 1);
+    	super.statusMap.put(3, 0);
+    	
         this.initialCategoryNameMap();
     }
 
@@ -48,21 +55,25 @@ public class PandaPlatform extends BasePlatform {
     }
 
     @Override
-    public List<Category> getAllCategory() {
+    public List<Category> getAllCategory() 
+    {
         if (categories != null)
             return categories;
+        
         categories = new ArrayList<Category>();
 
         String jsonLink = "http://static.api.m.panda.tv/android_hd/cate.json";
 
-        try {
+        try 
+        {
             String jsonStr = Jsoup.connect(jsonLink).ignoreContentType(true).execute().body();
 
             JSONObject json = new JSONObject(jsonStr);
 
             JSONArray array = json.getJSONArray("data");
 
-            for (int i = 0; i < array.length(); i++) {
+            for (int i = 0; i < array.length(); i++) 
+            {
                 Category cate = new Category();
 
                 JSONObject obj = array.getJSONObject(i);
@@ -85,40 +96,73 @@ public class PandaPlatform extends BasePlatform {
 
     //一次返回12个
     @Override
-    public List<Room> getMostPopular() {
+    public List<Room> getMostPopular() 
+    {
         List<Room> roomList = new ArrayList<Room>();
 
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= 12; i++) 
+        {
             String jsonLink = "http://static.api.m.panda.tv/android_hd/alllist_.json?pageno=" + i;
-
-            roomList.addAll(this.getRoomListByPandaAPI(jsonLink));
+            List<Room> rooms = this.getRoomListByPandaAPI(jsonLink);
+            if(rooms != null)
+                roomList.addAll(rooms);
         }
 
         return roomList;
     }
 
     @Override
-    public List<Category> getPopularCategory() {
-        return this.getAllCategory().subList(0, 8);
-    }
-
-    @Override
-    public Room getRoomById(String id) {
+    public Room getRoomById(String id)
+    {
         Room room = null;
 
-        try {
+        try 
+        {
             id = URLEncoder.encode(id, "utf-8");
-        } catch (UnsupportedEncodingException e) {
+        }
+        catch (UnsupportedEncodingException e) 
+        {
             e.printStackTrace();
         }
 
-        String link = String.format("http://www.panda.tv/ajax_search?roomid=%s&pageno=1&pagenum=1", id);
-
-        List<Room> ret = this.getRoomListBySearchAjaxUrl(link);
-
-        if (ret.size() > 0) {
-            room = ret.get(0);
-        }
+        String jsonLink = "http://api.m.panda.tv/ajax_search?roomid=" + id;
+        
+		try 
+		{
+			 String jsonStr = Jsoup.connect(jsonLink).ignoreContentType(true).execute().body();
+			
+			JSONObject json = new JSONObject(jsonStr);
+			
+			JSONArray array = json.getJSONObject("data").getJSONArray("items");
+			
+			if(array.length() > 0)
+			{
+				JSONObject obj = array.getJSONObject(0);
+				
+				room = new Room(Panda);
+				
+				room.setAnchor(obj.getString("nickname"));
+				room.setRoomId(obj.getString("roomid"));
+				room.setLink(this.baseLink + room.getRoomId());
+				room.setTitle(obj.getString("name"));
+				room.setCate(obj.getString("classification"));
+				
+				room.setPopularity(obj.getLong("person_num"));
+				room.setWatchingNumByPopularity();
+				
+				JSONObject picObj = obj.getJSONObject("pictures");
+				room.setPicUrl(picObj.getString("img"));
+				
+                room.setStatus(super.statusMap.get(obj.getInt("status")));
+			}
+			
+		} 
+		catch (IOException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+       
 
         return room;
     }
@@ -129,6 +173,8 @@ public class PandaPlatform extends BasePlatform {
         try {
             Document doc = Jsoup.connect(link).get();
 
+            System.out.println(doc);
+            
             String jsonStr = doc.body().text();
 
             JSONObject json = new JSONObject(jsonStr);
@@ -138,21 +184,22 @@ public class PandaPlatform extends BasePlatform {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject obj = array.getJSONObject(i);
 
-                JSONObject pic = obj.getJSONObject("pictures");
-
-                Room room = new Room();
-
-                room.setPlatform(Panda);
+                Room room = new Room(Panda);
 
                 room.setRoomId(obj.getString("roomid"));
                 room.setAnchor(obj.getString("nickname"));
                 room.setTitle(obj.getString("name"));
                 room.setCate(obj.getString("classification"));
+                
+                JSONObject pic = obj.getJSONObject("pictures");
                 room.setPicUrl(pic.getString("img"));
+                
                 room.setPopularity(obj.getLong("person_num"));
                 room.setWatchingNumByPopularity();
 
                 room.setLink("http://m.panda.tv/room.html?roomid=" + room.getRoomId());
+                
+                room.setStatus(super.statusMap.get(obj.get("status")));
 
                 ret.add(room);
             }
@@ -174,7 +221,7 @@ public class PandaPlatform extends BasePlatform {
             JSONArray array = json.getJSONObject("data").getJSONArray("items");
 
             for (int i = 0; i < array.length(); i++) {
-                Room r = new Room();
+                Room r = new Room(Panda);
 
                 JSONObject obj = array.getJSONObject(i);
 
@@ -204,8 +251,6 @@ public class PandaPlatform extends BasePlatform {
 
                 JSONObject userObj = obj.getJSONObject("userinfo");
                 r.setAnchor(userObj.getString("nickName"));
-
-                r.setPlatform(Panda);
 
                 ret.add(r);
             }
@@ -242,23 +287,12 @@ public class PandaPlatform extends BasePlatform {
 
     }
 
-    public static void main(String[] args) {
-        /*
-        List<Category> cate = new PandaPlatform().getPopularCategory();
-		Category c = cate.get(0);
-		
-		List<Room> roomList = new PandaPlatform().getByCategory(c, 1);
-		
-		for(Room r:roomList)
-		{
-			System.out.println(r);
-		}
-		*/
-
-        List<Room> room = new PandaPlatform().getMostPopular();
-        for (Room r : room) {
-            System.out.println(r);
-        }
+    public static void main(String[] args) 
+    {
+        List<Category> categories = new PandaPlatform().getPopularCategory();
+        
+        for(Category cate:categories)
+        	System.out.println(cate);
     }
 
 }

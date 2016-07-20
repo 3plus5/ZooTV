@@ -34,8 +34,6 @@ public class PlatformFactory {
         switch (platformName) {
             case BasePlatform.DouYu:
                 return (T) createPlatform(DouYuPlatform.class);
-            case BasePlatform.Huya:
-                return (T) createPlatform(HuYaPlatform.class);
             case BasePlatform.Panda:
                 return (T) createPlatform(PandaPlatform.class);
             case BasePlatform.Zoo:

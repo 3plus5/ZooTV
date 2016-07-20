@@ -49,7 +49,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean addUserbyItem(String userPic, String userName) {
+    public synchronized boolean addUserbyItem(String userPic, String userName) {
         boolean flag = false;
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -66,7 +66,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User addUserbyUser(User user) {
+    public synchronized User addUserbyUser(User user) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBUtil.userPic, user.getUserPic());
@@ -80,7 +80,7 @@ public class UserDaoImpl implements UserDao {
         return myuser;
     }
 
-    public User selectuser(User user) {
+    public synchronized User selectuser(User user) {
         User myuser = null;
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {DBUtil.userId, DBUtil.userName, DBUtil.userPic, DBUtil.signCount, DBUtil.lastSignDate};
@@ -100,7 +100,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean addinterest(int userid, int rid) {
+    public synchronized boolean addinterest(int userid, int rid) {
         boolean flag = false;
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -114,7 +114,7 @@ public class UserDaoImpl implements UserDao {
         return flag;
     }
 
-    public boolean ifhaveinterest(int userid, int rid) {
+    public synchronized boolean ifhaveinterest(int userid, int rid) {
         boolean flag = false;
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {DBUtil.interestId};
@@ -126,7 +126,7 @@ public class UserDaoImpl implements UserDao {
         return flag;
     }
 
-    public void deleteinterest(int userid, int rid) {
+    public synchronized void deleteinterest(int userid, int rid) {
         SQLiteDatabase db = helper.getWritableDatabase();
         String whereClause = DBUtil.userId + "=? and " + DBUtil.rid + "=?";
         String[] whereargs = {String.valueOf(userid), String.valueOf(rid)};
@@ -134,7 +134,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean addhistory(int userid, int rid) {
+    public synchronized boolean addhistory(int userid, int rid) {
         boolean flag = false;
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -148,7 +148,7 @@ public class UserDaoImpl implements UserDao {
         return flag;
     }
 
-    public boolean ifhavehistory(int userid, int rid) {
+    public synchronized boolean ifhavehistory(int userid, int rid) {
         boolean flag = false;
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {DBUtil.historyId};
@@ -160,14 +160,14 @@ public class UserDaoImpl implements UserDao {
         return flag;
     }
 
-    public void deletehistory(int userid, int rid) {
+    public synchronized void deletehistory(int userid, int rid) {
         SQLiteDatabase db = helper.getWritableDatabase();
         String whereClause = DBUtil.userId + "=? and " + DBUtil.rid + "=?";
         String[] whereargs = {String.valueOf(userid), String.valueOf(rid)};
         db.delete(DBUtil.History_TABLE_NAME, whereClause, whereargs);
     }
 
-    public List<Room> seleinterestRoom(int userid) {
+    public synchronized List<Room> seleinterestRoom(int userid) {
         List<Integer> rids = new ArrayList<Integer>();
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {DBUtil.rid};
@@ -200,7 +200,7 @@ public class UserDaoImpl implements UserDao {
         return myrooms;
     }
 
-    public List<Room> selehistoryRoom(int userid) {
+    public synchronized List<Room> selehistoryRoom(int userid) {
         List<Integer> rids = new ArrayList<Integer>();
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {DBUtil.rid};
@@ -233,7 +233,7 @@ public class UserDaoImpl implements UserDao {
         return myrooms;
     }
 
-    public boolean addlabel(int userid, List<String> labels) {
+    public synchronized boolean addlabel(int userid, List<String> labels) {
         boolean flag = true;
         SQLiteDatabase db = helper.getWritableDatabase();
 
@@ -253,7 +253,7 @@ public class UserDaoImpl implements UserDao {
 
     }
 
-    public boolean deletelabels(int userid) {
+    public synchronized boolean deletelabels(int userid) {
         SQLiteDatabase db = helper.getWritableDatabase();
         String whereClause = DBUtil.userId + "=?";
         String[] whereargs = {String.valueOf(userid)};
@@ -261,7 +261,7 @@ public class UserDaoImpl implements UserDao {
         return true;
     }
 
-    public List<String> selelabels(int userid) {
+    public synchronized List<String> selelabels(int userid) {
         List<String> mylabels = new ArrayList<String>();
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {DBUtil.label};
@@ -278,7 +278,7 @@ public class UserDaoImpl implements UserDao {
         return mylabels;
     }
 
-    public Room addRoom(Room room) {
+    public synchronized Room addRoom(Room room) {
         boolean flag = false;
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -291,7 +291,7 @@ public class UserDaoImpl implements UserDao {
         return myroom;
     }
 
-    public boolean ifhaveRoom(Room room) {
+    public synchronized boolean ifhaveRoom(Room room) {
         boolean flag = false;
         List<Room> myrooms = new ArrayList<Room>();
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -304,7 +304,7 @@ public class UserDaoImpl implements UserDao {
         return flag;
     }
 
-    public Room selectroom(Room room) {
+    public synchronized Room selectroom(Room room) {
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {DBUtil.rid, DBUtil.platform, DBUtil.roomId};
         String selection = DBUtil.platform + "='" + room.getPlatform() + "' and " + DBUtil.roomId + "='" + room.getRoomId() + "'";
@@ -321,7 +321,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int searchSignCount(int userid) {
+    public synchronized int searchSignCount(int userid) {
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {DBUtil.signCount};
         String selection = DBUtil.userId + "=" + userid;
@@ -337,7 +337,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public String searchLastSignDate(int userid) {
+    public synchronized String searchLastSignDate(int userid) {
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {DBUtil.lastSignDate};
         String selection = DBUtil.userId + "=" + userid;
@@ -353,7 +353,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean updateSignCount(int userid, int signCount) {
+    public synchronized boolean updateSignCount(int userid, int signCount) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBUtil.signCount, signCount);
@@ -364,7 +364,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean updateSignDate(int userid, String lastSignDate) {
+    public synchronized boolean updateSignDate(int userid, String lastSignDate) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBUtil.lastSignDate, lastSignDate);
@@ -375,7 +375,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void wipecache(int userid) {
+    public synchronized void wipecache(int userid) {
         SQLiteDatabase db = helper.getWritableDatabase();
         String whereClause = DBUtil.userId + "=?";
         String[] whereargs = {String.valueOf(userid)};
@@ -383,7 +383,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public String calcache(int userid) {
+    public synchronized String calcache(int userid) {
         int datasize = 0;
         SQLiteDatabase db = helper.getReadableDatabase();
         String columns[] = {"CONCAT(ROUND(DATA_LENGTH/1024/1024,2),'MB') AS DATA_LENGTH"};

@@ -3,7 +3,6 @@ package xmu.edu.a3plus5.zootv.network;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -60,27 +59,32 @@ public class ZooPlatform extends BasePlatform {
         }
     }
 
-
     @Override
-    public List<Room> getMostPopularByPage(int page) {
+    public List<Room> getMostPopularByPage(int page) 
+    {
         int i = 0;
         List<Room> roomList = new ArrayList<Room>();
-
-        for (BasePlatform platform : platforms) {
+        List<Room> tmpList = null;
+        
+        for (BasePlatform platform : platforms) 
+        {
             int begin = (page - 1) * portion[i];
-            int end = page * portion[i] - 1;
-            roomList.addAll(platform.getMostPopular().subList(begin, end + 1));
+            int end = page * portion[i];
+            tmpList = platform.getMostPopular();
+            int max = tmpList.size();
+            end = (end > max) ? max : end;
+            roomList.addAll(tmpList.subList(begin, end));
 
             i++;
         }
 
         Collections.sort(roomList);
-
         return roomList;
     }
 
     @Override
-    public List<Room> getByCategory(Category category, int page) {
+    public List<Room> getByCategory(Category category, int page) 
+    {
         List<Room> rooms = new ArrayList<>();
         for (BasePlatform platform : platforms) {
             List<Room> temp = platform.getByCategory(category, page);
@@ -90,18 +94,20 @@ public class ZooPlatform extends BasePlatform {
         Collections.sort(rooms);
         return rooms;
     }
-
+    /*
     @Override
     public List<Category> getPopularCategory() {
         List<Category> categories = getAllCategory();
         if (categories == null) {
             return null;
         }
-        //Log.d("catesize",categories.size()+"");
-        categories = categories.subList(0, 8);
+        
+        int end = categories.size() >= 8 ? 8 : categories.size();
+        
+        categories = categories.subList(0, end);
         return categories;
     }
-
+    */
     @Override
     public List<Room> search(String keyword) {
         List<Room> rooms = new ArrayList<>();
@@ -147,7 +153,9 @@ public class ZooPlatform extends BasePlatform {
     public List<Room> getMostPopular() {
         List<Room> rooms = new ArrayList<>();
         for (BasePlatform platform : platforms)
+        {
             rooms.addAll(platform.getMostPopular());
+        }
         Collections.sort(rooms);
         return rooms;
     }
@@ -157,19 +165,11 @@ public class ZooPlatform extends BasePlatform {
         return null;
     }
 
-    public static void main(String[] args) {
-        /*
-        ZooPlatform zootv = new ZooPlatform();
-		
-		List<Room> ret = zootv.getMostPopularByPage(1);
-		
-		for(Room r:ret)
-		{
-			System.out.println(r);
-		}
-		*/
-
-        Random r = new Random();
-        System.out.println(r.nextInt(3));
+    public static void main(String[] args) 
+    {
+        List<Category> categories = new ZooPlatform().getPopularCategory();
+        
+        for(Category cate:categories)
+        	System.out.println(cate);
     }
 }

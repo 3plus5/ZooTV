@@ -16,7 +16,9 @@ import com.daimajia.swipe.util.Attributes;
 import com.nostra13.universalimageloader.utils.L;
 import com.yalantis.phoenix.PullToRefreshView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -155,12 +157,26 @@ public class RoomListFragment extends Fragment {
             if(category == null && searchQuery == null){
                 rooms = platform.getByCategory(platform.getPopularCategory().get(0), 1);
             }else if(searchQuery != null){
-                rooms = platform.search(searchQuery);
+                if(isNumeric(searchQuery)){
+                    if(platform.getRoomById(searchQuery)!=null){
+                        rooms = new ArrayList<>();
+                        rooms.add(platform.getRoomById(searchQuery));
+                    }else{
+                        rooms = platform.search(searchQuery);
+                    }
+                }else {
+                    rooms = platform.search(searchQuery);
+                }
             } else{
                 rooms = platform.getByCategory(category, 1);
             }
             adapter = new RoomListAdapter(getActivity(),rooms);
             return null;
+        }
+
+        public boolean isNumeric(String str){
+            Pattern pattern = Pattern.compile("[0-9]*");
+            return pattern.matcher(str).matches();
         }
 
         @Override

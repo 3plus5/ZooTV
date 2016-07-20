@@ -1,15 +1,17 @@
 package xmu.edu.a3plus5.zootv.network;
 
+
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
 
-public abstract class BasePlatform {
+public abstract class BasePlatform 
+{
     public static final String DouYu = "DouYu";
     public static final String Huya = "Huya";
     public static final String Panda = "Panda";
@@ -17,12 +19,13 @@ public abstract class BasePlatform {
     public static final String QuanMin = "QuanMin";
     public static final String Zoo = "Zoo";
     protected List<Category> categories = null;
-
+    protected Map<Integer, Integer> statusMap;
+    
     //按分类获取直播间列表
     public abstract List<Room> getByCategory(Category category, int page);
 
     //获取最热分类列表
-    public abstract List<Category> getPopularCategory();
+    //public abstract List<Category> getPopularCategory();
 
     //获取搜索列表
     public abstract List<Room> search(String keyword);
@@ -35,7 +38,17 @@ public abstract class BasePlatform {
 
     //根据id获取直播间
     public abstract Room getRoomById(String id);
-
+    
+    //获取最热分类列表
+    public List<Category> getPopularCategory()
+    {
+    	List<Category> cateList = getAllCategory();
+    	
+    	int end = cateList.size() >= 8 ? 8 :cateList.size();
+    	
+    	return cateList.subList(0, end);
+    }
+    
     //根据分类名获得分类
     public Category getCategoryByName(String name) {
         List<Category> cates = getAllCategory();
@@ -47,11 +60,17 @@ public abstract class BasePlatform {
     }
 
     //根据页数获得最热直播间，默认一页8个
-    public List<Room> getMostPopularByPage(int page) {
+    public List<Room> getMostPopularByPage(int page) 
+    {
         int begin = (page - 1) * 8;
-        int end = page * 8 - 1;
+        int end = page * 8;
+        List<Room> roomList = this.getMostPopular();
+        
+        int max = roomList.size();
+        
+        end = (end > max) ? max : end;
 
-        return this.getMostPopular().subList(begin, end + 1);
+        return roomList.subList(begin, end);
     }
 
     //根据传入的分类List返回推荐的房间
@@ -80,7 +99,8 @@ public abstract class BasePlatform {
     }
 
     //根据列表的大小返回每个分类所占的比例
-    protected int[] getPortionByCateListSize(int size) {
+    protected int[] getPortionByCateListSize(int size) 
+    {
         int all = 8;
 
         if (size > 5) size = 5;
@@ -106,7 +126,22 @@ public abstract class BasePlatform {
         return portion;
     }
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) 
+    {
+            List<Integer> a = new ArrayList<Integer>();
+            a.add(1);
+            a.add(2);
+            a.add(3);
+            a.add(4);
+            
+            List<Integer> b = a.subList(0, a.size());
+            System.out.print(b);
+            
+            int end = 8;
+            int max = 10;
+            
+            end = (end > max) ? max : end;
+            
+            System.out.print(end);
     }
 }

@@ -109,9 +109,9 @@ public class MainMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 Picasso.with(context).load(R.drawable.icon_column).into(((ContentViewHolder) holder).icon);
             }
 
-            if (position == 1 || position == 2) {
-                ((ContentViewHolder) holder).pieceMore.setVisibility(View.GONE);
-            }
+//            if (position == 1 || position == 2) {
+//                ((ContentViewHolder) holder).pieceMore.setVisibility(View.INVISIBLE);
+//            }
 
             ((ContentViewHolder) holder).myGridView.setAdapter(adapter);
             ((ContentViewHolder) holder).myGridView.setSelected(false);

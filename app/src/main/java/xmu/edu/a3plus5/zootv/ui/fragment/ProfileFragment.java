@@ -78,8 +78,11 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         userName.setText(MyApplication.user.getUserName());
-//        Picasso.with(getActivity()).load(MyApplication.user.getUserPic()).into(userPhoto);
-        userPhoto.setImageDrawable(getResources().getDrawable(R.drawable.push_chat_default));
+        if("点击头像登录".equals(MyApplication.user.getUserName())){
+            userPhoto.setImageDrawable(getResources().getDrawable(R.drawable.push_chat_default));
+        }else {
+            Picasso.with(getActivity()).load(MyApplication.user.getUserPic()).into(userPhoto);
+        }
         userDao = DaoFactory.getUserDao(getActivity());
 
         //JudgeSignStatus();
