@@ -70,12 +70,14 @@ public class NotificationService extends Service {
                         for (Room r : rooms) {
                             int beforeStatus = r.getStatus();
                             Room cur = PlatformFactory.createPlatform(r.getPlatform()).getRoomById(r.getRoomId());
-                            r.setStatus(cur.getStatus());
-                            if (beforeStatus == 0 && r.getStatus() == 1) {
-                                r.setAnchor(cur.getAnchor());
-                                r.setTitle(cur.getTitle());
-                                count++;
-                                showNotification(r);
+                            if(cur != null){
+                                r.setStatus(cur.getStatus());
+                                if (beforeStatus == 0 && r.getStatus() == 1) {
+                                    r.setAnchor(cur.getAnchor());
+                                    r.setTitle(cur.getTitle());
+                                    count++;
+                                    showNotification(r);
+                                }
                             }
                         }
                         i++;

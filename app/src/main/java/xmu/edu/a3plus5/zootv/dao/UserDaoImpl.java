@@ -384,22 +384,17 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public synchronized String calcache(int userid) {
-        int datasize = 0;
+        int i=0;
         SQLiteDatabase db = helper.getReadableDatabase();
-        String columns[] = {"CONCAT(ROUND(DATA_LENGTH/1024,2),'KB') AS DATA_LENGTH"};
-        //String selection = DBUtil.userId + "=" + userid ;
-        String selection = "table_schema='zabbix' and table_name='HISTORY'";
-        Cursor cur = db.query("information_schema.TABLES", columns, selection, null, null, null, null, null);
-
+        String columns[] = {DBUtil.rid};
+        String selection = DBUtil.userId + "=" + userid;
+        Cursor cur = db.query(DBUtil.History_TABLE_NAME, columns, selection, null, null, null, null, null);
         if (cur.getCount() != 0) {
             cur.moveToFirst();
             do {
-                datasize = cur.getInt(cur.getColumnIndexOrThrow("DATA_LENGTH"));
+                i++;
             } while (cur.moveToNext());
         }
-        close(db, cur);
-        return String.valueOf(datasize);
-
+        return String.valueOf(i*8);
     }
-
 }

@@ -3,6 +3,7 @@ package xmu.edu.a3plus5.zootv.ui.fragment;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -78,7 +79,13 @@ public class ProfileFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
-//        cache.setText(DaoFactory.getUserDao(getActivity()).calcache(MyApplication.user.getUserId())+"KB");
+        String cacheAmount = DaoFactory.getUserDao(getActivity()).calcache(MyApplication.user.getUserId());
+        if(Integer.parseInt(cacheAmount)<=1024){
+            cache.setText(cacheAmount+"B");
+        } else {
+            cache.setText(Float.parseFloat(cacheAmount)/1024+"KB");
+        }
+
         userName.setText(MyApplication.user.getUserName());
         if("点击头像登录".equals(MyApplication.user.getUserName())){
             userPhoto.setImageDrawable(getResources().getDrawable(R.drawable.push_chat_default));
@@ -87,7 +94,7 @@ public class ProfileFragment extends Fragment {
         }
         userDao = DaoFactory.getUserDao(getActivity());
 
-        //JudgeSignStatus();
+        JudgeSignStatus();
 
         return view;
     }
@@ -98,7 +105,7 @@ public class ProfileFragment extends Fragment {
         getActivity().startActivityForResult(intent, 1);
     }
 
-    @OnClick(R.id.profile_sign_btn)
+
     public void dailySignTest() {
         signCount = signProgressBar.getProgress();
         if (signCount < 7) {
@@ -124,6 +131,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    @OnClick(R.id.profile_sign_btn)
     public void dailySign() {
         if (MyApplication.user.getUserName().equals("点击头像登录")) {
             Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
@@ -217,7 +225,7 @@ public class ProfileFragment extends Fragment {
                         public void onClick(SweetAlertDialog sDialog) {
                             Log.d("cgf", "wipe cache");
                             userDao.wipecache(MyApplication.user.getUserId());
-
+                            cache.setText("0B");
                             sDialog.setTitleText("操作已执行!")
                                     .setContentText("您的缓存已被清空:)")
                                     .setConfirmText("确定")

@@ -20,7 +20,7 @@
 
     <!--3dtag color-->
     <color name="tagLight">#ff4d00</color>
-    <color name="tagDark">#f000fd</color>
+    <color name="tagDark">#ffe667</color>
 
     <!--random Color-->
     <color name="red">#f44336</color>
