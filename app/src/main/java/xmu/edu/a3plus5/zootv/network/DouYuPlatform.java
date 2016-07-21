@@ -63,6 +63,7 @@ public class DouYuPlatform extends BasePlatform {
     @Override
     public List<Room> search(String keyword) {
         Document doc = null;
+
         try {
             keyword = URLEncoder.encode(keyword, "utf-8");
             doc = Jsoup.connect("http://www.douyu.com/search/" + keyword).get();
@@ -72,6 +73,7 @@ public class DouYuPlatform extends BasePlatform {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return parseFromDoc(doc);
     }
 
@@ -113,19 +115,15 @@ public class DouYuPlatform extends BasePlatform {
     }
 
     @Override
-    public Room getRoomById(String id) 
-    {
-    	Room room = null;
+    public Room getRoomById(String id) {
+        Room room = null;
 
-        try 
-        {
-			id = URLEncoder.encode(id, "utf-8");
-		}
-        catch (UnsupportedEncodingException e1)
-        {
-			e1.printStackTrace();
-		}
-        
+        try {
+            id = URLEncoder.encode(id, "utf-8");
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+
         String jsonLink = "http://open.douyucdn.cn/api/RoomApi/room/" + id;
 
         try {
@@ -133,9 +131,9 @@ public class DouYuPlatform extends BasePlatform {
 
             JSONObject json = new JSONObject(jsonStr);
 
-            if( !(json.getInt("error") == 0))
-            	return null;
-          
+            if (!(json.getInt("error") == 0))
+                return null;
+
             JSONObject dataObject = json.getJSONObject("data");
 
             room = new Room(DouYu);
@@ -156,9 +154,7 @@ public class DouYuPlatform extends BasePlatform {
             room.setWatchingNumByPopularity();
 
             room.setStatus(super.statusMap.get(dataObject.getInt("room_status")));
-        } 
-        catch (IOException | JSONException e)
-        {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
@@ -166,10 +162,9 @@ public class DouYuPlatform extends BasePlatform {
     }
 
 
-    public static void main(String[] args) 
-    {
-    	Room r  = new DouYuPlatform().getRoomById("10015");
-        
+    public static void main(String[] args) {
+        Room r = new DouYuPlatform().getRoomById("10015");
+
         System.out.println(r);
 
     }

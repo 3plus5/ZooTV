@@ -117,6 +117,11 @@ public class ZhanQiPlatform extends BasePlatform {
             e.printStackTrace();
         }
 
+        Room r = this.getRoomById(keyword);
+
+        if (r != null)
+            roomList.add(0, r);
+
         return roomList;
     }
 

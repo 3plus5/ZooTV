@@ -25,6 +25,8 @@ import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.adapter.RoomListAdapter;
 import xmu.edu.a3plus5.zootv.dao.DaoFactory;
+import xmu.edu.a3plus5.zootv.dao.HistoryDao;
+import xmu.edu.a3plus5.zootv.dao.InterestDao;
 import xmu.edu.a3plus5.zootv.dao.UserDao;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
@@ -144,14 +146,15 @@ public class HistoryContentFragment extends Fragment {
         protected Void doInBackground(Void... voids) {
             manager = new LinearLayoutManager(getActivity());
             BasePlatform platform;
-            UserDao userdao = DaoFactory.getUserDao(getActivity());
+            InterestDao interestDao = DaoFactory.getInterestDao(getActivity());
+            HistoryDao historyDao = DaoFactory.getHistoryDao(getActivity());
             List<Room> seleinterestRoom;
             List<Room> rooms = new ArrayList<>();
             if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
                 if (mPage == 1) {
-                    seleinterestRoom = userdao.seleinterestRoom(MyApplication.user.getUserId());
+                    seleinterestRoom = interestDao.seleinterestRoom(MyApplication.user.getUserId());
                 } else {
-                    seleinterestRoom = userdao.selehistoryRoom(MyApplication.user.getUserId());
+                    seleinterestRoom = historyDao.selehistoryRoom(MyApplication.user.getUserId());
                 }
                 for (Room room : seleinterestRoom) {
                     platform = PlatformFactory.createPlatform(room.getPlatform());

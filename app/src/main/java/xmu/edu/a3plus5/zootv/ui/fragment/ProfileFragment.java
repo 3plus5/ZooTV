@@ -3,44 +3,35 @@ package xmu.edu.a3plus5.zootv.ui.fragment;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.sina.weibo.SinaWeibo;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.dao.DaoFactory;
+import xmu.edu.a3plus5.zootv.dao.HistoryDao;
+import xmu.edu.a3plus5.zootv.dao.PropensityDao;
 import xmu.edu.a3plus5.zootv.dao.UserDao;
-import xmu.edu.a3plus5.zootv.entity.Propensity;
-import xmu.edu.a3plus5.zootv.entity.User;
 import xmu.edu.a3plus5.zootv.ui.FeedBackActivity;
 import xmu.edu.a3plus5.zootv.ui.LoginActivity;
-import xmu.edu.a3plus5.zootv.ui.MainActivity;
 import xmu.edu.a3plus5.zootv.ui.MyApplication;
 import xmu.edu.a3plus5.zootv.ui.PropensityActivity;
 import xmu.edu.a3plus5.zootv.widget.PieDialog;
@@ -64,6 +55,7 @@ public class ProfileFragment extends Fragment {
     private View view;
 
     private UserDao userDao;
+    private HistoryDao historyDao;
 
     private int signCount;
     private String nowDate;
@@ -79,7 +71,7 @@ public class ProfileFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
-        String cacheAmount = DaoFactory.getUserDao(getActivity()).calcache(MyApplication.user.getUserId());
+        String cacheAmount = DaoFactory.getHistoryDao(getActivity()).calcache(MyApplication.user.getUserId());
         if(Integer.parseInt(cacheAmount)<=1024){
             cache.setText(cacheAmount+"B");
         } else {
@@ -93,6 +85,7 @@ public class ProfileFragment extends Fragment {
             Picasso.with(getActivity()).load(MyApplication.user.getUserPic()).into(userPhoto);
         }
         userDao = DaoFactory.getUserDao(getActivity());
+        historyDao = DaoFactory.getHistoryDao(getActivity());
 
         //JudgeSignStatus();
 
@@ -226,7 +219,7 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
                             Log.d("cgf", "wipe cache");
-                            userDao.wipecache(MyApplication.user.getUserId());
+                            historyDao.wipecache(MyApplication.user.getUserId());
                             cache.setText("0B");
                             sDialog.setTitleText("操作已执行!")
                                     .setContentText("您的缓存已被清空:)")

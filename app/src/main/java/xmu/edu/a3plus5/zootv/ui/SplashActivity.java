@@ -54,7 +54,7 @@ public class SplashActivity extends AppCompatActivity {
         labels = new ArrayList<>();
         labels.add("热门");
         labels.add("推荐");
-        List<String> selectLabels = DaoFactory.getUserDao(this).selelabels(MyApplication.user.getUserId());
+        List<String> selectLabels = DaoFactory.getPropensityDao(this).selelabels(MyApplication.user.getUserId());
         labels.addAll(selectLabels);
         if (selectLabels.size() != 0) {
             for (String label : selectLabels) {
@@ -76,7 +76,7 @@ public class SplashActivity extends AppCompatActivity {
         pieces = new HashMap<>();
         pieces.put("热门", platform.getMostPopularByPage(1));
         pieces.put("推荐", platform.getRecommendedRoomByCateList(selectCates));
-        List<String> selelabels = DaoFactory.getUserDao(SplashActivity.this).selelabels(MyApplication.user.getUserId());
+        List<String> selelabels = DaoFactory.getPropensityDao(SplashActivity.this).selelabels(MyApplication.user.getUserId());
         for (String label : selelabels) {
             Category category = platform.getCategoryByName(label);
             if (category != null) {

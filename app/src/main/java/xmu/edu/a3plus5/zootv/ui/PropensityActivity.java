@@ -21,7 +21,7 @@ import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.adapter.FlowLayoutAdapter;
 import xmu.edu.a3plus5.zootv.adapter.TextTagsAdapter;
 import xmu.edu.a3plus5.zootv.dao.DaoFactory;
-import xmu.edu.a3plus5.zootv.dao.UserDao;
+import xmu.edu.a3plus5.zootv.dao.PropensityDao;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.User;
 import xmu.edu.a3plus5.zootv.network.BasePlatform;
@@ -40,7 +40,7 @@ public class PropensityActivity extends AppCompatActivity {
     private TextTagsAdapter mHotLabelAdapter;
     private List<String> myLabelLists, HotLabelLists;
 
-    private UserDao userDao;
+    private PropensityDao propensityDao;
     private User user = null;
     private BasePlatform zooPlatform;
     private List<Category> categories;
@@ -52,7 +52,7 @@ public class PropensityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_propensity);
 
-        userDao = DaoFactory.getUserDao(PropensityActivity.this);
+        propensityDao = DaoFactory.getPropensityDao(PropensityActivity.this);
         user = MyApplication.user;
 
         new MyAsyncTask().execute();
@@ -96,7 +96,7 @@ public class PropensityActivity extends AppCompatActivity {
         tcy_hot_label.setAdapter(mHotLabelAdapter);
 
         myLabelLists = new ArrayList<>();
-        myLabelLists = userDao.selelabels(user.getUserId());
+        myLabelLists = propensityDao.selelabels(user.getUserId());
         mMyLabelAdapter = new FlowLayoutAdapter(PropensityActivity.this, myLabelLists);
         ChangeMyLabels();
         tcy_my_label.setAdapter(mMyLabelAdapter);
@@ -176,8 +176,8 @@ public class PropensityActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.propensity_done_button) {
-            userDao.deletelabels(user.getUserId());
-            userDao.addlabel(user.getUserId(), myLabelLists);
+            propensityDao.deletelabels(user.getUserId());
+            propensityDao.addlabel(user.getUserId(), myLabelLists);
             finish();
         }
         return super.onOptionsItemSelected(item);

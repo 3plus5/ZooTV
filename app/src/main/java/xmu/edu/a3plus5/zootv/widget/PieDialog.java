@@ -124,7 +124,7 @@ public class PieDialog extends DialogFragment {
     }
 
     private PieData getPieData() {
-        List<Room> rooms = DaoFactory.getUserDao(getActivity()).selehistoryRoom(MyApplication.user.getUserId());
+        List<Room> rooms = DaoFactory.getHistoryDao(getActivity()).selehistoryRoom(MyApplication.user.getUserId());
         ArrayList<String> xValues = new ArrayList<>();  //xVals用来表示每个饼块上的内容
         ArrayList<Entry> yValues = new ArrayList<>();  //yVals用来表示封装每个饼块的实际数据
         ArrayList<Integer> colors = new ArrayList<Integer>();
