@@ -26,6 +26,9 @@ import cn.sharesdk.sina.weibo.SinaWeibo;
 import de.hdodenhof.circleimageview.CircleImageView;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.dao.DaoFactory;
+import xmu.edu.a3plus5.zootv.dao.HistoryDao;
+import xmu.edu.a3plus5.zootv.dao.InterestDao;
+import xmu.edu.a3plus5.zootv.dao.RoomDao;
 import xmu.edu.a3plus5.zootv.dao.UserDao;
 import xmu.edu.a3plus5.zootv.entity.History;
 import xmu.edu.a3plus5.zootv.entity.Interest;
@@ -40,14 +43,18 @@ public class RoomListAdapter extends BaseSwipeAdapter {
 
     private Context mContext;
     List<Room> rooms;
-    private UserDao userdao;
+    private RoomDao roomDao;
+    private InterestDao interestDao;
+    private HistoryDao historyDao;
     private Room room;
 
     public RoomListAdapter(Context mContext, List<Room> rooms) {
         this.rooms = rooms;
         this.mContext = mContext;
 
-        userdao = DaoFactory.getUserDao(mContext);
+        roomDao = DaoFactory.getRoomDao(mContext);
+        historyDao = DaoFactory.getHistoryDao(mContext);
+        interestDao = DaoFactory.getInterestDao(mContext);
     }
 
     @Override
@@ -111,10 +118,10 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                 room = rooms.get(position);
                 //根据roomId 和 platform 唯一确认一个room，若数据库中有room，则不加入
 
-                if (!userdao.ifhaveRoom(room)) {
-                    room = userdao.addRoom(room);
+                if (!roomDao.ifhaveRoom(room)) {
+                    room = roomDao.addRoom(room);
                 } else {
-                    room = userdao.selectroom(room);
+                    room = roomDao.selectroom(room);
                 }
                 Intent intent = new Intent(mContext, WebActivity.class);
                 intent.putExtra("url", room.getLink());
@@ -124,10 +131,10 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                 if (MyApplication.user.getUserName().equals("点击头像登录")) {
 //                    Toast.makeText(mContext, "请先登录哦~~", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (userdao.ifhavehistory(MyApplication.user.getUserId(), room.getRid())) {
-                        userdao.deletehistory(MyApplication.user.getUserId(), room.getRid());
+                    if (historyDao.ifhavehistory(MyApplication.user.getUserId(), room.getRid())) {
+                        historyDao.deletehistory(MyApplication.user.getUserId(), room.getRid());
                     }
-                    userdao.addhistory(MyApplication.user.getUserId(), room.getRid());
+                    historyDao.addhistory(MyApplication.user.getUserId(), room.getRid());
 //                    Toast.makeText(mContext, "成功添加历史记录~~", Toast.LENGTH_SHORT).show();
 //                    List<Room> histories = userdao.selehistoryRoom(MyApplication.user.getUserId());
 //                    for (int i = 0; i < histories.size(); i++) {
@@ -142,10 +149,10 @@ public class RoomListAdapter extends BaseSwipeAdapter {
 
                 room = rooms.get(position);
                 //根据roomId 和 platform 唯一确认一个room，若数据库中有room，则不加入
-                if (!userdao.ifhaveRoom(room)) {
-                    room = userdao.addRoom(room);
+                if (!roomDao.ifhaveRoom(room)) {
+                    room = roomDao.addRoom(room);
                 } else {
-                    room = userdao.selectroom(room);
+                    room = roomDao.selectroom(room);
                 }
 
                 //点击查询是否被关注，并弹出相应提示
@@ -153,7 +160,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                 if (MyApplication.user.getUserName().equals("点击头像登录"))
                     Toast.makeText(mContext, "请先登录再关注哦~~", Toast.LENGTH_SHORT).show();
                 else {
-                    if (userdao.ifhaveinterest(MyApplication.user.getUserId(), room.getRid())) {
+                    if (interestDao.ifhaveinterest(MyApplication.user.getUserId(), room.getRid())) {
                         new MaterialDialog.Builder(mContext)
                                 .title("真的要取消关注吗")
                                 .positiveText("忍心取消")
@@ -161,7 +168,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                                 .callback(new MaterialDialog.ButtonCallback() {
                                     @Override
                                     public void onPositive(MaterialDialog dialog) {
-                                        userdao.deleteinterest(MyApplication.user.getUserId(), room.getRid());
+                                        interestDao.deleteinterest(MyApplication.user.getUserId(), room.getRid());
                                         Toast.makeText(mContext, "取消关注~~", Toast.LENGTH_SHORT).show();
                                     }
 
@@ -171,7 +178,7 @@ public class RoomListAdapter extends BaseSwipeAdapter {
                                 })
                                 .show();
                     } else {
-                        userdao.addinterest(MyApplication.user.getUserId(), room.getRid());
+                        interestDao.addinterest(MyApplication.user.getUserId(), room.getRid());
                         Toast.makeText(mContext, "关注成功~~", Toast.LENGTH_SHORT).show();
                     }
                 }

@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import xmu.edu.a3plus5.zootv.R;
 import xmu.edu.a3plus5.zootv.adapter.CategoryGridAdapter;
 import xmu.edu.a3plus5.zootv.dao.DaoFactory;
+import xmu.edu.a3plus5.zootv.dao.HistoryDao;
 import xmu.edu.a3plus5.zootv.dao.UserDao;
 import xmu.edu.a3plus5.zootv.entity.Category;
 import xmu.edu.a3plus5.zootv.entity.Room;
@@ -118,9 +119,9 @@ public class CategoryViewPagerFragment extends Fragment {
                 categories = new ArrayList<>();
                 List<Room> historyRooms;
                 BasePlatform platform;
-                UserDao userDao = DaoFactory.getUserDao(getActivity());
+                HistoryDao historyDao = DaoFactory.getHistoryDao(getActivity());
                 if (!"点击头像登录".equals(MyApplication.user.getUserName())) {
-                    historyRooms = userDao.selehistoryRoom(MyApplication.user.getUserId());
+                    historyRooms = historyDao.selehistoryRoom(MyApplication.user.getUserId());
                     for (Room room : historyRooms) {
                         platform = PlatformFactory.createPlatform(room.getPlatform());
                         BasePlatform platform1 = PlatformFactory.createPlatform(MyApplication.platform);

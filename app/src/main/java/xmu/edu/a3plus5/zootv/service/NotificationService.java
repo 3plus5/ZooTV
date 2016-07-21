@@ -93,7 +93,7 @@ public class NotificationService extends Service {
         if ("点击头像登录".equals(MyApplication.user.getUserName())) {
             return null;
         } else {
-            List<Room> rooms = DaoFactory.getUserDao(getApplicationContext()).seleinterestRoom(MyApplication.user.getUserId());
+            List<Room> rooms = DaoFactory.getInterestDao(getApplicationContext()).seleinterestRoom(MyApplication.user.getUserId());
             return rooms;
         }
     }
