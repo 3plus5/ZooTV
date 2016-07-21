@@ -101,8 +101,8 @@ public class NotificationService extends Service {
     //弹出Notification
     private void showNotification(Room room) {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        PendingIntent pendingIntent3 = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+//        PendingIntent pendingIntent3 = PendingIntent.getActivity(this, 0,
+//                new Intent(this, MainActivity.class), 0);
         Notification notify = new Notification.Builder(this)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.logo)
@@ -112,7 +112,8 @@ public class NotificationService extends Service {
                 .setDefaults(Notification.DEFAULT_SOUND)
                 .setVibrate(new long[]{0, 200, 200, 200})
                 .setLights(Color.GREEN, 1000, 1000)
-                .setContentIntent(pendingIntent3).setNumber(1).build();
+                .setNumber(1)
+                .build();
         notify.flags |= Notification.FLAG_AUTO_CANCEL;
         manager.notify(count, notify);
     }

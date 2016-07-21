@@ -94,18 +94,20 @@ public class ProfileFragment extends Fragment {
         }
         userDao = DaoFactory.getUserDao(getActivity());
 
-        JudgeSignStatus();
+        //JudgeSignStatus();
 
         return view;
     }
 
     @OnClick(R.id.userPhoto)
     public void login() {
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        getActivity().startActivityForResult(intent, 1);
+        if (MyApplication.user.getUserName().equals("点击头像登录")) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            getActivity().startActivityForResult(intent, 1);
+        }
     }
 
-
+    @OnClick(R.id.profile_sign_btn)
     public void dailySignTest() {
         signCount = signProgressBar.getProgress();
         if (signCount < 7) {
@@ -131,7 +133,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.profile_sign_btn)
+
     public void dailySign() {
         if (MyApplication.user.getUserName().equals("点击头像登录")) {
             Toast.makeText(getActivity(), "您还没有登录哦~", Toast.LENGTH_SHORT).show();
